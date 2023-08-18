@@ -1,4 +1,4 @@
-package com.example.skyreserve.Data.API
+package com.example.skyreserve.Model.API
 
 // Import necessary packages from the OkHttp library and Java I/O.
 import okhttp3.OkHttpClient

@@ -1,5 +1,5 @@
-package com.example.skyreserve.Repository
-import com.example.skyreserve.Data.API.ApiClient
+package com.example.skyreserve.Model.Repository
+import com.example.skyreserve.Model.API.ApiClient
 
 
 class FlightSearchRepository {

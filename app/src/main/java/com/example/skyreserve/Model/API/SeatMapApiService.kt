@@ -1,4 +1,4 @@
-package com.example.skyreserve.Data.API
+package com.example.skyreserve.Model.API
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST

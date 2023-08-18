@@ -1,4 +1,4 @@
-package com.example.skyreserve.Data.API
+package com.example.skyreserve.Model.API
 
 import com.example.skyreserve.Model.EnhancedSeatMapRequest
 import com.example.skyreserve.Model.EnhancedSeatMapResponse
