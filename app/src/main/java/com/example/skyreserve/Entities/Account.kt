@@ -1,6 +1,20 @@
-package com.example.skyreserve.Model
+package com.example.skyreserve.Entities
 
 class Account {
+
+    companion object {
+        private val loginAccount = HashMap<String, Account>()
+
+        fun accountExists(username: String): Boolean {
+            return loginAccount.containsKey(username)
+        }
+
+        fun registerOrUpdate(account: Account) {
+            val username = account.username ?: throw IllegalArgumentException("Username cannot be null")
+            loginAccount[username] = account
+        }
+    }
+
 
     var reservationList: ArrayList<Reservation> = ArrayList()
         get() = field
@@ -87,22 +101,24 @@ class Account {
         this.phoneNumber = phoneNumber
     }
 
+    constructor() : this(
+        ArrayList(),
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+    ) {
+        // Secondary constructor with default values
+    }
+
 
     fun addReservationToAccount(reservation: Reservation) {
         reservationList.add(reservation)
     }
 
-
-    companion object {
-        private val loginAccount = HashMap<String, Account>()
-
-        fun accountExists(username: String): Boolean {
-            return loginAccount.containsKey(username)
-        }
-
-        fun registerOrUpdate(account: Account) {
-            val username = account.username ?: throw IllegalArgumentException("Username cannot be null")
-            loginAccount[username] = account
-        }
-    }
 }

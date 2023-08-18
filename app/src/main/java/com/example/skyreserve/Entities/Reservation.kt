@@ -1,4 +1,4 @@
-package com.example.skyreserve.Model
+package com.example.skyreserve.Entities
 
 class Reservation {
 
