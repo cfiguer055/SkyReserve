@@ -53,16 +53,26 @@ dependencies {
     // ViewModel
     //noinspection GradleDependency
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
     // LiveData
     //noinspection GradleDependency
     implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
     // Annotation processor
     //noinspection LifecycleAnnotationProcessorWithJava8
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycle_version")
+    // asLiveData
+    //noinspection GradleDependency
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
 
     // Room Components
     implementation("androidx.room:room-runtime:$room_version")
+    implementation "androidx.room:room-ktx:$room_version"
     kapt("androidx.room:room-compiler:$room_version")
+
+    // To use Dispatchers.Main
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+
 
     // Api Client
     implementation("com.squareup.okhttp3:okhttp:4.9.1")

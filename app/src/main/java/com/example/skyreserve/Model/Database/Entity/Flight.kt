@@ -1,4 +1,4 @@
-package com.example.skyreserve.Model.Database
+package com.example.skyreserve.Model.Database.Entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -10,9 +10,9 @@ data class Flight(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val flightId: Long = 0,
-    val departureDate: Date,
-    val arrivalDate: Date,
-    val departureTime: Time,
-    val arrivalTime: Time,
+    val departureDate: String,
+    val arrivalDate: String,
+    val departureTime: String,
+    val arrivalTime: String,
     // Other properties
 )

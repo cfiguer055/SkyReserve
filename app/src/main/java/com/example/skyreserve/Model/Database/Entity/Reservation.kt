@@ -1,12 +1,11 @@
-package com.example.skyreserve.Model.Database
+package com.example.skyreserve.Model.Database.Entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.math.BigDecimal
-import java.util.Date
 
-@Entity(tableName = "flight_reservations")
-data class FlightReservation(
+@Entity(tableName = "reservations")
+data class Reservation(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val reservationId: Long,
@@ -14,8 +13,8 @@ data class FlightReservation(
     val arrivalFlightNumber: String,
     val returnDepartueFlightNumber: String,
     val returnArrivalFlightNumber: String,
-    val totalPrice: BigDecimal,
-    val departureBasePrice: BigDecimal,
-    val returnBasePrice: BigDecimal,
+    val totalPrice: Double,
+    val departureBasePrice: Double,
+    val returnBasePrice: Double,
     // Other properties
 )

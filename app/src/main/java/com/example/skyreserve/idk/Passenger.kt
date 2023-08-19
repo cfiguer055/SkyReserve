@@ -1,4 +1,4 @@
-package com.example.skyreserve.Entities
+package com.example.skyreserve.idk
 
 class Passenger {
 

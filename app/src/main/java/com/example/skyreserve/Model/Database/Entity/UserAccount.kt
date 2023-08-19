@@ -1,4 +1,4 @@
-package com.example.skyreserve.Model.Database
+package com.example.skyreserve.Model.Database.Entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

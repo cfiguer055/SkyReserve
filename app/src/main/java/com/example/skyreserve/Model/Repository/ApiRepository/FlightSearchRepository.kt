@@ -1,4 +1,4 @@
-package com.example.skyreserve.Model.Repository
+package com.example.skyreserve.Model.Repository.ApiRepository
 import com.example.skyreserve.Model.API.ApiClient
 
 
