@@ -30,10 +30,15 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    viewBinding {
+        enabled = true
+    }
 }
 
 
 dependencies {
+    implementation 'androidx.navigation:navigation-fragment:2.5.1'
     def lifecycle_version = "2.4.0"
     def room_version = "2.5.2"
 
@@ -70,9 +75,10 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     kapt("androidx.room:room-compiler:$room_version")
 
+    // Coroutine
     // To use Dispatchers.Main
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
-
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
 
     // Api Client
     implementation("com.squareup.okhttp3:okhttp:4.9.1")

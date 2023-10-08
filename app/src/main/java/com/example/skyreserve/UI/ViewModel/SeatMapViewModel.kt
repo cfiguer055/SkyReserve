@@ -1,7 +1,7 @@
 package com.example.skyreserve.UI.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.skyreserve.Model.API.*
+import com.example.skyreserve.API.*
 
 import androidx.lifecycle.ViewModel
 import com.example.skyreserve.Model.EnhancedSeatMapRequest
