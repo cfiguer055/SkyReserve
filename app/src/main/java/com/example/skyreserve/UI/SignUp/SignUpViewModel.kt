@@ -15,9 +15,20 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
     private val _signUpResult = MutableLiveData<Boolean>()
     val signUpResult: LiveData<Boolean> get() = _signUpResult
 
-    suspend fun signUp(username: String, password: String, firstName: String, lastName: String) {
+    suspend fun signUp(emailAddress: String, password: String, firstName: String, lastName: String) {
         // Perform sign-up logic here, then update _signUpResult
-        val success = authRepository.signUp(username, password, firstName, lastName)
+        val success = authRepository.signUp(emailAddress, password, firstName, lastName)
         _signUpResult.postValue(success)
+    }
+
+    // Check database if email exists already and if format is correct
+    suspend fun validateEmail(emailAddress: String) : Boolean {
+        return true
+    }
+
+    // may not need suspend because no database interaction
+    suspend fun validatePassword(password: String, confirmPassword: String) : Boolean {
+        return password == confirmPassword
+        // ADD CHECKS FOR PASSWORD TYPES AND VALID CHARACTERS
     }
 }

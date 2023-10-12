@@ -29,6 +29,7 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
 
         // Access authRepository from SignInActivity
         authRepository = (activity as SignInActivity).authRepository
+
         // Initialize your ViewModel using SignInViewModelFactory
         signInViewModel = ViewModelProvider(this, SignInViewModelFactory(authRepository))
             .get(SignInViewModel::class.java)
@@ -48,8 +49,7 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
         signInViewModel.signInResult.observe(viewLifecycleOwner) { success ->
             if (success) {
                 // Navigate to the dashboard
-                val navController = findNavController()
-                navController.navigate(R.id.action_signInFragment_to_homeFragment)
+
             } else {
                 // Display an error message
             }

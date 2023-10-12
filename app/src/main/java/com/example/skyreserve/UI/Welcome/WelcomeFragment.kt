@@ -6,8 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.skyreserve.R
 import com.example.skyreserve.UI.SignIn.SignInActivity
+import com.example.skyreserve.UI.SignUp.SignUpActivity
 import com.example.skyreserve.databinding.FragmentWelcomeBinding
 
 class WelcomeFragment : Fragment() {
@@ -27,13 +30,11 @@ class WelcomeFragment : Fragment() {
         binding.signInButton.setOnClickListener {
             val intent = Intent(requireContext(), SignInActivity::class.java)
             startActivity(intent)
-
-            // supposedly navcontroller is for fragment to fragment within same activity
-            //findNavController().navigate(R.id.action_welcomeFragment_to_signInFragment)
         }
 
         binding.signUpButton.setOnClickListener {
-            // Handle sign-up button click
+            val intent = Intent(requireContext(), SignUpActivity::class.java)
+            startActivity(intent)
         }
 
         return rootView

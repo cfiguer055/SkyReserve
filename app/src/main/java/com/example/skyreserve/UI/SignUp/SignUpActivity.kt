@@ -3,6 +3,7 @@ package com.example.skyreserve.UI.SignUp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.skyreserve.Database.SkyReserveDatabase
+import androidx.navigation.fragment.NavHostFragment
 import com.example.skyreserve.R
 import com.example.skyreserve.Repository.AuthRepository
 
@@ -14,11 +15,14 @@ You can include any additional logic for initializing the app here.
 */
 class SignUpActivity : AppCompatActivity() {
 
-    private lateinit var authRepository: AuthRepository
+    lateinit var authRepository: AuthRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
+
+//        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+//        val navController = navHostFragment.navController
 
         // Initialize your database and UserAccountDao
         val skyReserveDatabase = SkyReserveDatabase.getInstance(applicationContext)
@@ -28,10 +32,15 @@ class SignUpActivity : AppCompatActivity() {
 
         // Other initialization code
 
-//        if (savedInstanceState == null) {
-//            supportFragmentManager.beginTransaction()
-//                .replace(R.id.container, SignUpFragment())
-//                .commitNow()
-//        }
+        if (savedInstanceState == null) {
+            val accountInfoFragment = AccountInfoFragment().apply {
+                // Pass the authRepository to the fragment
+                authRepository = this@SignUpActivity.authRepository
+            }
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, accountInfoFragment)
+                .commitNow()
+        }
     }
 }

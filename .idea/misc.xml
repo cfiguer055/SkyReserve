@@ -10,9 +10,12 @@
         <entry key="..\:/Users/Carlos/AndroidStudioProjects/SkyReserve/app/src/main/res/layout/activity_sign_up.xml" value="0.2159565580618212" />
         <entry key="..\:/Users/Carlos/AndroidStudioProjects/SkyReserve/app/src/main/res/layout/activity_welcome.xml" value="0.23278985507246377" />
         <entry key="..\:/Users/Carlos/AndroidStudioProjects/SkyReserve/app/src/main/res/layout/fragement_welcome.xml" value="0.20153985507246377" />
+        <entry key="..\:/Users/Carlos/AndroidStudioProjects/SkyReserve/app/src/main/res/layout/fragment_account_info.xml" value="0.17426545086119555" />
         <entry key="..\:/Users/Carlos/AndroidStudioProjects/SkyReserve/app/src/main/res/layout/fragment_home.xml" value="0.17882472137791286" />
         <entry key="..\:/Users/Carlos/AndroidStudioProjects/SkyReserve/app/src/main/res/layout/fragment_sign_in.xml" value="0.33" />
         <entry key="..\:/Users/Carlos/AndroidStudioProjects/SkyReserve/app/src/main/res/layout/fragment_sign_up.xml" value="0.2613981762917933" />
+        <entry key="..\:/Users/Carlos/AndroidStudioProjects/SkyReserve/app/src/main/res/layout/fragment_sign_up_account_info.xml" value="0.17426545086119555" />
+        <entry key="..\:/Users/Carlos/AndroidStudioProjects/SkyReserve/app/src/main/res/layout/fragment_sign_up_personal_info.xml" value="0.1" />
         <entry key="..\:/Users/Carlos/AndroidStudioProjects/SkyReserve/app/src/main/res/layout/fragment_welcome.xml" value="0.20153985507246377" />
       </map>
     </option>

@@ -36,7 +36,7 @@ class SignInActivity : AppCompatActivity() {
             }
 
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, SignInFragment())
+                .replace(R.id.fragment_container, signInFragment)
                 .commitNow()
         }
     }
