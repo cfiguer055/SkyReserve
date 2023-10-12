@@ -1,25 +1,24 @@
-package com.example.skyreserve.UI.Activities
+package com.example.skyreserve.UI.SignUp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.skyreserve.Database.Dao.UserAccountDao
 import com.example.skyreserve.Database.SkyReserveDatabase
 import com.example.skyreserve.R
 import com.example.skyreserve.Repository.AuthRepository
-import com.example.skyreserve.UI.Fragment.SignInFragment
+
 
 /*
-The activity manages the SignInFragment.
-It sets up the navigation flow for the sign-in process.
+The activity manages the SignUpFragment.
+It sets up the navigation flow for the sign-up process.
 You can include any additional logic for initializing the app here.
 */
-class SignInActivity : AppCompatActivity() {
+class SignUpActivity : AppCompatActivity() {
 
     private lateinit var authRepository: AuthRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_in)
+        setContentView(R.layout.activity_sign_up)
 
         // Initialize your database and UserAccountDao
         val skyReserveDatabase = SkyReserveDatabase.getInstance(applicationContext)
@@ -29,10 +28,10 @@ class SignInActivity : AppCompatActivity() {
 
         // Other initialization code
 
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, SignInFragment())
-                .commitNow()
-        }
+//        if (savedInstanceState == null) {
+//            supportFragmentManager.beginTransaction()
+//                .replace(R.id.container, SignUpFragment())
+//                .commitNow()
+//        }
     }
 }

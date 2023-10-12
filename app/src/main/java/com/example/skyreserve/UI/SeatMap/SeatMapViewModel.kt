@@ -1,4 +1,4 @@
-package com.example.skyreserve.UI.ViewModel
+package com.example.skyreserve.UI.SeatMap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.skyreserve.API.*

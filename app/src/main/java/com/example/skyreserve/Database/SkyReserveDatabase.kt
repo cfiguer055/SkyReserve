@@ -26,9 +26,9 @@ abstract class SkyReserveDatabase : RoomDatabase() {
         const val DATABASE_NAME = "sky_reserve_db"
 
 
+        // Ensures only one instance of the database is created.
         @Volatile
         private var instance: SkyReserveDatabase? = null
-
         fun getInstance(context: Context): SkyReserveDatabase {
             return instance ?: synchronized(this) {
                 instance ?: buildDatabase(context).also { instance = it }

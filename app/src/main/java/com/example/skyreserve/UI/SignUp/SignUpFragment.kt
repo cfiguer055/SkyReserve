@@ -1,11 +1,10 @@
-package com.example.skyreserve.UI.Fragment
+package com.example.skyreserve.UI.SignUp
 
 import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.example.skyreserve.R
-import com.example.skyreserve.UI.ViewModel.SignUpViewModel
 import com.example.skyreserve.databinding.FragmentSignUpBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -1,4 +1,4 @@
-package com.example.skyreserve.UI.ViewModel
+package com.example.skyreserve.UI.SignIn
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

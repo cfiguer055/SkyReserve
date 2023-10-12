@@ -1,4 +1,4 @@
-package com.example.skyreserve.UI.ViewModel
+package com.example.skyreserve.UI.FlightSearch
 
 
 class FlightSearchViewModel {

@@ -1,10 +1,9 @@
-package com.example.skyreserve.UI.Activities
+package com.example.skyreserve.UI.SeatMap
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.skyreserve.R
-import com.example.skyreserve.UI.ViewModel.SeatMapViewModel
 
 class SeatMapActivity : AppCompatActivity() {
     private lateinit var viewModel: SeatMapViewModel

@@ -1,15 +1,16 @@
-package com.example.skyreserve.UI.Fragment
+package com.example.skyreserve.UI.SignIn
 
 import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.example.skyreserve.R
-import com.example.skyreserve.UI.ViewModel.SignInViewModel
 import com.example.skyreserve.databinding.FragmentSignInBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import androidx.navigation.fragment.findNavController
+import com.example.skyreserve.Repository.AuthRepository
 
 //import kotlinx.android.synthetic.main.fragment_sign_in.*
 
@@ -19,13 +20,18 @@ It includes UI components like EditTexts for username and password, and a button
 It observes the LiveData in SignInViewModel to display the sign-in result.
  */
 class SignInFragment : Fragment(R.layout.fragment_sign_in) {
+    private lateinit var authRepository: AuthRepository
     private lateinit var signInViewModel: SignInViewModel
     private lateinit var binding: FragmentSignInBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        signInViewModel = ViewModelProvider(this).get(SignInViewModel::class.java)
+        // Access authRepository from SignInActivity
+        authRepository = (activity as SignInActivity).authRepository
+        // Initialize your ViewModel using SignInViewModelFactory
+        signInViewModel = ViewModelProvider(this, SignInViewModelFactory(authRepository))
+            .get(SignInViewModel::class.java)
         binding = FragmentSignInBinding.bind(view)
 
         binding.signInButton.setOnClickListener {
@@ -42,6 +48,8 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
         signInViewModel.signInResult.observe(viewLifecycleOwner) { success ->
             if (success) {
                 // Navigate to the dashboard
+                val navController = findNavController()
+                navController.navigate(R.id.action_signInFragment_to_homeFragment)
             } else {
                 // Display an error message
             }
