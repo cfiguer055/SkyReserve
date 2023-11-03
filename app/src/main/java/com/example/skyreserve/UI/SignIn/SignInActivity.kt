@@ -1,43 +1,30 @@
 package com.example.skyreserve.UI.SignIn
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.skyreserve.Database.SkyReserveDatabase
 import com.example.skyreserve.R
 import com.example.skyreserve.Repository.AuthRepository
+import com.example.skyreserve.UI.Home.HomeActivity
+import com.example.skyreserve.databinding.ActivitySignInBinding
 
-/*
-The activity manages the SignInFragment.
-It sets up the navigation flow for the sign-in process.
-You can include any additional logic for initializing the app here.
-*/
+
 class SignInActivity : AppCompatActivity() {
-
-    lateinit var authRepository: AuthRepository
+    private lateinit var binding: ActivitySignInBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_in)
+        binding = ActivitySignInBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // Initialize your database and UserAccountDao (MIGHT NOT NEED THIS...REPO ALREADY GETS INSTANCE)
-        //VIEWMODEL HAS ACCESS TO REPO METHODS
-        // MIGHT NEED IT BECAUSE OF VIEWMODEL...look into it later
-        val skyReserveDatabase = SkyReserveDatabase.getInstance(applicationContext)
-        val userAccountDao = skyReserveDatabase.userAccountDao()
+        binding.signInButton.setOnClickListener {
+            val intent = Intent(this, HomeActivity::class.java)
 
-        authRepository = AuthRepository(userAccountDao) // Initialize your auth repository
-
-        // Other initialization code
-
-        if (savedInstanceState == null) {
-            val signInFragment = SignInFragment().apply {
-                // Pass the authRepository to the fragment
-                authRepository = this@SignInActivity.authRepository
-            }
-
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, signInFragment)
-                .commitNow()
+            // Clear all previous activities from the stack and start a new task
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
         }
     }
 }

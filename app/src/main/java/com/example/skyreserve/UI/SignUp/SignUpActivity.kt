@@ -1,11 +1,14 @@
 package com.example.skyreserve.UI.SignUp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.skyreserve.Database.SkyReserveDatabase
 import androidx.navigation.fragment.NavHostFragment
 import com.example.skyreserve.R
 import com.example.skyreserve.Repository.AuthRepository
+import com.example.skyreserve.UI.Home.HomeActivity
+import com.example.skyreserve.databinding.ActivitySignUpBinding
 
 
 /*
@@ -14,33 +17,20 @@ It sets up the navigation flow for the sign-up process.
 You can include any additional logic for initializing the app here.
 */
 class SignUpActivity : AppCompatActivity() {
-
-    lateinit var authRepository: AuthRepository
+    private lateinit var binding: ActivitySignUpBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_up)
+        binding = ActivitySignUpBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-//        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-//        val navController = navHostFragment.navController
+        binding.signUpButton.setOnClickListener{
+            val intent = Intent(this, HomeActivity::class.java)
 
-        // Initialize your database and UserAccountDao
-        val skyReserveDatabase = SkyReserveDatabase.getInstance(applicationContext)
-        val userAccountDao = skyReserveDatabase.userAccountDao()
-
-        authRepository = AuthRepository(userAccountDao) // Initialize your auth repository
-
-        // Other initialization code
-
-        if (savedInstanceState == null) {
-            val accountInfoFragment = AccountInfoFragment().apply {
-                // Pass the authRepository to the fragment
-                authRepository = this@SignUpActivity.authRepository
-            }
-
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, accountInfoFragment)
-                .commitNow()
+            // Clear all previous activities from the stack and start a new task
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
         }
     }
 }

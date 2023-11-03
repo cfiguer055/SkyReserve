@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">SkyReserve</string>
+    <string name="forgot_password_link"><u>Forgot Password?</u></string>
+    <string name="signup_link">Don\'t have an account? <u>Sign Up.</u></string>
+    <string name="signin_link">Already have an account? <u>Sign In.</u></string>
+
+
+    <!-- Accessibility -->
+    <string name="signin_google">Sign in using your Google account</string>
 </resources>

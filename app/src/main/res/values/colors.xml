@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Default -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -7,4 +8,15 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Theme 1 -->
+    <color name="blue10">#0C82C5</color>
+    <color name="blue11">#02517E</color>
+    <color name="orange10">#FFC872</color>
+    <color name="red10">#FE4F4F</color>
+
+    <color name="purple20">#656ABB</color>
+    <color name="white20">#F9F9F9</color>
+    <color name="orange20">#FF5D04</color>
+    <color name="purple21">#acafda</color>
 </resources>
