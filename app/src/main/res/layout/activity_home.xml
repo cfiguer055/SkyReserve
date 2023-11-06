@@ -36,8 +36,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="30dp"
                     android:text="Search Flight"
-                    android:textSize="48sp"
+                    android:textSize="45sp"
                     android:textStyle="bold"
+                    android:textColor="@color/black"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <RadioGroup
@@ -54,14 +55,16 @@
                         android:id="@+id/oneWayRadioButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="One way" />
+                        android:text="One way"
+                        android:textColor="@color/black"/>
 
                     <RadioButton
                         android:id="@+id/roundTripRadioButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
-                        android:text="Roundtrip" />
+                        android:text="Roundtrip"
+                        android:textColor="@color/black"/>
                 </RadioGroup>
 
                 <EditText
@@ -70,7 +73,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="30dp"
                     android:layout_marginTop="16dp"
+                    android:background="@drawable/edit_text_background"
                     android:hint="Depart"
+                    android:textColorHint="#696969"
+                    android:paddingStart="15dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
@@ -81,14 +89,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="30dp"
                     android:layout_marginTop="8dp"
+                    android:background="@drawable/edit_text_background"
                     android:hint="Arrive"
+                    android:textColorHint="#696969"
+                    android:paddingStart="15dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/departEditText" />
 
                 <EditText
                     android:id="@+id/departureDateEditText"
-                    android:layout_width="0dp"
+                    android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="30dp"
                     android:layout_marginTop="8dp"
@@ -96,14 +109,16 @@
                     android:clickable="true"
                     android:drawableStart="@android:drawable/ic_menu_today"
                     android:focusable="false"
-                    android:hint="24 Jan"
+                    android:hint="Departure"
+                    android:textColorHint="#696969"
+                    android:textColor="@color/black"
                     app:layout_constraintEnd_toStartOf="@+id/returnDateEditText"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/arriveEditText" />
 
                 <EditText
                     android:id="@+id/returnDateEditText"
-                    android:layout_width="0dp"
+                    android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="30dp"
                     android:layout_marginStart="8dp"
@@ -112,9 +127,63 @@
                     android:drawableStart="@android:drawable/ic_menu_today"
                     android:focusable="false"
                     android:hint="Return"
+                    android:textColorHint="#696969"
+                    android:textColor="@color/black"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/departureDateEditText"
                     app:layout_constraintTop_toBottomOf="@+id/arriveEditText" />
+
+                <TextView
+                    android:id="@+id/passengerLabelTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Passengers"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/departureDateEditText"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/decrementPassengerButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/rounded_button_purple"
+                    android:padding="0dp"
+                    android:text="-"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white20"
+                    android:onClick="decrementPassengerCount"
+                    app:layout_constraintTop_toBottomOf="@id/passengerLabelTextView"
+                    app:layout_constraintEnd_toStartOf="@id/passengerCountTextView"/>
+
+                <TextView
+                    android:id="@+id/passengerCountTextView"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="1"
+                    android:textSize="30sp"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:layout_marginHorizontal="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/passengerLabelTextView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/incrementPassengerButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/rounded_button_purple"
+                    android:padding="0dp"
+                    android:text="+"
+                    android:textSize="20sp"
+                    android:textColor="@color/white20"
+                    android:onClick="incrementPassengerCount"
+                    app:layout_constraintTop_toBottomOf="@id/passengerLabelTextView"
+                    app:layout_constraintStart_toEndOf="@id/passengerCountTextView" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/searchFlightButton"
@@ -133,7 +202,7 @@
                     android:textSize="24sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/departureDateEditText" />
+                    app:layout_constraintTop_toBottomOf="@+id/incrementPassengerButton" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -154,7 +223,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="30dp"
                     android:text="Resevations"
-                    android:textSize="48sp"
+                    android:textColor="@color/black"
+                    android:textSize="45sp"
                     android:textStyle="bold"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -177,6 +247,7 @@
                         android:layout_height="wrap_content"
                         android:text="Los Angeles"
                         android:textSize="24sp"
+                        android:textColor="@color/black"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent" />
 
@@ -186,6 +257,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="LAX"
+                        android:textColor="@color/black"
                         android:textSize="24sp"
                         android:textStyle="bold"
                         app:layout_constraintTop_toBottomOf="@+id/firstTicketDepartureCityTextView"
@@ -197,6 +269,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Date"
+                        android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         app:layout_constraintTop_toBottomOf="@+id/firstTicketDepartureAirportTextView"
@@ -207,6 +280,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="14 Nov"
+                        android:textColor="@color/black"
                         android:textSize="18sp"
                         app:layout_constraintTop_toBottomOf="@+id/firstTicketDepartureDateLabelTextView"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -216,6 +290,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="New York"
+                        android:textColor="@color/black"
                         android:textSize="24sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -226,6 +301,7 @@
                         android:layout_height="wrap_content"
                         android:text="JFK"
                         android:textSize="24sp"
+                        android:textColor="@color/black"
                         android:textStyle="bold"
                         app:layout_constraintTop_toBottomOf="@+id/firstTicketArrivalCityTextView"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -235,6 +311,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Cabin"
+                        android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         app:layout_constraintTop_toBottomOf="@+id/firstTicketDepartureAirportTextView"
@@ -245,6 +322,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Business"
+                        android:textColor="@color/black"
                         android:textSize="18sp"
                         app:layout_constraintTop_toBottomOf="@+id/firstTicketCabinLabelTextView"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -254,6 +332,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Time"
+                        android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         app:layout_constraintTop_toBottomOf="@+id/firstTicketDepartureAirportTextView"
@@ -265,6 +344,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="8:30 AM"
+                        android:textColor="@color/black"
                         android:textSize="18sp"
                         app:layout_constraintTop_toBottomOf="@+id/firstTicketCabinLabelTextView"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -275,6 +355,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Gate"
+                        android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginTop="85dp"
@@ -286,6 +367,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="B7"
+                        android:textColor="@color/black"
                         android:textSize="18sp"
                         app:layout_constraintTop_toBottomOf="@+id/firstTicketGateLabelTextView"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -295,6 +377,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Terminal"
+                        android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginTop="85dp"
@@ -307,6 +390,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Terminal B"
+                        android:textColor="@color/black"
                         android:textSize="18sp"
                         app:layout_constraintTop_toBottomOf="@+id/firstTicketTerminalLabelTextView"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -317,6 +401,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Seat"
+                        android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginTop="85dp"
@@ -328,6 +413,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="17A"
+                        android:textColor="@color/black"
                         android:textSize="18sp"
                         app:layout_constraintTop_toBottomOf="@+id/firstTicketSeatLabelTextView"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -409,6 +495,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/windowBackground"
+        app:itemIconTint="@color/white20"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_navigation_menu"/>
 

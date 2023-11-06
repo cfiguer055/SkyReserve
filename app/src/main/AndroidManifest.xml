@@ -38,6 +38,16 @@
             android:exported="true">
         </activity>
 
+        <activity
+            android:name=".UI.FlightSearch.FlightSearchActivity"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".UI.Settings.SettingsActivity"
+            android:exported="true">
+        </activity>
+
     </application>
 
 </manifest>
