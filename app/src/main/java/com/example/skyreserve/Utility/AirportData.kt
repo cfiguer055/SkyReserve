@@ -1,0 +1,45 @@
+package com.example.skyreserve.Utility
+
+object AirportsData {
+    val airports = arrayOf(
+        "Hartsfield–Jackson Atlanta International Airport - ATL - Atlanta, Georgia, USA",
+        "Beijing Capital International Airport - PEK - Beijing, China",
+        "Dubai International Airport - DXB - Dubai, United Arab Emirates",
+        "Tokyo Haneda Airport - HND - Tokyo, Japan",
+        "Los Angeles International Airport - LAX - Los Angeles, California, USA",
+        "O'Hare International Airport - ORD - Chicago, Illinois, USA",
+        "London Heathrow Airport - LHR - London, United Kingdom",
+        "Hong Kong International Airport - HKG - Hong Kong",
+        "Shanghai Pudong International Airport - PVG - Shanghai, China",
+        "Paris Charles de Gaulle Airport - CDG - Paris, France",
+        "Amsterdam Schiphol Airport - AMS - Amsterdam, Netherlands",
+        "Indira Gandhi International Airport - DEL - New Delhi, India",
+        "Singapore Changi Airport - SIN - Singapore",
+        "Seoul Incheon International Airport - ICN - Seoul, South Korea",
+        "Denver International Airport - DEN - Denver, Colorado, USA",
+        "Suvarnabhumi Airport - BKK - Bangkok, Thailand",
+        "San Francisco International Airport - SFO - San Francisco, California, USA",
+        "Dallas/Fort Worth International Airport - DFW - Dallas/Fort Worth, Texas, USA",
+        "Guangzhou Baiyun International Airport - CAN - Guangzhou, China",
+        "Frankfurt Airport - FRA - Frankfurt, Germany",
+        "Istanbul Atatürk Airport - ISL (old IATA: IST) - Istanbul, Turkey",
+        "John F. Kennedy International Airport - JFK - New York City, New York, USA",
+        "Kuala Lumpur International Airport - KUL - Kuala Lumpur, Malaysia",
+        "Madrid Barajas Airport - MAD - Madrid, Spain",
+        "McCarran International Airport - LAS - Las Vegas, Nevada, USA",
+        "Miami International Airport - MIA - Miami, Florida, USA",
+        "Munich Airport - MUC - Munich, Germany",
+        "São Paulo–Guarulhos International Airport - GRU - São Paulo, Brazil",
+        "Sydney Kingsford-Smith Airport - SYD - Sydney, Australia",
+        "Chhatrapati Shivaji Maharaj International Airport - BOM - Mumbai, India",
+        "Benito Juárez International Airport - MEX - Mexico City, Mexico",
+        "Rome Fiumicino Airport - FCO - Rome, Italy",
+        "Chengdu Shuangliu International Airport - CTU - Chengdu, China",
+        "Soekarno–Hatta International Airport - CGK - Jakarta, Indonesia",
+        "Taoyuan International Airport - TPE - Taipei, Taiwan",
+        "Shenzhen Bao'an International Airport - SZX - Shenzhen, China",
+        "Kempegowda International Airport - BLR - Bengaluru (Bangalore), India",
+        "Melbourne Airport - MEL - Melbourne, Australia"
+        // ... and so on for other major airports.
+    )
+}

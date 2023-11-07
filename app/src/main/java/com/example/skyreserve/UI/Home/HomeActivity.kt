@@ -2,8 +2,11 @@ package com.example.skyreserve.UI.Home
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.skyreserve.R
+import com.example.skyreserve.Utility.AirportsData
 import com.example.skyreserve.databinding.ActivityHomeBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -16,6 +19,17 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Setting up the adapter for departAutoCompleteTextView
+        val departAdapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, AirportsData.airports)
+        binding.departAutoCompleteTextView.setAdapter(departAdapter)
+
+        // Setting up the adapter for arriveAutoCompleteTextView
+        val arriveAdapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, AirportsData.airports)
+        binding.arriveAutoCompleteTextView.setAdapter(arriveAdapter)
+
+        // Optional: you can customize the number of characters that will trigger the autocomplete suggestions
+        binding.departAutoCompleteTextView.threshold = 1 //start searching from one character
+        binding.arriveAutoCompleteTextView.threshold = 1
 
         binding.departureDateEditText.setOnClickListener {
             val calendar = Calendar.getInstance()

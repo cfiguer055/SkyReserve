@@ -67,8 +67,8 @@
                         android:textColor="@color/black"/>
                 </RadioGroup>
 
-                <EditText
-                    android:id="@+id/departEditText"
+                <AutoCompleteTextView
+                    android:id="@+id/departAutoCompleteTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="30dp"
@@ -83,8 +83,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
-                <EditText
-                    android:id="@+id/arriveEditText"
+                <AutoCompleteTextView
+                    android:id="@+id/arriveAutoCompleteTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="30dp"
@@ -97,7 +97,7 @@
                     android:paddingBottom="12dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/departEditText" />
+                    app:layout_constraintTop_toBottomOf="@+id/departAutoCompleteTextView" />
 
                 <EditText
                     android:id="@+id/departureDateEditText"
@@ -114,7 +114,7 @@
                     android:textColor="@color/black"
                     app:layout_constraintEnd_toStartOf="@+id/returnDateEditText"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/arriveEditText" />
+                    app:layout_constraintTop_toBottomOf="@+id/arriveAutoCompleteTextView" />
 
                 <EditText
                     android:id="@+id/returnDateEditText"
@@ -131,7 +131,7 @@
                     android:textColor="@color/black"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/departureDateEditText"
-                    app:layout_constraintTop_toBottomOf="@+id/arriveEditText" />
+                    app:layout_constraintTop_toBottomOf="@+id/arriveAutoCompleteTextView" />
 
                 <TextView
                     android:id="@+id/passengerLabelTextView"
