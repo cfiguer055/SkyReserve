@@ -53,6 +53,10 @@ class SignInActivity : AppCompatActivity() {
             }
         }
 
+        binding.signInWithGoogle.setOnClickListener {
+            navigateToHome()
+        }
+
         // CHANGE TEXTVIEW
         binding.signUpLinkTextView.setOnClickListener {
             navigateToSingUp()

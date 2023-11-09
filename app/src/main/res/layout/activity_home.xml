@@ -67,8 +67,8 @@
                         android:textColor="@color/black"/>
                 </RadioGroup>
 
-                <AutoCompleteTextView
-                    android:id="@+id/departAutoCompleteTextView"
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/departButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="30dp"
@@ -76,6 +76,7 @@
                     android:background="@drawable/edit_text_background"
                     android:hint="Depart"
                     android:textColorHint="#696969"
+                    android:textColor="@color/black"
                     android:paddingStart="15dp"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
@@ -83,8 +84,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
-                <AutoCompleteTextView
-                    android:id="@+id/arriveAutoCompleteTextView"
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/arriveButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="30dp"
@@ -92,12 +93,13 @@
                     android:background="@drawable/edit_text_background"
                     android:hint="Arrive"
                     android:textColorHint="#696969"
+                    android:textColor="@color/black"
                     android:paddingStart="15dp"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/departAutoCompleteTextView" />
+                    app:layout_constraintTop_toBottomOf="@+id/departButton" />
 
                 <EditText
                     android:id="@+id/departureDateEditText"
@@ -114,7 +116,7 @@
                     android:textColor="@color/black"
                     app:layout_constraintEnd_toStartOf="@+id/returnDateEditText"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/arriveAutoCompleteTextView" />
+                    app:layout_constraintTop_toBottomOf="@+id/arriveButton" />
 
                 <EditText
                     android:id="@+id/returnDateEditText"
@@ -131,7 +133,7 @@
                     android:textColor="@color/black"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/departureDateEditText"
-                    app:layout_constraintTop_toBottomOf="@+id/arriveAutoCompleteTextView" />
+                    app:layout_constraintTop_toBottomOf="@+id/arriveButton" />
 
                 <TextView
                     android:id="@+id/passengerLabelTextView"

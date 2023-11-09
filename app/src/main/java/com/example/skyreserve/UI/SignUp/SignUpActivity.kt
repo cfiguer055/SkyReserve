@@ -83,6 +83,7 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
+
     private fun resetInputUI() {
         binding.errorTextView.visibility = View.GONE
         binding.errorTextView.text = ""
@@ -118,6 +119,7 @@ class SignUpActivity : AppCompatActivity() {
     private fun navigateToHome() {
         val intent = Intent(this, HomeActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        intent.putExtra("FROM_SIGN_UP", true)
         startActivity(intent)
         finish()
     }
