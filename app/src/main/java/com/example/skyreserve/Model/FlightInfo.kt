@@ -1,5 +1,6 @@
 package com.example.skyreserve.Model
 
+import android.os.Parcelable
 import java.io.Serializable
 
 data class FlightInfo(

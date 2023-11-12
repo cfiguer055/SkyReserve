@@ -14,6 +14,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.skyreserve.Model.FlightAdapter
@@ -33,10 +35,12 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
     private lateinit var departAirport : String
     private lateinit var arriveAirport : String
     private lateinit var departDate : String
-    private lateinit var returnDate : String
+//    private lateinit var returnDate : String
     private var numPassengers : Int = 1
     private var passengerCount = 1
     private val maxPassengerCount = 9
+
+    private lateinit var email: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +50,12 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         loadIntentData()
         if(areAllFieldsFilled()) showFlightResults()
         Log.d("areAllFieldsFilled(): ", areAllFieldsFilled().toString())
+
+        binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            // When any RadioButton is checked, change the text color back to black
+            resetErrorState()
+        }
+
 
         binding.departButton.setOnClickListener {
             showAirportAutoCompleteDialog(true)
@@ -62,6 +72,7 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
                 { _, year, month, dayOfMonth ->
                     val selectedDate = "$dayOfMonth ${getMonthShortName(month)}"
                     binding.departureDateEditText.setText(selectedDate)
+                    resetErrorState()
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
@@ -70,20 +81,21 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
             datePickerDialog.show()
         }
 
-        binding.returnDateEditText.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val datePickerDialog = DatePickerDialog(
-                this,
-                { _, year, month, dayOfMonth ->
-                    val selectedDate = "$dayOfMonth ${getMonthShortName(month)}"
-                    binding.returnDateEditText.setText(selectedDate)
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            )
-            datePickerDialog.show()
-        }
+//        binding.returnDateEditText.setOnClickListener {
+//            val calendar = Calendar.getInstance()
+//            val datePickerDialog = DatePickerDialog(
+//                this,
+//                { _, year, month, dayOfMonth ->
+//                    val selectedDate = "$dayOfMonth ${getMonthShortName(month)}"
+//                    binding.returnDateEditText.setText(selectedDate)
+//                    resetErrorState()
+//                },
+//                calendar.get(Calendar.YEAR),
+//                calendar.get(Calendar.MONTH),
+//                calendar.get(Calendar.DAY_OF_MONTH)
+//            )
+//            datePickerDialog.show()
+//        }
 
         binding.passengerCountTextView.text = passengerCount.toString()
 
@@ -102,23 +114,69 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         }
 
         binding.searchFlightButton.setOnClickListener {
-            showFlightResults()
+            if (areAllFieldsFilled()) {
+                showFlightResults()
+            } else {
+                showError()
+            }
         }
     }
 
 
     private fun areAllFieldsFilled(): Boolean {
         val isTripTypeSelected = binding.radioGroup.checkedRadioButtonId != -1
-        val isDepartAirportSet = binding.departButton.text.toString() != "Depart"
-        val isArriveAirportSet = binding.arriveButton.text.toString() != "Arrive"
+        val isDepartAirportSet = binding.departButton.text.toString().isNotEmpty()
+        val isArriveAirportSet = binding.arriveButton.text.toString().isNotEmpty()
         val isDepartDateSet = binding.departureDateEditText.text.toString().isNotEmpty()
-        val isReturnDateSet = binding.returnDateEditText.text.toString().isNotEmpty()
+//        val isReturnDateSet = binding.returnDateEditText.text.toString().isNotEmpty()
         val isPassengerCountSet = binding.passengerCountTextView.text.toString()
             .isNotEmpty() // or check for a default value
 
         // Now, if all fields are set, adjust the layout accordingly
-        return isDepartAirportSet && isArriveAirportSet && isDepartDateSet && isReturnDateSet && isPassengerCountSet && isTripTypeSelected
+        return isDepartAirportSet && isArriveAirportSet && isDepartDateSet && isPassengerCountSet && isTripTypeSelected
     }
+
+    private fun showError() {
+        // Check each field and set an error if it's not filled
+        if (binding.radioGroup.checkedRadioButtonId == -1) {
+            binding.oneWayRadioButton.setTextColor(ContextCompat.getColor(this, R.color.red10))
+            binding.roundTripRadioButton.setTextColor(ContextCompat.getColor(this, R.color.red10))
+        }
+        if (binding.departButton.text.toString().isEmpty()) {
+            binding.departButton.setBackgroundResource(R.drawable.edit_text_error_background)
+        }
+        if (binding.arriveButton.text.toString().isEmpty()) {
+            binding.arriveButton.setBackgroundResource(R.drawable.edit_text_error_background)
+        }
+        if (binding.departureDateEditText.text.toString().isEmpty()) {
+            binding.departureDateEditText.setBackgroundResource(R.drawable.edit_text_error_background)
+        }
+        if (binding.passengerCountTextView.text.toString().isEmpty()) {
+            // Change background of passengers count to indicate error
+        }
+        // If any field is not filled, show the error message
+        binding.errorTextView.text = getString(R.string.all_fields_required_error)
+        binding.errorTextView.visibility = View.VISIBLE
+    }
+
+    private fun resetErrorState() {
+        // Clear the error message
+        binding.errorTextView.visibility = View.GONE
+
+        // Reset the backgrounds and texts to default
+        binding.oneWayRadioButton.setTextColor(ContextCompat.getColor(this, R.color.black))
+        binding.roundTripRadioButton.setTextColor(ContextCompat.getColor(this, R.color.black))
+        binding.departButton.setBackgroundResource(R.drawable.edit_text_background)
+        binding.arriveButton.setBackgroundResource(R.drawable.edit_text_background)
+        binding.departureDateEditText.setBackgroundResource(R.drawable.edit_text_background)
+        // Add any other fields that need to be reset
+
+        // Optionally, if you have an error drawable for the radio group or any other fields, reset them as well
+        // Example:
+        // binding.radioGroup.setBackgroundResource(R.drawable.default_background)
+        // ... etc.
+    }
+
 
     private fun showFlightResults() {
         // consider leaving header visible the entire time, just change the navigation for back button
@@ -164,11 +222,13 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
 
     private fun loadIntentData() {
         // Retrieve the data from the intent
+        email = intent.getStringExtra("EXTRA_EMAIL") ?: ""
+
         roundTrip = intent.getStringExtra("ROUND_TRIP") ?: ""
         departAirport = intent.getStringExtra("DEPART_AIRPORT") ?: ""
         arriveAirport = intent.getStringExtra("ARRIVE_AIRPORT") ?: ""
         departDate = intent.getStringExtra("DEPART_DATE") ?: ""
-        returnDate = intent.getStringExtra("RETURN_DATE") ?: ""
+//        returnDate = intent.getStringExtra("RETURN_DATE") ?: ""
         numPassengers = intent.getIntExtra("NUM_PASSENGERS", 1) // Assuming a default of 1 passenger
 
         // Update the UI with the retrieved data
@@ -176,7 +236,7 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         binding.departButton.text = departAirport
         binding.arriveButton.text = arriveAirport
         binding.departureDateEditText.setText(departDate)
-        binding.returnDateEditText.setText(returnDate)
+//        binding.returnDateEditText.setText(returnDate)
         binding.passengerCountTextView.text = numPassengers.toString()
     }
 
@@ -196,7 +256,7 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         data.putExtra("DEPART_AIRPORT", binding.departButton.text.toString())
         data.putExtra("ARRIVE_AIRPORT", binding.arriveButton.text.toString())
         data.putExtra("DEPART_DATE", binding.departureDateEditText.text.toString())
-        data.putExtra("RETURN_DATE", binding.returnDateEditText.text.toString())
+//        data.putExtra("RETURN_DATE", binding.returnDateEditText.text.toString())
         data.putExtra("NUM_PASSENGERS", binding.passengerCountTextView.text.toString())
         // Other extras...
 
@@ -211,6 +271,8 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         // Handle the click, navigate to the confirmation page
         val intent = Intent(this, ReservationConfirmationActivity::class.java)
         intent.putExtra("EXTRA_FLIGHT_INFO", selectedFlightInfo) // Pass flight information
+        intent.putExtra("NUM_PASSENGERS", numPassengers)
+        intent.putExtra("EXTRA_EMAIL", email)
         startActivity(intent)
     }
 
@@ -282,8 +344,8 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
                 if(departure) binding.departButton.text = "$airportCode - $city" else binding.arriveButton.text = "$airportCode - $city"
 
                 dialog.dismiss()
+                resetErrorState()
             }
             layout.addView(textView)
         }
-    }
-}
+    }}

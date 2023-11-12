@@ -4,6 +4,7 @@
     <string name="signup_link">Don\'t have an account? <u>Sign Up.</u></string>
     <string name="signin_link">Already have an account? <u>Sign In.</u></string>
 
+    <string name="all_fields_required_error">Not all fields are filled. Please complete all fields.</string>
 
     <!-- Accessibility -->
     <string name="signin_google">Sign in using your Google account</string>

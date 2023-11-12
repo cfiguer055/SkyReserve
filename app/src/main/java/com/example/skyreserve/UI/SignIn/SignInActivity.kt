@@ -18,6 +18,8 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignInBinding
     private lateinit var signInViewModel: SignInViewModel
 
+    private lateinit var email: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignInBinding.inflate(layoutInflater)
@@ -30,7 +32,7 @@ class SignInActivity : AppCompatActivity() {
         binding.passwordEditText.addTextChangedListener { resetInputUI() }
 
         binding.signInButton.setOnClickListener {
-            val email = binding.emailEditText.text.toString()
+            email = binding.emailEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
 
             try {
@@ -87,6 +89,7 @@ class SignInActivity : AppCompatActivity() {
     private fun navigateToHome() {
         val intent = Intent(this, HomeActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        intent.putExtra("EXTRA_EMAIL", email)
         startActivity(intent)
         finish()
     }

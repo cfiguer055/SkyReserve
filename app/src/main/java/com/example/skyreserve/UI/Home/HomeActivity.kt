@@ -29,6 +29,8 @@ class HomeActivity : AppCompatActivity() {
     private var passengerCount = 1
     private val maxPassengerCount = 9
 
+    private lateinit var email: String
+
     // Initialize the ActivityResultLauncher
     private val startFlightSearchActivity = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -51,6 +53,8 @@ class HomeActivity : AppCompatActivity() {
         val isNewUser = intent.getBooleanExtra("FROM_SIGN_UP", false)
         if (isNewUser) {
             showSignUpDialog()
+        } else {
+            email = intent.getStringExtra("EXTRA_EMAIL") ?: ""
         }
 
         // not sure if i need this?
@@ -126,6 +130,8 @@ class HomeActivity : AppCompatActivity() {
             R.id.roundTripRadioButton -> "Round trip"
             else -> "Not selected"
         }
+        intent.putExtra("EXTRA_EMAIL", email)
+
         intent.putExtra("ROUND_TRIP", tripType)
         intent.putExtra("DEPART_AIRPORT", binding.departButton.text.toString())
         intent.putExtra("ARRIVE_AIRPORT", binding.arriveButton.text.toString())
