@@ -1,4 +1,4 @@
-package com.example.skyreserve.Utility
+package com.example.skyreserve.Util
 
 import android.content.Context
 import androidx.room.Room

@@ -1,7 +1,7 @@
 package com.example.skyreserve.UI.SignUp
 
 import androidx.lifecycle.ViewModel
-import com.example.skyreserve.Utility.SignUpResult
+import com.example.skyreserve.Util.SignUpResult
 
 /*
 This ViewModel handles the logic for signing up a new user.

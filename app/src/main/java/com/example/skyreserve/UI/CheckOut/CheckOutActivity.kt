@@ -63,9 +63,10 @@ class CheckOutActivity : AppCompatActivity() {
 
     private fun navigateToSuccess() {
         val intent = Intent(this, SuccessActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        // temp intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        intent.putExtra("EXTRA_EMAIL", email)
         startActivity(intent)
-        finish() // Call this if you want to close the current activity as well
+        // finish() temp // Call this if you want to close the current activity as well
     }
 
     private fun areAllFieldsFilled(): Boolean {

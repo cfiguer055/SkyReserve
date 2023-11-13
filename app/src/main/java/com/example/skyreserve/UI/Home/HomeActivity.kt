@@ -8,15 +8,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.example.skyreserve.App.MyApp
 import com.example.skyreserve.R
 import com.example.skyreserve.UI.Account.AccountActivity
 import com.example.skyreserve.UI.FlightSearch.FlightSearchActivity
-import com.example.skyreserve.Utility.AirportsData
+import com.example.skyreserve.Util.AirportsData
+import com.example.skyreserve.Util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivityHomeBinding
 import com.example.skyreserve.databinding.DialogAirportAutoCompleteBinding
 import com.example.skyreserve.databinding.DialogSignUpBinding
@@ -27,6 +28,8 @@ class HomeActivity : AppCompatActivity() {
     // This is the request code you will use when launching the FlightSearchActivity
     private val FLIGHT_SEARCH_REQUEST_CODE = 1  // This can be any integer unique to the Activity
     private lateinit var binding: ActivityHomeBinding
+    private lateinit var logger: UserInteractionLogger
+
     private var passengerCount = 1
     private val maxPassengerCount = 9
 
@@ -60,15 +63,19 @@ class HomeActivity : AppCompatActivity() {
 
         setupBottomNavigation()
 
+        logger = (application as MyApp).logger
+
         // not sure if i need this?
         //binding.oneWayRadioButton.setOnClickListener {  }
 
         binding.departButton.setOnClickListener {
             showAirportAutoCompleteDialog(true)
+            logger.logInteraction("Button clicked: ${binding.departButton.text}")
         }
 
         binding.arriveButton.setOnClickListener {
             showAirportAutoCompleteDialog(false)
+            logger.logInteraction("Button clicked: ${binding.arriveButton.text}")
         }
 
         binding.departureDateEditText.setOnClickListener {
@@ -78,6 +85,7 @@ class HomeActivity : AppCompatActivity() {
                 { _, year, month, dayOfMonth ->
                     val selectedDate = "$dayOfMonth ${getMonthShortName(month)}"
                     binding.departureDateEditText.setText(selectedDate)
+                    logger.logInteraction("Button clicked: ${binding.departureDateEditText.text}")
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
@@ -93,6 +101,7 @@ class HomeActivity : AppCompatActivity() {
                 { _, year, month, dayOfMonth ->
                     val selectedDate = "$dayOfMonth ${getMonthShortName(month)}"
                     binding.returnDateEditText.setText(selectedDate)
+                    logger.logInteraction("Button clicked: ${binding.returnDateEditText.text}")
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
@@ -119,13 +128,14 @@ class HomeActivity : AppCompatActivity() {
 
         binding.searchFlightButton.setOnClickListener {
             navigateToFlightSearch()
+            logger.logInteraction("Button clicked: ${binding.searchFlightButton.text}")
         }
 
     }
 
     private fun navigateToFlightSearch() {
         val intent = Intent(this, FlightSearchActivity::class.java)
-        // intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        // DONT UNCOMMENT intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
         val selectedRadioButtonId = binding.radioGroup.checkedRadioButtonId
         val tripType = when (selectedRadioButtonId) {

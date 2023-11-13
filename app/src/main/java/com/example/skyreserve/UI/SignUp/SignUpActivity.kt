@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.skyreserve.R
 import com.example.skyreserve.UI.Home.HomeActivity
 import com.example.skyreserve.UI.SignIn.SignInActivity
-import com.example.skyreserve.Utility.SignUpResult
+import com.example.skyreserve.Util.SignUpResult
 import com.example.skyreserve.databinding.ActivitySignUpBinding
 
 
@@ -118,17 +118,17 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun navigateToHome() {
         val intent = Intent(this, HomeActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        // temp intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         intent.putExtra("FROM_SIGN_UP", true)
         startActivity(intent)
-        finish()
+        // finish() temp
     }
 
     private fun navigateToSingIn() {
         val intent = Intent(this, SignInActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        // temp intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
-        finish()
+        // finish() finish
     }
 
     private fun showSignUpError(message: String, errorCode: String) {

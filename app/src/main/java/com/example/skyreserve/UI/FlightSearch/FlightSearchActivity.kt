@@ -15,17 +15,15 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.skyreserve.Model.FlightAdapter
 import com.example.skyreserve.Model.FlightInfo
 import com.example.skyreserve.R
 import com.example.skyreserve.UI.ReservationConfirmation.ReservationConfirmationActivity
-import com.example.skyreserve.Utility.AirportsData
+import com.example.skyreserve.Util.AirportsData
 import com.example.skyreserve.databinding.ActivityFlightSearchBinding
 import com.example.skyreserve.databinding.DialogAirportAutoCompleteBinding
-import com.example.skyreserve.databinding.DialogSignUpBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -266,7 +264,7 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         setResult(Activity.RESULT_OK, data)
 
         // Finish the current activity to go back to HomeActivity
-        finish()
+        // finish() temp
     }
 
     override fun onFlightClick(selectedFlightInfo: FlightInfo) {

@@ -1,7 +1,7 @@
 package com.example.skyreserve.UI.SignIn
 
 import androidx.lifecycle.ViewModel
-import com.example.skyreserve.Utility.SignInResult
+import com.example.skyreserve.Util.SignInResult
 
 /*
 This ViewModel handles the logic for signing in a user.

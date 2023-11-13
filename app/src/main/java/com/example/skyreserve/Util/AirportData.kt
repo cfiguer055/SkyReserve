@@ -1,4 +1,4 @@
-package com.example.skyreserve.Utility
+package com.example.skyreserve.Util
 
 object AirportsData {
     val airports = arrayOf(
