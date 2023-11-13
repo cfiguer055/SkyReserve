@@ -63,6 +63,11 @@
             android:exported="true">
         </activity>
 
+        <activity
+            android:name=".UI.Account.AccountActivity"
+            android:exported="true">
+        </activity>
+
     </application>
 
 </manifest>

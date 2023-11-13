@@ -1,16 +1,23 @@
 package com.example.skyreserve.UI.CheckOut
 
-import android.R
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.Log
+import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
+import com.example.skyreserve.R
 import com.example.skyreserve.UI.Success.SuccessActivity
 import com.example.skyreserve.databinding.ActivityCheckOutBinding
+import java.io.File.separator
 
 class CheckOutActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCheckOutBinding
@@ -22,6 +29,8 @@ class CheckOutActivity : AppCompatActivity() {
     private var tax: Double = 0.00
     private var reservationTotal: Double = 0.00
 
+    private lateinit var email: String
+
     override fun onCreate(savedInstance: Bundle?) {
         super.onCreate(savedInstance)
         binding = ActivityCheckOutBinding.inflate(layoutInflater)
@@ -29,17 +38,126 @@ class CheckOutActivity : AppCompatActivity() {
 
         // Retrieve intent extras
         loadIntentData()
+        setRedAsterisk()
+
+        binding.nameOnCardEditText.addTextChangedListener { resetErrorState() }
+        binding.cardNumberEditText.addTextChangedListener { resetErrorState() }
+        binding.expirationMonthEditText.addTextChangedListener { resetErrorState() }
+        binding.expirationYearEditText.addTextChangedListener { resetErrorState() }
+        binding.securityCodeEditText.addTextChangedListener { resetErrorState() }
+        binding.countryTerritoryEditText.addTextChangedListener { resetErrorState() }
+        binding.billingAddress1EditText.addTextChangedListener { resetErrorState() }
+        binding.cityEditText.addTextChangedListener { resetErrorState() }
+        binding.stateEditText.addTextChangedListener { resetErrorState() }
+        binding.zipCodeEditText.addTextChangedListener { resetErrorState() }
 
         binding.completePaymentButton.setOnClickListener {
-            navigateToSuccess()
+            if(areAllFieldsFilled()) {
+                navigateToSuccess()
+            } else {
+                showError()
+            }
         }
     }
+
 
     private fun navigateToSuccess() {
         val intent = Intent(this, SuccessActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish() // Call this if you want to close the current activity as well
+    }
+
+    private fun areAllFieldsFilled(): Boolean {
+        val isNameOnCardSet = binding.nameOnCardEditText.text.toString().isNotEmpty()
+        val cardNumberSet = binding.cardNumberEditText.text.toString().isNotEmpty()
+        val isExpirationMonthSet = binding.expirationMonthEditText.text.toString().isNotEmpty()
+        val isExpirationYearSet = binding.expirationYearEditText.text.toString().isNotEmpty()
+        val isSecurityCodeSet = binding.securityCodeEditText.text.toString().isNotEmpty()
+
+        val isCountryTerritorySet = binding.countryTerritoryEditText.text.toString().isNotEmpty()
+        val isBillingAddressSet = binding.billingAddress1EditText.text.toString().isNotEmpty()
+        val isCitySet = binding.cityEditText.text.toString().isNotEmpty()
+        val isStateSet = binding.stateEditText.text.toString().isNotEmpty()
+        val isZipCodeSet = binding.zipCodeEditText.text.toString().isNotEmpty()
+
+        return isNameOnCardSet && cardNumberSet && isExpirationMonthSet && isExpirationYearSet &&
+                isSecurityCodeSet && isCountryTerritorySet && isBillingAddressSet &&
+                isCitySet && isStateSet && isZipCodeSet
+    }
+
+    private fun showError() {
+        val paymentErrors = ArrayList<String>()
+        val billingAddressErrors = ArrayList<String>()
+
+        // Check each field and set an error if it's not filled
+        if (binding.nameOnCardEditText.text.toString().isEmpty()) {
+            binding.nameOnCardEditText.setBackgroundResource(R.drawable.edit_text_error_background)
+            paymentErrors.add("Enter a valid name.")
+        }
+        if (binding.cardNumberEditText.text.toString().isEmpty() || binding.cardNumberEditText.length() < 16) {
+            binding.cardNumberEditText.setBackgroundResource(R.drawable.edit_text_error_background)
+            paymentErrors.add("Card Number must be 16 characters.")
+        }
+        if (binding.expirationMonthEditText.text.toString().isEmpty() || binding.expirationMonthEditText.length() < 2) {
+            binding.expirationMonthEditText.setBackgroundResource(R.drawable.edit_text_error_background)
+            paymentErrors.add("Enter Valid Expiration Month.")
+        }
+        if (binding.expirationYearEditText.text.toString().isEmpty() || binding.expirationYearEditText.length() < 2) {
+            binding.expirationYearEditText.setBackgroundResource(R.drawable.edit_text_error_background)
+            paymentErrors.add("Enter Valid Expiration Year.")
+        }
+        if (binding.securityCodeEditText.text.toString().isEmpty() || binding.expirationYearEditText.length() < 3) {
+            binding.securityCodeEditText.setBackgroundResource(R.drawable.edit_text_error_background)
+            paymentErrors.add("Enter Valid Security Code.")
+        }
+
+        if (binding.countryTerritoryEditText.text.toString().isEmpty()) {
+            binding.countryTerritoryEditText.setBackgroundResource(R.drawable.edit_text_error_background)
+            billingAddressErrors.add("Enter a Country/Territory.")
+        }
+        if (binding.billingAddress1EditText.text.toString().isEmpty()) {
+            binding.billingAddress1EditText.setBackgroundResource(R.drawable.edit_text_error_background)
+            billingAddressErrors.add("Enter Billing Address.")
+        }
+        if (binding.cityEditText.text.toString().isEmpty()) {
+            binding.cityEditText.setBackgroundResource(R.drawable.edit_text_error_background)
+            billingAddressErrors.add("Enter City.")
+        }
+        if (binding.stateEditText.text.toString().isEmpty()) {
+            binding.stateEditText.setBackgroundResource(R.drawable.edit_text_error_background)
+            billingAddressErrors.add("Enter State.")
+        }
+        if (binding.zipCodeEditText.text.toString().isEmpty()) {
+            binding.zipCodeEditText.setBackgroundResource(R.drawable.edit_text_error_background)
+            billingAddressErrors.add("Enter Zip Code.")
+        }
+
+        // If any field is not filled, show the error message
+        binding.errorTextView.text = getString(R.string.all_fields_required_error)
+        binding.errorLayout.visibility = View.VISIBLE
+
+        binding.errorPaymentTextView.text = paymentErrors.joinToString(separator = "\n")
+        binding.errorBillingAddressTextView.text = billingAddressErrors.joinToString(separator = "\n")
+        binding.errorPaymentTextView.visibility = View.VISIBLE
+        binding.errorBillingAddressTextView.visibility = View.VISIBLE
+    }
+
+    private fun resetErrorState() {
+        // Clear the error message
+        binding.errorLayout.visibility = View.GONE
+
+        // Reset the backgrounds to default
+        binding.nameOnCardEditText.setBackgroundResource(R.drawable.edit_text_background)
+        binding.cardNumberEditText.setBackgroundResource(R.drawable.edit_text_background)
+        binding.expirationMonthEditText.setBackgroundResource(R.drawable.edit_text_background)
+        binding.expirationYearEditText.setBackgroundResource(R.drawable.edit_text_background)
+        binding.securityCodeEditText.setBackgroundResource(R.drawable.edit_text_background)
+        binding.countryTerritoryEditText.setBackgroundResource(R.drawable.edit_text_background)
+        binding.billingAddress1EditText.setBackgroundResource(R.drawable.edit_text_background)
+        binding.cityEditText.setBackgroundResource(R.drawable.edit_text_background)
+        binding.stateEditText.setBackgroundResource(R.drawable.edit_text_background)
+        binding.zipCodeEditText.setBackgroundResource(R.drawable.edit_text_background)
     }
 
     private fun loadIntentData() {
@@ -50,6 +168,8 @@ class CheckOutActivity : AppCompatActivity() {
         baggageFee = intent.getDoubleExtra("EXTRA_BAGGAGE_FEE", 0.00)
         tax = intent.getDoubleExtra("EXTRA_TAX", 0.00)
         reservationTotal = intent.getDoubleExtra("EXTRA_RESERVATION_TOTAL", 0.00)
+
+        email = intent.getStringExtra("EXTRA_EMAIL") ?: ""
 
         binding.numberPassengersTextView.text = "Passengers: ${numPassengers}"
         binding.basePriceTextView.text = String.format("$%.2f\nper passenger", basePrice)

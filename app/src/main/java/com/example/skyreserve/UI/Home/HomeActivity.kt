@@ -14,6 +14,7 @@ import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.skyreserve.R
+import com.example.skyreserve.UI.Account.AccountActivity
 import com.example.skyreserve.UI.FlightSearch.FlightSearchActivity
 import com.example.skyreserve.Utility.AirportsData
 import com.example.skyreserve.databinding.ActivityHomeBinding
@@ -56,6 +57,8 @@ class HomeActivity : AppCompatActivity() {
         } else {
             email = intent.getStringExtra("EXTRA_EMAIL") ?: ""
         }
+
+        setupBottomNavigation()
 
         // not sure if i need this?
         //binding.oneWayRadioButton.setOnClickListener {  }
@@ -142,7 +145,10 @@ class HomeActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-
+    private fun navigateToAccount() {
+        val intent = Intent(this, AccountActivity::class.java)
+        startActivity(intent)
+    }
 
     // Helper function to get month short name
     fun getMonthShortName(month: Int): String {
@@ -238,6 +244,30 @@ class HomeActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
             layout.addView(textView)
+        }
+    }
+
+    private fun setupBottomNavigation() {
+        binding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    // Handle home action
+                    true
+                }
+                R.id.navigation_order -> {
+                    // Handle order action
+                    true
+                }
+                R.id.navigation_search -> {
+                    // Handle search action
+                    true
+                }
+                R.id.navigation_account -> {
+                    navigateToAccount()
+                    true
+                }
+                else -> false
+            }
         }
     }
 }

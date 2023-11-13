@@ -193,6 +193,8 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         val arriveAirportCode = arriveParts.getOrNull(0) ?: "" // This will get "LAX" or an empty string if the part is not found.
         val arriveCity = arriveParts.getOrNull(1)?.split(",")?.getOrNull(0) ?: ""
 
+        binding.headerTitle.text = "${departAirportCode} to ${arriveAirportCode}"
+
         val flightList = listOf(
             FlightInfo("08:00", "10:00", departCity , arriveCity, departAirportCode, arriveAirportCode,"7h", "Spirit Airlines", "$500", roundTrip),
             FlightInfo("08:15", "14:45", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 30m", "Spirit Airlines", "$500", roundTrip),

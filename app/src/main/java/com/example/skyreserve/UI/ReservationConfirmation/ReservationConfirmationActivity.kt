@@ -29,6 +29,8 @@ class ReservationConfirmationActivity: AppCompatActivity() {
     private var tax: Double = 0.00
     private var reservationTotal: Double = 0.00
 
+    private lateinit var email: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityReservationConfirmationBinding.inflate(layoutInflater)
@@ -37,7 +39,8 @@ class ReservationConfirmationActivity: AppCompatActivity() {
         loadIntentData()
         calculatePaymentSummary()
 
-        val email = intent.getStringExtra("EXTRA_EMAIL") ?: ""
+        binding.headerTitle.text = "Review your trip to ${arrivalAirport}"
+
         val username = email.substringBefore("@")
         val passengerLabelTextView = binding.passengerLabelTextView
         passengerLabelTextView.text = "\t$username:"
@@ -86,6 +89,7 @@ class ReservationConfirmationActivity: AppCompatActivity() {
             basePrice = parsePrice(it.cost)
         }
         numPassengers = intent.getIntExtra("NUM_PASSENGERS", 1)
+        email = intent.getStringExtra("EXTRA_EMAIL") ?: ""
 
         // Set the text of the TextViews with the assigned variables
         binding.departureCityTextView.text = "${departureCity} - ${arrivalCity}"
@@ -124,6 +128,7 @@ class ReservationConfirmationActivity: AppCompatActivity() {
         intent.putExtra("EXTRA_BAGGAGE_FEE", baggageFee)
         intent.putExtra("EXTRA_TAX", tax)
         intent.putExtra("EXTRA_RESERVATION_TOTAL", reservationTotal)
+        intent.putExtra("EXTRA_EMAIL", email)
         startActivity(intent)
     }
 
