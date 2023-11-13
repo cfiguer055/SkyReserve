@@ -56,6 +56,7 @@ class SignInActivity : AppCompatActivity() {
         }
 
         binding.signInWithGoogle.setOnClickListener {
+            email = "google@gmail.com"
             navigateToHome()
         }
 

@@ -260,9 +260,11 @@ class HomeActivity : AppCompatActivity() {
                 }
                 R.id.navigation_search -> {
                     // Handle search action
+                    navigateToFlightSearch()
                     true
                 }
                 R.id.navigation_account -> {
+                    // Handle account action
                     navigateToAccount()
                     true
                 }
