@@ -7,16 +7,19 @@ import android.util.Log
 import android.view.View
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
+import com.example.skyreserve.App.MyApp
 import com.example.skyreserve.R
 import com.example.skyreserve.UI.Home.HomeActivity
 import com.example.skyreserve.UI.SignUp.SignUpActivity
 import com.example.skyreserve.Util.SignInResult
+import com.example.skyreserve.Util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivitySignInBinding
 
 
 class SignInActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignInBinding
     private lateinit var signInViewModel: SignInViewModel
+    private lateinit var logger: UserInteractionLogger
 
     private lateinit var email: String
 
@@ -26,6 +29,9 @@ class SignInActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         signInViewModel = ViewModelProvider(this, SignInViewModelFactory()).get(SignInViewModel::class.java)
+
+        logger = (application as MyApp).logger
+
 
         // Add TextChangedListeners to reset the colors when the user starts typing
         binding.emailEditText.addTextChangedListener { resetInputUI() }
@@ -88,6 +94,10 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun navigateToHome() {
+        logger.init(email)
+        logger.logInteraction("Log Start: $email")
+        logger.logInteraction("Navigating to HomeActivity")
+
         val intent = Intent(this, HomeActivity::class.java)
         // temp intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         intent.putExtra("EXTRA_EMAIL", email)

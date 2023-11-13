@@ -2,6 +2,7 @@ package com.example.skyreserve.UI.CheckOut
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Spannable
@@ -10,17 +11,21 @@ import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
+import com.example.skyreserve.App.MyApp
 import com.example.skyreserve.R
 import com.example.skyreserve.UI.Success.SuccessActivity
+import com.example.skyreserve.Util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivityCheckOutBinding
 import java.io.File.separator
 
 class CheckOutActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCheckOutBinding
+    private lateinit var logger: UserInteractionLogger
 
     private var numPassengers: Int = 1
     private var basePrice: Double = 0.00
@@ -36,25 +41,60 @@ class CheckOutActivity : AppCompatActivity() {
         binding = ActivityCheckOutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        logger = (application as MyApp).logger
+        logger.logInteraction("CheckOutActivity:")
+
         // Retrieve intent extras
         loadIntentData()
         setRedAsterisk()
 
-        binding.nameOnCardEditText.addTextChangedListener { resetErrorState() }
-        binding.cardNumberEditText.addTextChangedListener { resetErrorState() }
-        binding.expirationMonthEditText.addTextChangedListener { resetErrorState() }
-        binding.expirationYearEditText.addTextChangedListener { resetErrorState() }
-        binding.securityCodeEditText.addTextChangedListener { resetErrorState() }
-        binding.countryTerritoryEditText.addTextChangedListener { resetErrorState() }
-        binding.billingAddress1EditText.addTextChangedListener { resetErrorState() }
-        binding.cityEditText.addTextChangedListener { resetErrorState() }
-        binding.stateEditText.addTextChangedListener { resetErrorState() }
-        binding.zipCodeEditText.addTextChangedListener { resetErrorState() }
+        // Add onFocusChangeListeners to each EditText
+        val editTextList = listOf(
+            binding.nameOnCardEditText,
+            binding.cardNumberEditText,
+            binding.expirationMonthEditText,
+            binding.expirationYearEditText,
+            binding.securityCodeEditText,
+            binding.countryTerritoryEditText,
+            binding.billingAddress1EditText,
+            binding.cityEditText,
+            binding.stateEditText,
+            binding.zipCodeEditText
+        )
+        editTextList.forEach { editText ->
+            editText.setOnFocusChangeListener { view, hasFocus ->
+                val logMsg = if (hasFocus) {
+                    "Focused on ${getResourceName(view.id)}"
+                } else {
+                    val editText = view as EditText
+                    val textContent = editText.text.toString()
+                    "Defocused from ${getResourceName(view.id)} with text: $textContent"
+                }
+                logger.logInteraction(logMsg)
+            }
+            editText.addTextChangedListener { resetErrorState() }
+        }
+
+
+//        binding.nameOnCardEditText.addTextChangedListener { resetErrorState() }
+//        binding.cardNumberEditText.addTextChangedListener { resetErrorState() }
+//        binding.expirationMonthEditText.addTextChangedListener { resetErrorState() }
+//        binding.expirationYearEditText.addTextChangedListener { resetErrorState() }
+//        binding.securityCodeEditText.addTextChangedListener { resetErrorState() }
+//        binding.countryTerritoryEditText.addTextChangedListener { resetErrorState() }
+//        binding.billingAddress1EditText.addTextChangedListener { resetErrorState() }
+//        binding.cityEditText.addTextChangedListener { resetErrorState() }
+//        binding.stateEditText.addTextChangedListener { resetErrorState() }
+//        binding.zipCodeEditText.addTextChangedListener { resetErrorState() }
 
         binding.completePaymentButton.setOnClickListener {
+            logger.logInteraction("Button clicked: ${binding.completePaymentButton.text}")
             if(areAllFieldsFilled()) {
+                logger.logInteraction("Are All Fields Filled?: ${areAllFieldsFilled()}")
                 navigateToSuccess()
             } else {
+                logger.logInteraction("Are All Fields Filled?: ${areAllFieldsFilled()}")
+                logger.logInteraction("Errors Displayed:")
                 showError()
             }
         }
@@ -62,6 +102,8 @@ class CheckOutActivity : AppCompatActivity() {
 
 
     private fun navigateToSuccess() {
+        logger.logInteraction("Navigating To SuccessActivity - TASK 3 Complete")
+
         val intent = Intent(this, SuccessActivity::class.java)
         // temp intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         intent.putExtra("EXTRA_EMAIL", email)
@@ -142,6 +184,10 @@ class CheckOutActivity : AppCompatActivity() {
         binding.errorBillingAddressTextView.text = billingAddressErrors.joinToString(separator = "\n")
         binding.errorPaymentTextView.visibility = View.VISIBLE
         binding.errorBillingAddressTextView.visibility = View.VISIBLE
+
+        logger.logInteraction("Error Display is Visible")
+        logger.logInteraction("Payment Errors: $paymentErrors")
+        logger.logInteraction("Billing Address Errors: $billingAddressErrors")
     }
 
     private fun resetErrorState() {
@@ -159,6 +205,8 @@ class CheckOutActivity : AppCompatActivity() {
         binding.cityEditText.setBackgroundResource(R.drawable.edit_text_background)
         binding.stateEditText.setBackgroundResource(R.drawable.edit_text_background)
         binding.zipCodeEditText.setBackgroundResource(R.drawable.edit_text_background)
+
+        //logger.logInteraction("Error State Reset")
     }
 
     private fun loadIntentData() {
@@ -169,8 +217,14 @@ class CheckOutActivity : AppCompatActivity() {
         baggageFee = intent.getDoubleExtra("EXTRA_BAGGAGE_FEE", 0.00)
         tax = intent.getDoubleExtra("EXTRA_TAX", 0.00)
         reservationTotal = intent.getDoubleExtra("EXTRA_RESERVATION_TOTAL", 0.00)
-
         email = intent.getStringExtra("EXTRA_EMAIL") ?: ""
+
+        logger.logInteraction("Passengers: ${numPassengers}")
+        logger.logInteraction("Base Price: ${"%.2f".format(basePrice)}")
+        logger.logInteraction("Seat Change Fee: ${"%.2f".format(seatChangeFee)}")
+        logger.logInteraction("Baggage Fee: ${"%.2f".format(baggageFee)}")
+        logger.logInteraction("Tax: ${"%.2f".format(tax)}")
+        logger.logInteraction("Reservation Total: ${"%.2f".format(reservationTotal)}")
 
         binding.numberPassengersTextView.text = "Passengers: ${numPassengers}"
         binding.basePriceTextView.text = String.format("$%.2f\nper passenger", basePrice)
@@ -198,5 +252,14 @@ class CheckOutActivity : AppCompatActivity() {
         val redSpan = ForegroundColorSpan(Color.RED)
         s.setSpan(redSpan, s.length - 1, s.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         textView.text = s
+    }
+
+    // Utility function to get the resource name for logging purposes
+    private fun getResourceName(resId: Int): String {
+        return try {
+            resources.getResourceEntryName(resId)
+        } catch (e: Resources.NotFoundException) {
+            "unknown"
+        }
     }
 }

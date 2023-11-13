@@ -12,6 +12,6 @@ class MyApp : Application() {
 
         // Set up SQL Database
 //        DatabaseInitializer.getInstance(this).initializeDatabase(this)
-        logger = UserInteractionLogger(applicationContext, "defaultUsername")
+        logger = UserInteractionLogger(applicationContext)
     }
 }

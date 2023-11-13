@@ -4,12 +4,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.example.skyreserve.App.MyApp
 import com.example.skyreserve.Model.FlightInfo
 import com.example.skyreserve.UI.CheckOut.CheckOutActivity
+import com.example.skyreserve.Util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivityReservationConfirmationBinding
 
 class ReservationConfirmationActivity: AppCompatActivity() {
     private lateinit var binding: ActivityReservationConfirmationBinding
+    private lateinit var logger: UserInteractionLogger
+
     private var baggageCount = 1
     private var maxBaggageCount = 5
 
@@ -36,6 +40,9 @@ class ReservationConfirmationActivity: AppCompatActivity() {
         binding = ActivityReservationConfirmationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        logger = (application as MyApp).logger
+        logger.logInteraction("ReservationConfirmationActivity:")
+
         loadIntentData()
         calculatePaymentSummary()
 
@@ -46,28 +53,33 @@ class ReservationConfirmationActivity: AppCompatActivity() {
         passengerLabelTextView.text = "\t$username:"
 
         binding.departureChangeSeatsButton.setOnClickListener {
-
+            logger.logInteraction("Button clicked: ${binding.departureChangeSeatsButton.text}")
         }
 
         binding.departureDecrementBaggageButton.setOnClickListener {
+            logger.logInteraction("Button clicked: ${binding.departureDecrementBaggageButton.text}")
             if (baggageCount > 1) {
                 baggageCount--
                 binding.departureBaggageCountTextView.text = baggageCount.toString()
             }
+            logger.logInteraction("Passenger Count: $baggageCount")
         }
 
         binding.departureIncrementBaggageButton.setOnClickListener {
+            logger.logInteraction("Button clicked: ${binding.departureIncrementBaggageButton.text}")
             if (baggageCount < maxBaggageCount) {
                 baggageCount++
                 binding.departureBaggageCountTextView.text = baggageCount.toString()
             }
+            logger.logInteraction("Passenger Count: $baggageCount")
         }
 
         binding.editPartyButton.setOnClickListener {
-
+            logger.logInteraction("Button clicked: ${binding.editPartyButton.text}")
         }
 
         binding.confirmButton.setOnClickListener {
+            logger.logInteraction("Button clicked: ${binding.confirmButton.text}")
             navigateToCheckOut()
         }
     }
@@ -118,9 +130,12 @@ class ReservationConfirmationActivity: AppCompatActivity() {
         binding.baggagePriceTextView.text = String.format("$%.2f", baggageFee)
         binding.taxTextView.text = String.format("$%.2f", tax)
         binding.totalTextView.text = String.format("$%.2f", reservationTotal)
+
     }
 
     private fun navigateToCheckOut() {
+        logger.logInteraction("Navigating To CheckOutActivity - TASK 2 Complete")
+
         val intent = Intent(this, CheckOutActivity::class.java)
         intent.putExtra("EXTRA_NUM_PASSENGERS", numPassengers)
         intent.putExtra("EXTRA_BASE_PRICE", basePrice)

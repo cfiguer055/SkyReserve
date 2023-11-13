@@ -19,7 +19,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/logoutButton"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
             android:background="@drawable/rounded_button_purple"
@@ -34,6 +34,69 @@
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/emailCurrentUserInteractionButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_button_purple"
+            android:paddingLeft="24dp"
+            android:paddingTop="6dp"
+            android:paddingRight="24dp"
+            android:paddingBottom="6dp"
+            android:gravity="center"
+            android:text="Email Current User Interaction"
+            android:textAllCaps="false"
+            android:textColor="@color/white20"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/logoutButton"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/emailAllUserInteractionButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_button_purple"
+            android:paddingLeft="24dp"
+            android:paddingTop="6dp"
+            android:paddingRight="24dp"
+            android:paddingBottom="6dp"
+            android:gravity="center"
+            android:text="Email All User Interaction"
+            android:textAllCaps="false"
+            android:textColor="@color/white20"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emailCurrentUserInteractionButton"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/emailUserListButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_button_purple"
+            android:paddingLeft="24dp"
+            android:paddingTop="6dp"
+            android:paddingRight="24dp"
+            android:paddingBottom="6dp"
+            android:gravity="center"
+            android:text="Email User List"
+            android:textAllCaps="false"
+            android:textColor="@color/white20"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emailAllUserInteractionButton"
             tools:ignore="MissingConstraints" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
