@@ -171,7 +171,7 @@ class CheckOutActivity : AppCompatActivity() {
             binding.stateEditText.setBackgroundResource(R.drawable.edit_text_error_background)
             billingAddressErrors.add("Enter State.")
         }
-        if (binding.zipCodeEditText.text.toString().isEmpty()) {
+        if (binding.zipCodeEditText.length() < 3) {
             binding.zipCodeEditText.setBackgroundResource(R.drawable.edit_text_error_background)
             billingAddressErrors.add("Enter Zip Code.")
         }
