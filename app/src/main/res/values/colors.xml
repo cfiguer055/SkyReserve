@@ -19,4 +19,6 @@
     <color name="white20">#F9F9F9</color>
     <color name="orange20">#FF5D04</color>
     <color name="purple21">#acafda</color>
+
+    <color name="grey">#808080</color>
 </resources>
