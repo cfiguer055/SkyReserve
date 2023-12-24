@@ -1,5 +1,6 @@
 package com.example.skyreserve.UI.Welcome
 
+import WelcomeViewPagerAdapter
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -17,7 +18,17 @@ class WelcomeActivity : AppCompatActivity() {
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.reserveSkyButton.setOnClickListener{
+        val images = listOf(
+            R.drawable.welcome_main_logo,
+            R.drawable.welcome_plan_logo,
+            R.drawable.welcome_book_logo,
+            R.drawable.welcome_travel_logo
+        )
+
+        val adapter = WelcomeViewPagerAdapter(images)
+        binding.welcomeViewPager.adapter = adapter
+
+        binding.nextButton.setOnClickListener{
             val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
         }
