@@ -1,29 +1,19 @@
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.recyclerview.widget.RecyclerView
-import com.example.skyreserve.R
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
+import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class WelcomeViewPagerAdapter(
-    val images: List<Int>
-) : RecyclerView.Adapter<WelcomeViewPagerAdapter.WelcomeViewPagerViewHolder>() {
-
-    inner class WelcomeViewPagerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imageView: ImageView = itemView.findViewById(R.id.skyReserveWelcomeImage)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WelcomeViewPagerViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_welcome_view_pager, parent, false)
-        return WelcomeViewPagerViewHolder(view)
-    }
+    fragmentManager: FragmentManager,
+    lifecycle: Lifecycle,
+    private val fragments: List<Fragment>
+) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
     override fun getItemCount(): Int {
-        return images.size
+        return fragments.size
     }
 
-    override fun onBindViewHolder(holder: WelcomeViewPagerViewHolder, position: Int) {
-        val currentImage = images[position]
-        holder.imageView.setImageResource(currentImage)
+    override fun createFragment(position: Int): Fragment {
+        return fragments[position]
     }
 }
