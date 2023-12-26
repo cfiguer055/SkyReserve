@@ -22,8 +22,9 @@ interface UserAccountDao {
     @Query("SELECT * FROM user_accounts WHERE id = :id")
     suspend fun getUserAccountById(id: Long): UserAccount?
 
-    @Query("SELECT * FROM user_accounts WHERE username = :username")
-    suspend fun getUserAccountByUsername(username: String): UserAccount?
+    @Query("SELECT * FROM user_accounts WHERE emailAddress = :emailAddress")
+    suspend fun getUserAccountByEmailAddress(emailAddress: String): UserAccount?
+
 
     // Add more queries as needed for your app's requirements
 }

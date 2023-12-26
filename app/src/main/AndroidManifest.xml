@@ -52,7 +52,7 @@
         </activity>
 
         <activity
-            android:name=".UI.Home.HomeActivity"
+            android:name=".UI.Home.HomeActivityOld"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:exported="true">
         </activity>

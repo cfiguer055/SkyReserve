@@ -4,15 +4,20 @@ import com.example.skyreserve.Database.Dao.UserAccountDao
 import com.example.skyreserve.Database.Entity.UserAccount
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.*
 
+// LATER BACKEND IMPLEMENTATION
+// This class will need significant modifications. Instead of directly querying the local database for
+// user authentication, it will make network requests to the backend for user sign-in, sign-up, and
+// token validation.
 class AuthRepository(private val userAccountDao: UserAccountDao) {
 
     // Perform user sign-in
-    suspend fun signIn(username: String, password: String): Boolean {
+    suspend fun signIn(emailAddress: String, password: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 // Query the local database to find the user by username and password
-                val userAccount = userAccountDao.getUserAccountByUsername(username)
+                val userAccount = userAccountDao.getUserAccountByEmailAddress(emailAddress)
 
                 return@withContext userAccount != null && userAccount.password == password
             } catch (e: Exception) {
@@ -24,23 +29,21 @@ class AuthRepository(private val userAccountDao: UserAccountDao) {
 
     // Perform user sign-up
     suspend fun signUp(
-        username: String,
+        emailAddress: String,
         password: String,
-        firstName: String,
-        lastName: String
     ): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 // Check if the user with the same username already exists in the database
-                val existingUser = userAccountDao.getUserAccountByUsername(username)
+                val existingUser = userAccountDao.getUserAccountByEmailAddress(emailAddress)
 
                 if (existingUser == null) {
                     // Create a new UserAccount entity and insert it into the database
                     val newUserAccount = UserAccount(
-                        username = username,
+                        emailAddress = emailAddress,
                         password = password,
-                        firstName = firstName,
-                        lastName = lastName
+                        firstName = "",
+                        lastName = ""
                     )
                     userAccountDao.insertUserAccount(newUserAccount)
                     return@withContext true // Sign-up successful
@@ -54,5 +57,52 @@ class AuthRepository(private val userAccountDao: UserAccountDao) {
         }
     }
 
+    suspend fun getUserAccountByEmailAddress(emailAddress: String): UserAccount? {
+        return userAccountDao.getUserAccountByEmailAddress(emailAddress)
+    }
+
+    // Helper functions for password hashing and checking
+    private fun hashPassword(password: String): String {
+        // TODO: Implement password hashing
+        return ""
+    }
+
+    private fun checkPassword(plainPassword: String, hashedPassword: String): Boolean {
+        // TODO: Implement password checking against hashed password
+        return false
+    }
+
+
     // Additional methods can be added for managing user sessions, tokens, etc.
 }
+
+
+// FOR SERVER BASED
+//suspend fun signUp(
+//    emailAddress: String,
+//    password: String,
+//    firstName: String,
+//    lastName: String
+//): SignUpResult {
+//    return withContext(Dispatchers.IO) {
+//        try {
+//            val existingUser = userAccountDao.getUserAccountByEmailAddress(emailAddress)
+//
+//            if (existingUser == null) {
+//                val newUserAccount = UserAccount(
+//                    emailAddress = emailAddress,
+//                    password = password, // Make sure to hash the password here
+//                    firstName = firstName,
+//                    lastName = lastName
+//                )
+//                userAccountDao.insertUserAccount(newUserAccount)
+//                SignUpResult.SUCCESS // Enum representing successful sign-up
+//            } else {
+//                SignUpResult.EXISTING_EMAIL // Enum representing existing email
+//            }
+//        } catch (e: Exception) {
+//            // Log the exception or handle it as needed
+//            SignUpResult.UNKNOWN_ERROR // Enum representing an unknown error
+//        }
+//    }
+//}

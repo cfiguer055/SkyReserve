@@ -5,13 +5,18 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.example.skyreserve.App.MyApp
 import com.example.skyreserve.R
-import com.example.skyreserve.UI.Home.HomeActivity
+import com.example.skyreserve.Repository.AuthRepository
+import com.example.skyreserve.UI.Home.HomeActivityOld
 import com.example.skyreserve.UI.SignIn.SignInActivity
 import com.example.skyreserve.Util.SignUpResult
 import com.example.skyreserve.databinding.ActivitySignUpBinding
+import kotlinx.coroutines.launch
 
 
 /*
@@ -22,13 +27,18 @@ You can include any additional logic for initializing the app here.
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
     private lateinit var signUpViewModel: SignUpViewModel
+    private lateinit var authRepository: AuthRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        signUpViewModel = ViewModelProvider(this, SignUpViewModelFactory()).get(SignUpViewModel::class.java)
+        val userAccountDao = (application as MyApp).userAccountDao
+
+        authRepository = AuthRepository(userAccountDao) // Create an instance of AuthRepository with the required dependencies
+        signUpViewModel = ViewModelProvider(this, SignUpViewModelFactory(authRepository)).get(SignUpViewModel::class.java)
+
 
         binding.emailEditText.addTextChangedListener { resetInputUI() }
         binding.passwordEditText.addTextChangedListener { resetInputUI() }
@@ -52,25 +62,26 @@ class SignUpActivity : AppCompatActivity() {
             try {
                 disableSignUpUI()
 
-                signUpViewModel.signUp(email, password, confirmPassword) { result ->
-                    enableSignUpUI()
+                signUpViewModel.viewModelScope.launch {
+                    signUpViewModel.signUp(email, password, confirmPassword) { result ->
+                        enableSignUpUI()
 
-                    when(result) {
-                        SignUpResult.SUCCESS -> navigateToHome()
-                        SignUpResult.MISSING_INFORMATION -> showSignUpError("Please fill out all fields.", "MISSING_INFORMATION")
-                        SignUpResult.INVALID_EMAIL -> showSignUpError("Invalid email format.", "INVALID_EMAIL")
-                        SignUpResult.EXISTING_EMAIL -> showSignUpError("This email is already taken. Try another.", "INVALID_EMAIL")
-                        SignUpResult.SHORT_PASSWORD -> showSignUpError("Your password is too short. It needs to be at least 8 characters.", "INVALID_PASSWORD")
-                        SignUpResult.MISSING_CAPITAL_LETTER -> showSignUpError("Add at least one capital letter in your password.", "INVALID_PASSWORD")
-                        SignUpResult.MISSING_LOWCASE_LETTER -> showSignUpError("Add at least one lowercase letter in your password.", "INVALID_PASSWORD")
-                        SignUpResult.MISSING_DIGIT -> showSignUpError("Include at least one number in your password.", "INVALID_PASSWORD")
-                        SignUpResult.PASSWORD_NO_MATCH -> showSignUpError("Oops! Your passwords do not match.", "PASSWORD_NO_MATCH")
-                        SignUpResult.TERMS_NOT_ACCEPTED -> showSignUpError("You must accept the terms and conditions to continue.", "TERMS_NOT_ACCEPTED")
-                        SignUpResult.NETWORK_ERROR -> showSignUpError("Check your internet connection and try again.", "")
-                        SignUpResult.UNKNOWN_ERROR -> showSignUpError("Something went wrong. Please try again later.", "")
+                        when (result) {
+                            SignUpResult.SUCCESS -> navigateToHome()
+                            SignUpResult.MISSING_INFORMATION -> showSignUpError("Please fill out all fields.", "MISSING_INFORMATION")
+                            SignUpResult.INVALID_EMAIL -> showSignUpError("Invalid email format.", "INVALID_EMAIL")
+                            SignUpResult.EXISTING_EMAIL -> showSignUpError("This email is already taken. Try another.", "INVALID_EMAIL")
+                            SignUpResult.SHORT_PASSWORD -> showSignUpError("Your password is too short. It needs to be at least 8 characters.", "INVALID_PASSWORD")
+                            SignUpResult.MISSING_CAPITAL_LETTER -> showSignUpError("Add at least one capital letter in your password.", "INVALID_PASSWORD")
+                            SignUpResult.MISSING_LOWCASE_LETTER -> showSignUpError("Add at least one lowercase letter in your password.", "INVALID_PASSWORD")
+                            SignUpResult.MISSING_DIGIT -> showSignUpError("Include at least one number in your password.", "INVALID_PASSWORD")
+                            SignUpResult.PASSWORD_NO_MATCH -> showSignUpError("Oops! Your passwords do not match.", "PASSWORD_NO_MATCH")
+                            SignUpResult.TERMS_NOT_ACCEPTED -> showSignUpError("You must accept the terms and conditions to continue.", "TERMS_NOT_ACCEPTED")
+                            SignUpResult.NETWORK_ERROR -> showSignUpError("Check your internet connection and try again.", "NETWORK_ERROR")
+                            SignUpResult.UNKNOWN_ERROR -> showSignUpError("Something went wrong. Please try again later.", "UNKNOWN_ERROR")
+                        }
                     }
                 }
-
             } catch (e: Exception) {
                 Log.e("SignUpActivity", "Error during sign up", e)
             } finally {
@@ -117,7 +128,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun navigateToHome() {
-        val intent = Intent(this, HomeActivity::class.java)
+        val intent = Intent(this, HomeActivityOld::class.java)
         // temp intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         intent.putExtra("FROM_SIGN_UP", true)
         startActivity(intent)
@@ -164,7 +175,11 @@ class SignUpActivity : AppCompatActivity() {
             }
             "TERMS_NOT_ACCEPTED" -> {
                 // Handle TERMS_NOT_ACCEPTED error
-            } else -> {
+            }
+            "NETWORK_ERROR" -> {
+
+            }
+            else -> {
                 // Optionally, handle any other unexpected error codes
             }
         }

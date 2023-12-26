@@ -6,12 +6,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.viewpager2.widget.ViewPager2
-import com.example.skyreserve.R
 import com.example.skyreserve.UI.SignIn.SignInActivity
 import com.example.skyreserve.UI.SignUp.SignUpActivity
 import com.example.skyreserve.databinding.ActivityWelcomeBinding
@@ -19,7 +14,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class WelcomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWelcomeBinding
-    private val viewModel: WelcomeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

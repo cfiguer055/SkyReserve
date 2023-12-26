@@ -1,6 +1,8 @@
 package com.example.skyreserve.UI.SignUp
 
 import androidx.lifecycle.ViewModel
+import com.example.skyreserve.Database.Dao.UserAccountDao
+import com.example.skyreserve.Repository.AuthRepository
 import com.example.skyreserve.Util.SignUpResult
 
 /*
@@ -11,7 +13,7 @@ It communicates with the Sign-Up Repository.
 
 // ADD THIS TO CONSTRUCTOR LATER
 // private val authRepository: AuthRepository
-class SignUpViewModel() : ViewModel() {
+class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
     // WILL BE USED LATER
 //    private val _signUpResult = MutableLiveData<Boolean>()
@@ -35,7 +37,7 @@ class SignUpViewModel() : ViewModel() {
 //    }
 
     // temp
-    fun signUp(email: String, password: String, confirmPassword: String, callback: (SignUpResult) -> Unit) {
+    suspend fun signUp(email: String, password: String, confirmPassword: String, callback: (SignUpResult) -> Unit) {
         when {
             email.isBlank() || password.isBlank() || confirmPassword.isBlank() -> {
                 callback(SignUpResult.MISSING_INFORMATION)
@@ -66,11 +68,14 @@ class SignUpViewModel() : ViewModel() {
             }
             // If all checks pass, then proceed with the actual sign up process
             else -> {
-                // Attempt to create a new user account and handle success or unknown error
-                createUserAccount(email, password) { success ->
+                // val authRepository = AuthRepository(userAccountDao)
+                createUserAccount(email, password, authRepository) { success ->
+                    // Handle the result here
                     if (success) {
+                        // Sign-up was successful
                         callback(SignUpResult.SUCCESS)
                     } else {
+                        // Sign-up failed
                         callback(SignUpResult.UNKNOWN_ERROR)
                     }
                 }
@@ -90,10 +95,19 @@ class SignUpViewModel() : ViewModel() {
     }
 
     // This will be replaced with database authentication later
-    fun createUserAccount(email: String, password: String, result: (Boolean) -> Unit) {
-        // Replace with actual sign-up logic and call 'result' with true if successful, false otherwise
-        val accountCreationSuccess = true
-        result(accountCreationSuccess)
+    private suspend fun createUserAccount(
+        email: String,
+        password: String,
+        authRepository: AuthRepository,
+        result: (Boolean) -> Unit
+    ) {
+        val success = authRepository.signUp(email, password)
+        result(success)
     }
+//    fun createUserAccount(email: String, password: String, result: (Boolean) -> Unit) {
+//        // Replace with actual sign-up logic and call 'result' with true if successful, false otherwise
+//        val accountCreationSuccess = true
+//        result(accountCreationSuccess)
+//    }
 
 }

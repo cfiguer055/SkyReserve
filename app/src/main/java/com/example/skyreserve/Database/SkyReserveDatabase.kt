@@ -23,7 +23,7 @@ abstract class SkyReserveDatabase : RoomDatabase() {
     abstract fun flightDao(): FlightDao
 
     companion object {
-        const val DATABASE_NAME = "sky_reserve_db"
+        private const val DATABASE_NAME = "sky_reserve_db"
 
 
         // Ensures only one instance of the database is created.
@@ -56,7 +56,7 @@ abstract class SkyReserveDatabase : RoomDatabase() {
 
                     //THIS IS TEMPORARY UNTIL REAL DATA
                     val newUserAccount = UserAccount(
-                        username = "john_doe",
+                        emailAddress = "john_doe@gmail.com",
                         password = "secretpassword",
                         firstName = "John",
                         lastName = "Doe",

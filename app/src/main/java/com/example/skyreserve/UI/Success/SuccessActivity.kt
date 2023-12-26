@@ -2,11 +2,9 @@ package com.example.skyreserve.UI.Success
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.skyreserve.App.MyApp
 import com.example.skyreserve.UI.Account.AccountActivity
-import com.example.skyreserve.UI.Home.HomeActivity
 import com.example.skyreserve.Util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivitySuccessBinding
 

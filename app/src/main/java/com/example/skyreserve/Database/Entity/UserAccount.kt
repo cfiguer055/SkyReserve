@@ -9,7 +9,7 @@ data class UserAccount(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 
-    val username: String,
+    val emailAddress: String,
 
     val password: String,
 
@@ -26,8 +26,8 @@ data class UserAccount(
     constructor() : this(0, "", "", "", "")
 
     // Constructor without 'id' (useful when inserting a new UserAccount)
-    constructor(username: String, password: String, firstName: String, lastName: String) :
-            this(0, username, password, firstName, lastName)
+    constructor(emailAddress: String, password: String, firstName: String, lastName: String) :
+            this(0, emailAddress, password, firstName, lastName)
 }
 
 /*
