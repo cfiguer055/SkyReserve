@@ -11,6 +11,7 @@ import com.example.skyreserve.App.MyApp
 import com.example.skyreserve.R
 import com.example.skyreserve.UI.Home.HomeActivityOld
 import com.example.skyreserve.UI.SignUp.SignUpActivity
+import com.example.skyreserve.Util.ActivityState
 import com.example.skyreserve.Util.SignInResult
 import com.example.skyreserve.Util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivitySignInBinding
@@ -68,7 +69,7 @@ class SignInActivity : AppCompatActivity() {
 
         // CHANGE TEXTVIEW
         binding.signUpLinkTextView.setOnClickListener {
-            navigateToSingUp()
+            navigateToSignUp()
         }
     }
 
@@ -105,14 +106,16 @@ class SignInActivity : AppCompatActivity() {
         // finish() temp
     }
 
-    private fun navigateToSingUp() {
+    private fun navigateToSignUp() {
         val intent = Intent(this, SignUpActivity::class.java)
-        // temp intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
         startActivity(intent)
-        // finish() temp
     }
 
     private fun navigateToForgotPassword() {
+
     }
 
     private fun showSignInError(message: String) {

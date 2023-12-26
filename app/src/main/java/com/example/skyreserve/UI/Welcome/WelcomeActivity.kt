@@ -46,7 +46,7 @@ class WelcomeActivity : AppCompatActivity() {
         }
 
         binding.signInLinkTextView.setOnClickListener {
-            navigateToSingIn()
+            navigateToSignIn()
         }
     }
 
@@ -64,10 +64,11 @@ class WelcomeActivity : AppCompatActivity() {
 
     private fun navigateToSignUp() {
         val intent = Intent(this, SignUpActivity::class.java)
+        intent.putExtra("parentActivity", "WelcomeActivity")
         startActivity(intent)
     }
 
-    private fun navigateToSingIn() {
+    private fun navigateToSignIn() {
         val intent = Intent(this, SignInActivity::class.java)
         startActivity(intent)
     }

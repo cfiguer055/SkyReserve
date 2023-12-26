@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.activity.viewModels
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -14,6 +13,7 @@ import com.example.skyreserve.R
 import com.example.skyreserve.Repository.AuthRepository
 import com.example.skyreserve.UI.Home.HomeActivityOld
 import com.example.skyreserve.UI.SignIn.SignInActivity
+import com.example.skyreserve.Util.ActivityState
 import com.example.skyreserve.Util.SignUpResult
 import com.example.skyreserve.databinding.ActivitySignUpBinding
 import kotlinx.coroutines.launch
@@ -89,7 +89,7 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         binding.signInLinkTextView.setOnClickListener {
-            navigateToSingIn()
+            navigateToSignIn()
         }
     }
 
@@ -134,11 +134,12 @@ class SignUpActivity : AppCompatActivity() {
         // finish() temp
     }
 
-    private fun navigateToSingIn() {
+    private fun navigateToSignIn() {
         val intent = Intent(this, SignInActivity::class.java)
-        // temp intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
         startActivity(intent)
-        // finish() finish
     }
 
     private fun showSignUpError(message: String, errorCode: String) {

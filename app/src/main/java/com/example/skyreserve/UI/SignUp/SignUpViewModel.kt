@@ -72,7 +72,6 @@ class SignUpViewModel(private val authRepository: AuthRepository, private val co
     fun isNetworkAvailable(): Boolean {
         // Replace with actual network status check
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
         val networkInfo = connectivityManager.activeNetworkInfo
 
         if (networkInfo != null && networkInfo.isConnected) {
