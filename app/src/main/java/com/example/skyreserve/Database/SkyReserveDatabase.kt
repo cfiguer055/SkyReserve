@@ -58,8 +58,6 @@ abstract class SkyReserveDatabase : RoomDatabase() {
                     val newUserAccount = UserAccount(
                         emailAddress = "john_doe@gmail.com",
                         password = "secretpassword",
-                        firstName = "John",
-                        lastName = "Doe",
                         // ... other properties
                     )
 

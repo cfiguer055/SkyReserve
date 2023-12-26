@@ -41,15 +41,26 @@ class AuthRepository(private val userAccountDao: UserAccountDao) {
                     // Create a new UserAccount entity and insert it into the database
                     val newUserAccount = UserAccount(
                         emailAddress = emailAddress,
-                        password = password,
-                        firstName = "",
-                        lastName = ""
+                        password = password
                     )
                     userAccountDao.insertUserAccount(newUserAccount)
                     return@withContext true // Sign-up successful
                 } else {
                     return@withContext false // User with the same username already exists
                 }
+            } catch (e: Exception) {
+                // Handle exceptions (e.g., database errors)
+                return@withContext false
+            }
+        }
+    }
+
+    // Check if an email exists in the database
+    suspend fun isEmailExisting(email: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                val userAccount = userAccountDao.getUserAccountByEmailAddress(email)
+                return@withContext userAccount != null
             } catch (e: Exception) {
                 // Handle exceptions (e.g., database errors)
                 return@withContext false

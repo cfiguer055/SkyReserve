@@ -1,5 +1,8 @@
 package com.example.skyreserve.UI.SignUp
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.lifecycle.ViewModel
 import com.example.skyreserve.Database.Dao.UserAccountDao
 import com.example.skyreserve.Repository.AuthRepository
@@ -13,29 +16,7 @@ It communicates with the Sign-Up Repository.
 
 // ADD THIS TO CONSTRUCTOR LATER
 // private val authRepository: AuthRepository
-class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() {
-
-    // WILL BE USED LATER
-//    private val _signUpResult = MutableLiveData<Boolean>()
-//    val signUpResult: LiveData<Boolean> get() = _signUpResult
-//
-//    suspend fun signUp(emailAddress: String, password: String, firstName: String, lastName: String) {
-//        // Perform sign-up logic here, then update _signUpResult
-//        val success = authRepository.signUp(emailAddress, password, firstName, lastName)
-//        _signUpResult.postValue(success)
-//    }
-//
-//    // Check database if email exists already and if format is correct
-//    suspend fun validateEmail(emailAddress: String) : Boolean {
-//        return true
-//    }
-//
-//    // may not need suspend because no database interaction
-//    suspend fun validatePassword(password: String, confirmPassword: String) : Boolean {
-//        return password == confirmPassword
-//        // ADD CHECKS FOR PASSWORD TYPES AND VALID CHARACTERS
-//    }
-
+class SignUpViewModel(private val authRepository: AuthRepository, private val context: Context) : ViewModel() {
     // temp
     suspend fun signUp(email: String, password: String, confirmPassword: String, callback: (SignUpResult) -> Unit) {
         when {
@@ -84,14 +65,23 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
     }
 
     // Mock functions to illustrate the concept - replace these with your actual implementation
-    fun isEmailExisting(email: String): Boolean {
-        // Replace with actual email existence check
-        return false
+    suspend fun isEmailExisting(email: String): Boolean {
+        return authRepository.isEmailExisting(email)
     }
 
     fun isNetworkAvailable(): Boolean {
         // Replace with actual network status check
-        return true
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val networkInfo = connectivityManager.activeNetworkInfo
+
+        if (networkInfo != null && networkInfo.isConnected) {
+            val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            }
+        }
+        return false
     }
 
     // This will be replaced with database authentication later

@@ -35,9 +35,8 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val userAccountDao = (application as MyApp).userAccountDao
-
         authRepository = AuthRepository(userAccountDao) // Create an instance of AuthRepository with the required dependencies
-        signUpViewModel = ViewModelProvider(this, SignUpViewModelFactory(authRepository)).get(SignUpViewModel::class.java)
+        signUpViewModel = ViewModelProvider(this, SignUpViewModelFactory(authRepository, this))[SignUpViewModel::class.java]
 
 
         binding.emailEditText.addTextChangedListener { resetInputUI() }
@@ -177,7 +176,7 @@ class SignUpActivity : AppCompatActivity() {
                 // Handle TERMS_NOT_ACCEPTED error
             }
             "NETWORK_ERROR" -> {
-
+                // Handle NETWORK_ERROR error
             }
             else -> {
                 // Optionally, handle any other unexpected error codes

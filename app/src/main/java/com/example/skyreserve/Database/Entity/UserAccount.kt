@@ -8,14 +8,17 @@ data class UserAccount(
 
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-
     val emailAddress: String,
-
     val password: String,
-
     val firstName: String,
-
     val lastName: String,
+    val gender: String,
+    val phone: String,
+    val dateOfBirth: String,
+    val address: String,
+    val stateCode: String,
+    val countryCode: String,
+    val passport: String,
 
     // Other properties
 
@@ -23,11 +26,37 @@ data class UserAccount(
     // no need for getters and setters - because variables are accessible already through property accessor
 ) {
     // Default constructor
-    constructor() : this(0, "", "", "", "")
+    constructor() : this(
+        emailAddress = "",
+        password = "",
+        firstName = "",
+        lastName = "",
+        gender = "",
+        phone = "",
+        dateOfBirth = "",
+        address = "",
+        stateCode = "",
+        countryCode = "",
+        passport = ""
+    )
 
     // Constructor without 'id' (useful when inserting a new UserAccount)
-    constructor(emailAddress: String, password: String, firstName: String, lastName: String) :
-            this(0, emailAddress, password, firstName, lastName)
+    constructor(
+        emailAddress: String,
+        password: String,
+    ) : this(
+        emailAddress = emailAddress,
+        password = password,
+        firstName = "",
+        lastName = "",
+        gender = "",
+        phone = "",
+        dateOfBirth = "",
+        address = "",
+        stateCode = "",
+        countryCode = "",
+        passport = ""
+    )
 }
 
 /*
