@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.skyreserve.App.MyApp
 import com.example.skyreserve.UI.Account.AccountActivity
+import com.example.skyreserve.UI.Home.HomeActivity
 import com.example.skyreserve.Util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivitySuccessBinding
 
@@ -27,7 +28,9 @@ class SuccessActivity : AppCompatActivity() {
             //val intent = Intent(this, HomeActivity::class.java)
 
             // temp
-            val intent = Intent(this, AccountActivity::class.java)
+            //val intent = Intent(this, AccountActivity::class.java)
+
+            val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
             // finish() temp
         }

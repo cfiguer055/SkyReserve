@@ -76,7 +76,7 @@
                         android:id="@+id/progressTracker"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Flight-Search > Review"
+                        android:text="> Search > Review"
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold"
