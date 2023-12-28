@@ -25,14 +25,21 @@ class SuccessActivity : AppCompatActivity() {
 
 
         binding.okayButton.setOnClickListener {
-            //val intent = Intent(this, HomeActivity::class.java)
-
-            // temp
-            //val intent = Intent(this, AccountActivity::class.java)
-
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-            // finish() temp
+            navigateToHome()
         }
+    }
+
+    private fun navigateToHome() {
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    override fun onBackPressed() {
+        // Redirect to the Homepage
+        val homeIntent = Intent(this, HomeActivity::class.java)
+        homeIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(homeIntent)
+        finish()
     }
 }

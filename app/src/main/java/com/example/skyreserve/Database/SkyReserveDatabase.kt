@@ -8,14 +8,12 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.skyreserve.Database.Dao.UserAccountDao
 import com.example.skyreserve.Database.Dao.ReservationDao
 import com.example.skyreserve.Database.Dao.FlightDao
-import com.example.skyreserve.Database.Entity.UserAccount
-import com.example.skyreserve.Database.Entity.Reservation
-import com.example.skyreserve.Database.Entity.Flight
+import com.example.skyreserve.Database.Entity.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [UserAccount::class, Reservation::class, Flight::class], version = 1)
+@Database(entities = [UserAccount::class, Reservation::class, Flight::class, BaseFlightPrice::class, Taxes::class], version = 1)
 abstract class SkyReserveDatabase : RoomDatabase() {
 
     abstract fun userAccountDao(): UserAccountDao

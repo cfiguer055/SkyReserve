@@ -49,17 +49,8 @@ class SignUpViewModel(private val authRepository: AuthRepository, private val co
             }
             // If all checks pass, then proceed with the actual sign up process
             else -> {
-                // val authRepository = AuthRepository(userAccountDao)
-                createUserAccount(email, password, authRepository) { success ->
-                    // Handle the result here
-                    if (success) {
-                        // Sign-up was successful
-                        callback(SignUpResult.SUCCESS)
-                    } else {
-                        // Sign-up failed
-                        callback(SignUpResult.UNKNOWN_ERROR)
-                    }
-                }
+                val success = authRepository.signUp(email, password)
+                callback(if (success) SignUpResult.SUCCESS else SignUpResult.UNKNOWN_ERROR)
             }
         }
     }
@@ -84,15 +75,6 @@ class SignUpViewModel(private val authRepository: AuthRepository, private val co
     }
 
     // This will be replaced with database authentication later
-    private suspend fun createUserAccount(
-        email: String,
-        password: String,
-        authRepository: AuthRepository,
-        result: (Boolean) -> Unit
-    ) {
-        val success = authRepository.signUp(email, password)
-        result(success)
-    }
 //    fun createUserAccount(email: String, password: String, result: (Boolean) -> Unit) {
 //        // Replace with actual sign-up logic and call 'result' with true if successful, false otherwise
 //        val accountCreationSuccess = true

@@ -15,6 +15,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.skyreserve.App.MyApp
@@ -204,7 +205,7 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
 
     private fun showFlightResults() {
         // consider leaving header visible the entire time, just change the navigation for back button
-        binding.headerLayout.visibility = View.VISIBLE
+        //binding.headerLayout.visibility = View.VISIBLE
 
         binding.searchFlight.visibility = View.GONE
         binding.flightResultsRecyclerView.visibility = View.VISIBLE
@@ -247,6 +248,11 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         recyclerView.adapter = adapter
     }
 
+    private fun showFlightSearch() {
+        binding.searchFlight.visibility = View.VISIBLE
+        binding.flightResultsRecyclerView.visibility = View.GONE
+    }
+
     private fun loadIntentData() {
         // Retrieve the data from the intent
         email = intent.getStringExtra("EXTRA_EMAIL") ?: ""
@@ -277,21 +283,28 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
     }
 
     override fun onBackPressed() {
-        val data = Intent()
-        // Put extras in the Intent
-        data.putExtra("ROUND_TRIP", binding.radioGroup.checkedRadioButtonId)
-        data.putExtra("DEPART_AIRPORT", binding.departButton.text.toString())
-        data.putExtra("ARRIVE_AIRPORT", binding.arriveButton.text.toString())
-        data.putExtra("DEPART_DATE", binding.departureDateEditText.text.toString())
-//        data.putExtra("RETURN_DATE", binding.returnDateEditText.text.toString())
-        data.putExtra("NUM_PASSENGERS", binding.passengerCountTextView.text.toString())
-        // Other extras...
+        if(binding.searchFlight.isVisible) {
+            super.onBackPressed()
+        } else {
+            showFlightSearch()
+        }
 
-        // Set the result with a result code and the Intent
-        setResult(Activity.RESULT_OK, data)
 
-        // Finish the current activity to go back to HomeActivity
-        // finish() temp
+//        val data = Intent()
+//        // Put extras in the Intent
+//        data.putExtra("ROUND_TRIP", binding.radioGroup.checkedRadioButtonId)
+//        data.putExtra("DEPART_AIRPORT", binding.departButton.text.toString())
+//        data.putExtra("ARRIVE_AIRPORT", binding.arriveButton.text.toString())
+//        data.putExtra("DEPART_DATE", binding.departureDateEditText.text.toString())
+////        data.putExtra("RETURN_DATE", binding.returnDateEditText.text.toString())
+//        data.putExtra("NUM_PASSENGERS", binding.passengerCountTextView.text.toString())
+//        // Other extras...
+//
+//        // Set the result with a result code and the Intent
+//        setResult(Activity.RESULT_OK, data)
+//
+//        // Finish the current activity to go back to HomeActivity
+//        // finish() temp
     }
 
     override fun onFlightClick(selectedFlightInfo: FlightInfo) {

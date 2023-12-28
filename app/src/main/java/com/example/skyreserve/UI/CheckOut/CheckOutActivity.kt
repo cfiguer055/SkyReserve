@@ -105,7 +105,8 @@ class CheckOutActivity : AppCompatActivity() {
         logger.logInteraction("Navigating To SuccessActivity - TASK 3 Complete")
 
         val intent = Intent(this, SuccessActivity::class.java)
-        // temp intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         intent.putExtra("EXTRA_EMAIL", email)
         startActivity(intent)
         // finish() temp // Call this if you want to close the current activity as well

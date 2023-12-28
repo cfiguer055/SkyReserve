@@ -1,19 +1,32 @@
 package com.example.skyreserve.Database.Entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "reservations")
-data class Reservation(
+data class Reservation (
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @ColumnInfo(name = "reservation_id")
     val reservationId: Long,
-    val departueFlightNumber: String,
-    val arrivalFlightNumber: String,
-    val returnDepartueFlightNumber: String,
-    val returnArrivalFlightNumber: String,
-    val totalPrice: Double,
+
+    @ColumnInfo(name = "user_id")
+    val userId: Long,
+
+    @ColumnInfo(name = "departure_flight_number")
+    val departureFlightNumber: String,
+    @ColumnInfo(name = "return_flight_number")
+    val returnFlightNumber: String,
+
+    @ColumnInfo(name = "reservation_total")
+    val reservationTotal: Double,
+
+    @ColumnInfo(name = "departure_base_price")
     val departureBasePrice: Double,
+    @ColumnInfo(name = "return_base_price")
     val returnBasePrice: Double,
-    // Other properties
+
+    @ColumnInfo(name = "service_fee")
+    val skyreserve_fee: Double,
 )

@@ -1,5 +1,6 @@
 package com.example.skyreserve.Database.Entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -7,17 +8,30 @@ import androidx.room.PrimaryKey
 data class UserAccount(
 
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @ColumnInfo(name = "user_id")
+    val userId: Long = 0,
+
+    @ColumnInfo(name = "email_address")
     val emailAddress: String,
+    @ColumnInfo(name = "password")
     val password: String,
+    @ColumnInfo(name = "first_name")
     val firstName: String,
+    @ColumnInfo(name = "last_name")
     val lastName: String,
+    @ColumnInfo(name = "gender")
     val gender: String,
+    @ColumnInfo(name = "phone")
     val phone: String,
+    @ColumnInfo(name = "date_of_birth")
     val dateOfBirth: String,
+    @ColumnInfo(name = "address")
     val address: String,
+    @ColumnInfo(name = "state_code")
     val stateCode: String,
+    @ColumnInfo(name = "country_code")
     val countryCode: String,
+    @ColumnInfo(name = "passport")
     val passport: String,
 
     // Other properties

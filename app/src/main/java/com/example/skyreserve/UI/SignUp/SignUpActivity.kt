@@ -11,9 +11,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.skyreserve.App.MyApp
 import com.example.skyreserve.R
 import com.example.skyreserve.Repository.AuthRepository
-import com.example.skyreserve.UI.Home.HomeActivityOld
+import com.example.skyreserve.UI.Home.HomeActivity
 import com.example.skyreserve.UI.SignIn.SignInActivity
-import com.example.skyreserve.Util.ActivityState
 import com.example.skyreserve.Util.SignUpResult
 import com.example.skyreserve.databinding.ActivitySignUpBinding
 import kotlinx.coroutines.launch
@@ -127,8 +126,9 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun navigateToHome() {
-        val intent = Intent(this, HomeActivityOld::class.java)
-        // temp intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val intent = Intent(this, HomeActivity::class.java)
+
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         intent.putExtra("FROM_SIGN_UP", true)
         startActivity(intent)
         // finish() temp

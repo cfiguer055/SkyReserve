@@ -1,6 +1,8 @@
 package com.example.skyreserve.Database.Dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.skyreserve.Database.DataTransferObject.UserReservations
 import com.example.skyreserve.Database.Entity.UserAccount
 import kotlinx.coroutines.flow.Flow
 
@@ -16,13 +18,18 @@ interface UserAccountDao {
     @Delete
     suspend fun deleteUserAccount(userAccount: UserAccount)
 
+
+    @Transaction
+    @Query("SELECT * FROM user_accounts WHERE user_id = :userId")
+    fun getUserReservations(userId: Long): LiveData<UserReservations>
+
     @Query("SELECT * FROM user_accounts")
     fun getAllUsersFlow(): Flow<List<UserAccount>>
 
-    @Query("SELECT * FROM user_accounts WHERE id = :id")
-    suspend fun getUserAccountById(id: Long): UserAccount?
+    @Query("SELECT * FROM user_accounts WHERE user_id = :userId")
+    suspend fun getUserAccountById(userId: Long): UserAccount?
 
-    @Query("SELECT * FROM user_accounts WHERE emailAddress = :emailAddress")
+    @Query("SELECT * FROM user_accounts WHERE email_address = :emailAddress")
     suspend fun getUserAccountByEmailAddress(emailAddress: String): UserAccount?
 
 
