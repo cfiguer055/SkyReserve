@@ -1,9 +1,20 @@
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 import java.util.*
 
 class LocalSessionManager(context: Context) {
-    private val prefs: SharedPreferences = context.getSharedPreferences("AppSessionPrefs", Context.MODE_PRIVATE)
+    private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+
+    //private val prefs: SharedPreferences = context.getSharedPreferences("AppSessionPrefs", Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences = EncryptedSharedPreferences.create(
+        "AppSessionPrefs",
+        masterKeyAlias,
+        context,
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+    )
 
     fun createLoginSession(userEmail: String, token: String) {
         val editor = prefs.edit()
@@ -45,7 +56,7 @@ class LocalSessionManager(context: Context) {
         return prefs.getLong("token_expiry", -1)
     }
 
-    private fun getUserEmail(): String? {
+    public fun getUserEmail(): String? {
         return prefs.getString("user_id", null)
     }
 }

@@ -1,5 +1,6 @@
 package com.example.skyreserve.UI.Account
 
+import LocalSessionManager
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,7 @@ import com.example.skyreserve.databinding.ActivityAccountBinding
 
 class AccountActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAccountBinding
+    private lateinit var sessionManager: LocalSessionManager
     private lateinit var logger: UserInteractionLogger
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,11 +19,15 @@ class AccountActivity : AppCompatActivity() {
         binding= ActivityAccountBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Access sessionManager from MyApp
+        sessionManager = (applicationContext as MyApp).sessionManager
+
+        // Access logger from MyApp
         logger = (application as MyApp).logger
 
 
         binding.logoutButton.setOnClickListener {
-            navigateToSignIn()
+            logout()
         }
 
         binding.emailCurrentUserInteractionButton.setOnClickListener {
@@ -37,10 +43,11 @@ class AccountActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToSignIn() {
+    private fun logout() {
+        sessionManager.logoutUser()
+
         val intent = Intent(this, WelcomeActivity::class.java)
-        // temp intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
-        //finish() temp
+        finish()
     }
 }

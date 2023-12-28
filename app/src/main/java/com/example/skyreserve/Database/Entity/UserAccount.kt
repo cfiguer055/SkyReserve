@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+
 @Entity(tableName = "user_accounts")
 data class UserAccount(
 
@@ -12,66 +13,44 @@ data class UserAccount(
     val userId: Long = 0,
 
     @ColumnInfo(name = "email_address")
-    val emailAddress: String,
+    var emailAddress: String,
+
     @ColumnInfo(name = "password")
-    val password: String,
+    var password: String,
+
     @ColumnInfo(name = "first_name")
-    val firstName: String,
+    var firstName: String? = null,
+
     @ColumnInfo(name = "last_name")
-    val lastName: String,
+    var lastName: String? = null,
+
     @ColumnInfo(name = "gender")
-    val gender: String,
+    var gender: String? = null,
+
     @ColumnInfo(name = "phone")
-    val phone: String,
+    var phone: String? = null,
+
     @ColumnInfo(name = "date_of_birth")
-    val dateOfBirth: String,
+    var dateOfBirth: String? = null,
+
     @ColumnInfo(name = "address")
-    val address: String,
+    var address: String? = null,
+
     @ColumnInfo(name = "state_code")
-    val stateCode: String,
+    var stateCode: String? = null,
+
     @ColumnInfo(name = "country_code")
-    val countryCode: String,
+    var countryCode: String? = null,
+
     @ColumnInfo(name = "passport")
-    val passport: String,
+    var passport: String? = null
 
-    // Other properties
+    // Other properties if any
 
-    // once all properties are created make constructor
-    // no need for getters and setters - because variables are accessible already through property accessor
 ) {
-    // Default constructor
-    constructor() : this(
-        emailAddress = "",
-        password = "",
-        firstName = "",
-        lastName = "",
-        gender = "",
-        phone = "",
-        dateOfBirth = "",
-        address = "",
-        stateCode = "",
-        countryCode = "",
-        passport = ""
-    )
-
-    // Constructor without 'id' (useful when inserting a new UserAccount)
-    constructor(
-        emailAddress: String,
-        password: String,
-    ) : this(
-        emailAddress = emailAddress,
-        password = password,
-        firstName = "",
-        lastName = "",
-        gender = "",
-        phone = "",
-        dateOfBirth = "",
-        address = "",
-        stateCode = "",
-        countryCode = "",
-        passport = ""
-    )
+    // No secondary constructor needed
 }
+
 
 /*
 Here's how you might handle password storage:

@@ -30,7 +30,7 @@ interface ReservationDao {
     @Query("""
     SELECT total_price FROM base_flight_prices
     WHERE reservation_id = :reservationId AND flight_type = 'return'
-""")
+    """)
     fun getReturnBasePrice(reservationId: Long): LiveData<Double>
 
 

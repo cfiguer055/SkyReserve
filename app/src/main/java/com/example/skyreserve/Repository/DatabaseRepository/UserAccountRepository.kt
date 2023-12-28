@@ -36,6 +36,11 @@ class UserAccountRepository(application: Application) {
         userAccountDao.deleteUserAccount(userAccount)
     }
 
+    suspend fun getUserAccountByEmailAddress(emailAddress: String): UserAccount? {
+        return userAccountDao.getUserAccountByEmailAddress(emailAddress)
+    }
+
+
     fun getAllUsers(): LiveData<List<UserAccount>> {
         return allUsersAccounts
     }

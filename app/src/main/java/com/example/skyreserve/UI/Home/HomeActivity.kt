@@ -1,5 +1,6 @@
 package com.example.skyreserve.UI.Home
 
+import LocalSessionManager
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
@@ -13,22 +14,32 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.skyreserve.App.MyApp
 import com.example.skyreserve.R
+import com.example.skyreserve.Repository.AuthRepository
 import com.example.skyreserve.UI.Account.AccountActivity
 import com.example.skyreserve.UI.FlightSearch.FlightSearchActivity
+import com.example.skyreserve.UI.UserViewModelFactory
 import com.example.skyreserve.Util.AirportsData
 import com.example.skyreserve.Util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivityHomeBinding
 import com.example.skyreserve.databinding.DialogAirportAutoCompleteBinding
 import com.example.skyreserve.databinding.DialogSignUpBinding
 import java.text.SimpleDateFormat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import com.example.skyreserve.Database.Entity.UserAccount
+import com.example.skyreserve.Repository.DatabaseRepository.UserAccountRepository
+import kotlinx.coroutines.*
 import java.util.*
 
 class HomeActivity : AppCompatActivity() {
     // This is the request code you will use when launching the FlightSearchActivity
     private val FLIGHT_SEARCH_REQUEST_CODE = 1  // This can be any integer unique to the Activity
     private lateinit var binding: ActivityHomeBinding
+    private lateinit var sessionManager: LocalSessionManager
+    private lateinit var userAccountRepository: UserAccountRepository
     private lateinit var logger: UserInteractionLogger
 
     private var passengerCount = 1
@@ -55,11 +66,25 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Initialize logger
+        logger = (applicationContext as MyApp).logger
+        // Initialize sessionManager
+        sessionManager = (applicationContext as MyApp).sessionManager
+
+        // Validate session and get user email
+        if (sessionManager.isTokenValid()) {
+            email = sessionManager.getUserEmail().toString()
+            // Use userEmail to fetch user details if needed
+        } else {
+            // Handle invalid session, e.g., navigate to login
+            email = ""
+        }
+
+        binding.nameText.text = email
+
         val isNewUser = intent.getBooleanExtra("FROM_SIGN_UP", false)
         if (isNewUser) {
             showSignUpDialog()
-        } else {
-            email = intent.getStringExtra("EXTRA_EMAIL") ?: ""
         }
 
         setupBottomNavigation()
@@ -183,30 +208,67 @@ class HomeActivity : AppCompatActivity() {
         return dateFormat.format(calendar.time)
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun showSignUpDialog() {
-        // Inflate the layout using view binding
         val binding = DialogSignUpBinding.inflate(layoutInflater)
-
-        // Create the AlertDialog
         val dialog = AlertDialog.Builder(this).apply {
             setTitle("Complete Your Profile")
             setView(binding.root)
             setPositiveButton("Submit") { dialog, which ->
-                // Here you would handle the submission of the data
-                val firstName = binding.firstName.text.toString()
-                val lastName = binding.lastName.text.toString()
-                // ... get the data from other fields like gender and dob
-                // Now you can use the data to update the user's profile
+                // Get the user's email from session manager
+                val userEmail = LocalSessionManager(this@HomeActivity).getUserEmail() ?: return@setPositiveButton
+
+                val userAccountRepository = UserAccountRepository(application)
+
+                GlobalScope.launch(Dispatchers.Main) {
+                    val userEmail = LocalSessionManager(this@HomeActivity).getUserEmail() ?: return@launch
+
+                    // Collect the data from UI on the Main thread
+                    val firstName = binding.firstNameEditText.text.toString()
+                    val lastName = binding.lastNameEditText.text.toString()
+                    val gender = binding.genderEditText.text.toString()
+                    val phone = binding.phoneNumberEditText.text.toString()
+                    val dateOfBirth = binding.dateOfBirthEditText.text.toString()
+                    val address = binding.addressEditText.text.toString()
+                    val stateCode = binding.stateCodeEditText.text.toString()
+                    val countryCode = binding.countryCodeEditText.text.toString()
+                    val passport = binding.passportEditText.text.toString()
+
+                    // Perform database operations in the IO context
+                    withContext(Dispatchers.IO) {
+                        val userAccount = userAccountRepository.getUserAccountByEmailAddress(userEmail)
+
+                        if (userAccount != null) {
+                            // Update the user account object
+                            userAccount.firstName = firstName
+                            userAccount.lastName = lastName
+                            userAccount.gender = gender
+                            userAccount.phone = phone
+                            userAccount.dateOfBirth = dateOfBirth
+                            userAccount.address = address
+                            userAccount.stateCode = stateCode
+                            userAccount.countryCode = countryCode
+                            userAccount.passport = passport
+                            // ... update other fields
+
+                            // Save the updated user account
+                            userAccountRepository.updateUserAccount(userAccount)
+                        } else {
+                            // Handle the case where the user account is not found
+                            withContext(Dispatchers.Main) {
+                                // Show an error message or take appropriate action
+                            }
+                        }
+                    }
+                }
             }
             setNegativeButton("Cancel") { dialog, which ->
-                logger.logInteraction("Alert Dialog Cancelled")
-                dialog.cancel()
+                // Handle cancellation...
             }
         }.create()
-
-        // Show the AlertDialog
         dialog.show()
     }
+
 
     private fun showAirportAutoCompleteDialog(departure: Boolean) {
 

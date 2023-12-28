@@ -1,5 +1,7 @@
 package com.example.skyreserve.UI.SignUp
 
+import LocalSessionManager
+import UserViewModel
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,6 +15,7 @@ import com.example.skyreserve.R
 import com.example.skyreserve.Repository.AuthRepository
 import com.example.skyreserve.UI.Home.HomeActivity
 import com.example.skyreserve.UI.SignIn.SignInActivity
+import com.example.skyreserve.UI.UserViewModelFactory
 import com.example.skyreserve.Util.SignUpResult
 import com.example.skyreserve.databinding.ActivitySignUpBinding
 import kotlinx.coroutines.launch
@@ -25,7 +28,8 @@ You can include any additional logic for initializing the app here.
 */
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
-    private lateinit var signUpViewModel: SignUpViewModel
+    //private lateinit var signUpViewModel: SignUpViewModel
+    private lateinit var userViewModel: UserViewModel
     private lateinit var authRepository: AuthRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +39,10 @@ class SignUpActivity : AppCompatActivity() {
 
         val userAccountDao = (application as MyApp).userAccountDao
         authRepository = AuthRepository(userAccountDao) // Create an instance of AuthRepository with the required dependencies
-        signUpViewModel = ViewModelProvider(this, SignUpViewModelFactory(authRepository, this))[SignUpViewModel::class.java]
+        //signUpViewModel = ViewModelProvider(this, SignUpViewModelFactory(authRepository, this))[SignUpViewModel::class.java]
+        val sessionManager = LocalSessionManager(this)
+        userViewModel = ViewModelProvider(this, UserViewModelFactory(authRepository, sessionManager, this))[UserViewModel::class.java]
+
 
 
         binding.emailEditText.addTextChangedListener { resetInputUI() }
@@ -60,26 +67,8 @@ class SignUpActivity : AppCompatActivity() {
             try {
                 disableSignUpUI()
 
-                signUpViewModel.viewModelScope.launch {
-                    signUpViewModel.signUp(email, password, confirmPassword) { result ->
-                        enableSignUpUI()
-
-                        when (result) {
-                            SignUpResult.SUCCESS -> navigateToHome()
-                            SignUpResult.MISSING_INFORMATION -> showSignUpError("Please fill out all fields.", "MISSING_INFORMATION")
-                            SignUpResult.INVALID_EMAIL -> showSignUpError("Invalid email format.", "INVALID_EMAIL")
-                            SignUpResult.EXISTING_EMAIL -> showSignUpError("This email is already taken. Try another.", "INVALID_EMAIL")
-                            SignUpResult.SHORT_PASSWORD -> showSignUpError("Your password is too short. It needs to be at least 8 characters.", "INVALID_PASSWORD")
-                            SignUpResult.MISSING_CAPITAL_LETTER -> showSignUpError("Add at least one capital letter in your password.", "INVALID_PASSWORD")
-                            SignUpResult.MISSING_LOWCASE_LETTER -> showSignUpError("Add at least one lowercase letter in your password.", "INVALID_PASSWORD")
-                            SignUpResult.MISSING_DIGIT -> showSignUpError("Include at least one number in your password.", "INVALID_PASSWORD")
-                            SignUpResult.PASSWORD_NO_MATCH -> showSignUpError("Oops! Your passwords do not match.", "PASSWORD_NO_MATCH")
-                            SignUpResult.TERMS_NOT_ACCEPTED -> showSignUpError("You must accept the terms and conditions to continue.", "TERMS_NOT_ACCEPTED")
-                            SignUpResult.NETWORK_ERROR -> showSignUpError("Check your internet connection and try again.", "NETWORK_ERROR")
-                            SignUpResult.UNKNOWN_ERROR -> showSignUpError("Something went wrong. Please try again later.", "UNKNOWN_ERROR")
-                        }
-                    }
-                }
+                userViewModel.signUp(email, password, confirmPassword)
+                observeSignUpResult()
             } catch (e: Exception) {
                 Log.e("SignUpActivity", "Error during sign up", e)
             } finally {
@@ -140,6 +129,25 @@ class SignUpActivity : AppCompatActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
         startActivity(intent)
+    }
+
+    private fun observeSignUpResult() {
+        userViewModel.signUpResult.observe(this) { result ->
+            when (result) {
+                SignUpResult.SUCCESS -> navigateToHome()
+                SignUpResult.MISSING_INFORMATION -> showSignUpError("Please fill out all fields.", "MISSING_INFORMATION")
+                SignUpResult.INVALID_EMAIL -> showSignUpError("Invalid email format.", "INVALID_EMAIL")
+                SignUpResult.EXISTING_EMAIL -> showSignUpError("This email is already taken. Try another.", "INVALID_EMAIL")
+                SignUpResult.SHORT_PASSWORD -> showSignUpError("Your password is too short. It needs to be at least 8 characters.", "INVALID_PASSWORD")
+                SignUpResult.MISSING_CAPITAL_LETTER -> showSignUpError("Add at least one capital letter in your password.", "INVALID_PASSWORD")
+                SignUpResult.MISSING_LOWCASE_LETTER -> showSignUpError("Add at least one lowercase letter in your password.", "INVALID_PASSWORD")
+                SignUpResult.MISSING_DIGIT -> showSignUpError("Include at least one number in your password.", "INVALID_PASSWORD")
+                SignUpResult.PASSWORD_NO_MATCH -> showSignUpError("Oops! Your passwords do not match.", "PASSWORD_NO_MATCH")
+                SignUpResult.TERMS_NOT_ACCEPTED -> showSignUpError("You must accept the terms and conditions to continue.", "TERMS_NOT_ACCEPTED")
+                SignUpResult.NETWORK_ERROR -> showSignUpError("Check your internet connection and try again.", "NETWORK_ERROR")
+                SignUpResult.UNKNOWN_ERROR -> showSignUpError("Something went wrong. Please try again later.", "UNKNOWN_ERROR")
+            }
+        }
     }
 
     private fun showSignUpError(message: String, errorCode: String) {
