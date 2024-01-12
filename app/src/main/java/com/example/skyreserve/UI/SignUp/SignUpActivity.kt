@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.View
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import com.example.skyreserve.App.MyApp
 import com.example.skyreserve.R
 import com.example.skyreserve.Repository.AuthRepository
@@ -18,7 +17,6 @@ import com.example.skyreserve.UI.SignIn.SignInActivity
 import com.example.skyreserve.UI.UserViewModelFactory
 import com.example.skyreserve.Util.SignUpResult
 import com.example.skyreserve.databinding.ActivitySignUpBinding
-import kotlinx.coroutines.launch
 
 
 /*

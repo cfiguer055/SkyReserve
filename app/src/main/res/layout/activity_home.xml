@@ -112,6 +112,7 @@
                         android:id="@+id/oneWayRadioButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:buttonTint="@color/black"
                         android:text="One way"
                         android:textColor="@color/black"/>
 
@@ -121,6 +122,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:clickable="false"
+                        android:buttonTint="@color/black"
                         android:text="Roundtrip"
                         android:textColor="@color/black"/>
                 </RadioGroup>

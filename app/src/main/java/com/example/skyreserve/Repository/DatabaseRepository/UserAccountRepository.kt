@@ -6,6 +6,7 @@ import androidx.lifecycle.asLiveData
 import com.example.skyreserve.Database.Dao.*
 import com.example.skyreserve.Database.Entity.UserAccount
 import com.example.skyreserve.Database.SkyReserveDatabase
+import com.example.skyreserve.UI.Home.HomeActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 
@@ -24,6 +25,7 @@ class UserAccountRepository(application: Application) {
     }
 
     // Repository Methods
+    // MAYBE HAVE AUTHREPO USE THIS
     suspend fun insertUserAccount(userAccount: UserAccount) {
         userAccountDao.insertUserAccount(userAccount)
     }

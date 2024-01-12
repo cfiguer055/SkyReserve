@@ -9,6 +9,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -17,24 +18,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.skyreserve.App.MyApp
 import com.example.skyreserve.R
-import com.example.skyreserve.Repository.AuthRepository
 import com.example.skyreserve.UI.Account.AccountActivity
 import com.example.skyreserve.UI.FlightSearch.FlightSearchActivity
-import com.example.skyreserve.UI.UserViewModelFactory
 import com.example.skyreserve.Util.AirportsData
+import com.example.skyreserve.Util.UserData
 import com.example.skyreserve.Util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivityHomeBinding
 import com.example.skyreserve.databinding.DialogAirportAutoCompleteBinding
 import com.example.skyreserve.databinding.DialogSignUpBinding
 import java.text.SimpleDateFormat
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
-import com.example.skyreserve.Database.Entity.UserAccount
 import com.example.skyreserve.Repository.DatabaseRepository.UserAccountRepository
-import kotlinx.coroutines.*
 import java.util.*
 
 class HomeActivity : AppCompatActivity() {
+    private lateinit var homeViewModel: HomeViewModel
+
     // This is the request code you will use when launching the FlightSearchActivity
     private val FLIGHT_SEARCH_REQUEST_CODE = 1  // This can be any integer unique to the Activity
     private lateinit var binding: ActivityHomeBinding
@@ -71,20 +69,34 @@ class HomeActivity : AppCompatActivity() {
         // Initialize sessionManager
         sessionManager = (applicationContext as MyApp).sessionManager
 
-        // Validate session and get user email
-        if (sessionManager.isTokenValid()) {
-            email = sessionManager.getUserEmail().toString()
-            // Use userEmail to fetch user details if needed
-        } else {
-            // Handle invalid session, e.g., navigate to login
-            email = ""
-        }
+        val userAccountDao = (application as MyApp).userAccountDao
+        userAccountRepository = UserAccountRepository(application)
+        val sessionManager = LocalSessionManager(this)
 
-        binding.nameText.text = email
+        homeViewModel = ViewModelProvider(this, HomeViewModelFactory(userAccountRepository, sessionManager, this))[HomeViewModel::class.java]
+
 
         val isNewUser = intent.getBooleanExtra("FROM_SIGN_UP", false)
         if (isNewUser) {
             showSignUpDialog()
+        } else {
+            fetchUserDetailsAfterSignUp()
+        }
+
+        // Validate session and get user email
+        if (sessionManager.isTokenValid()) {
+            // Use userEmail to fetch user details if needed
+
+            email = sessionManager.getUserEmail().toString()
+            homeViewModel.fetchUserDetails(email)
+
+            homeViewModel.userName.observe(this) { name ->
+                binding.nameText.text = name
+            }
+
+        } else {
+            // Handle invalid session, e.g., navigate to login
+            binding.nameText.text = ""
         }
 
         setupBottomNavigation()
@@ -208,67 +220,55 @@ class HomeActivity : AppCompatActivity() {
         return dateFormat.format(calendar.time)
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     private fun showSignUpDialog() {
         val binding = DialogSignUpBinding.inflate(layoutInflater)
         val dialog = AlertDialog.Builder(this).apply {
             setTitle("Complete Your Profile")
             setView(binding.root)
-            setPositiveButton("Submit") { dialog, which ->
+            setPositiveButton("Submit") { _, _ ->
                 // Get the user's email from session manager
                 val userEmail = LocalSessionManager(this@HomeActivity).getUserEmail() ?: return@setPositiveButton
 
-                val userAccountRepository = UserAccountRepository(application)
+                // Collect data from the UI
+                val userData = UserData(
+                    firstName = binding.firstNameEditText.text.toString(),
+                    lastName = binding.lastNameEditText.text.toString(),
+                    gender = binding.genderEditText.text.toString(),
+                    phone = binding.phoneNumberEditText.text.toString(),
+                    dateOfBirth = binding.dateOfBirthEditText.text.toString(),
+                    address = binding.addressEditText.text.toString(),
+                    stateCode = binding.stateCodeEditText.text.toString(),
+                    countryCode = binding.countryCodeEditText.text.toString(),
+                    passport = binding.passportEditText.text.toString()
+                )
+                // Pass data to ViewModel to handle the update
+                homeViewModel.updateUserDetails(userData)
 
-                GlobalScope.launch(Dispatchers.Main) {
-                    val userEmail = LocalSessionManager(this@HomeActivity).getUserEmail() ?: return@launch
-
-                    // Collect the data from UI on the Main thread
-                    val firstName = binding.firstNameEditText.text.toString()
-                    val lastName = binding.lastNameEditText.text.toString()
-                    val gender = binding.genderEditText.text.toString()
-                    val phone = binding.phoneNumberEditText.text.toString()
-                    val dateOfBirth = binding.dateOfBirthEditText.text.toString()
-                    val address = binding.addressEditText.text.toString()
-                    val stateCode = binding.stateCodeEditText.text.toString()
-                    val countryCode = binding.countryCodeEditText.text.toString()
-                    val passport = binding.passportEditText.text.toString()
-
-                    // Perform database operations in the IO context
-                    withContext(Dispatchers.IO) {
-                        val userAccount = userAccountRepository.getUserAccountByEmailAddress(userEmail)
-
-                        if (userAccount != null) {
-                            // Update the user account object
-                            userAccount.firstName = firstName
-                            userAccount.lastName = lastName
-                            userAccount.gender = gender
-                            userAccount.phone = phone
-                            userAccount.dateOfBirth = dateOfBirth
-                            userAccount.address = address
-                            userAccount.stateCode = stateCode
-                            userAccount.countryCode = countryCode
-                            userAccount.passport = passport
-                            // ... update other fields
-
-                            // Save the updated user account
-                            userAccountRepository.updateUserAccount(userAccount)
-                        } else {
-                            // Handle the case where the user account is not found
-                            withContext(Dispatchers.Main) {
-                                // Show an error message or take appropriate action
-                            }
-                        }
-                    }
-                }
+                // After updating, fetch user details to update UI
+                fetchUserDetailsAfterSignUp()
             }
-            setNegativeButton("Cancel") { dialog, which ->
-                // Handle cancellation...
-            }
+            setNegativeButton("Cancel", null)
         }.create()
         dialog.show()
     }
 
+    private fun fetchUserDetailsAfterSignUp() {
+        if (sessionManager.isTokenValid()) {
+            email = sessionManager.getUserEmail().toString()
+            homeViewModel.fetchUserDetails(email)
+
+            Log.d("fetchUserDetailsAfterSignUp", "Valid Email")
+
+            homeViewModel.userName.observe(this) { name ->
+                Log.d("fetchUserDetailsAfterSignUp", name.toString())
+                binding.nameText.text = name
+            }
+        } else {
+            // Handle invalid session
+            binding.nameText.text = ""
+            Log.d("fetchUserDetailsAfterSignUp", "Invalid Email")
+        }
+    }
 
     private fun showAirportAutoCompleteDialog(departure: Boolean) {
 
