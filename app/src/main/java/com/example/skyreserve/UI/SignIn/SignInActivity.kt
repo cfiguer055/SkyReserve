@@ -1,5 +1,7 @@
 package com.example.skyreserve.UI.SignIn
 
+import LocalSessionManager
+import UserViewModel
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,8 +11,10 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.example.skyreserve.App.MyApp
 import com.example.skyreserve.R
+import com.example.skyreserve.Repository.AuthRepository
 import com.example.skyreserve.UI.Home.HomeActivity
 import com.example.skyreserve.UI.SignUp.SignUpActivity
+import com.example.skyreserve.UI.UserViewModelFactory
 import com.example.skyreserve.Util.SignInResult
 import com.example.skyreserve.Util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivitySignInBinding
@@ -18,7 +22,9 @@ import com.example.skyreserve.databinding.ActivitySignInBinding
 
 class SignInActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignInBinding
+    private lateinit var userViewModel: UserViewModel
     private lateinit var signInViewModel: SignInViewModel
+    private lateinit var authRepository: AuthRepository
     private lateinit var logger: UserInteractionLogger
 
     private lateinit var email: String
@@ -28,7 +34,12 @@ class SignInActivity : AppCompatActivity() {
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        signInViewModel = ViewModelProvider(this, SignInViewModelFactory()).get(SignInViewModel::class.java)
+        val userAccountDao = (application as MyApp).userAccountDao
+        authRepository = AuthRepository(userAccountDao)
+        val sessionManager = LocalSessionManager(this)
+
+        userViewModel = ViewModelProvider(this, UserViewModelFactory(authRepository, sessionManager, this))[UserViewModel::class.java]
+        //signInViewModel = ViewModelProvider(this, SignInViewModelFactory()).get(SignInViewModel::class.java)
 
         logger = (application as MyApp).logger
 
@@ -44,16 +55,17 @@ class SignInActivity : AppCompatActivity() {
             try {
                 disableSignInUI()
 
-                signInViewModel.signIn(email, password) { result ->
-                    enableSignInUI() // Re-enable the UI elements
+//                signInViewModel.signIn(email, password) { result ->
+//                    when (result) {
+//                        SignInResult.SUCCESS -> navigateToHome()
+//                        SignInResult.INVALID_CREDENTIALS -> showSignInError("Invalid credentials. Please try again.")
+//                        SignInResult.NETWORK_ERROR -> showSignInError("Network error. Please check your internet connection.")
+//                        SignInResult.UNKNOWN_ERROR -> showSignInError("An unknown error occurred.")
+//                    }
+//                }
+                userViewModel.signIn(email, password)
+                observeSignInResult()
 
-                    when (result) {
-                        SignInResult.SUCCESS -> navigateToHome()
-                        SignInResult.INVALID_CREDENTIALS -> showSignInError("Invalid credentials. Please try again.")
-                        SignInResult.NETWORK_ERROR -> showSignInError("Network error. Please check your internet connection.")
-                        SignInResult.UNKNOWN_ERROR -> showSignInError("An unknown error occurred.")
-                    }
-                }
             } catch (e: Exception) {
                 Log.e("SignInActivity", "Error during sign in", e)
             } finally {
@@ -116,6 +128,17 @@ class SignInActivity : AppCompatActivity() {
 
     private fun navigateToForgotPassword() {
 
+    }
+
+    private fun observeSignInResult() {
+        userViewModel.signInResult.observe(this) { result ->
+            when (result) {
+                SignInResult.SUCCESS -> navigateToHome()
+                SignInResult.INVALID_CREDENTIALS -> showSignInError("Invalid credentials. Please try again.")
+                SignInResult.NETWORK_ERROR -> showSignInError("Network error. Please check your internet connection.")
+                SignInResult.UNKNOWN_ERROR -> showSignInError("An unknown error occurred.")
+            }
+        }
     }
 
     private fun showSignInError(message: String) {

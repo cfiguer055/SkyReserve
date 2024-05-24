@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skyreserve.Database.Entity.UserAccount
 import com.example.skyreserve.Repository.AuthRepository
+import com.example.skyreserve.Util.SignInResult
 import com.example.skyreserve.Util.SignUpResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,30 +25,54 @@ class UserViewModel(
     private val _isLoggedIn = MutableStateFlow(false)
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
 
-    // LiveData or StateFlow to hold the sign-up result
+    // LiveData or StateFlow to hold the sign-up and sign-in result
     private val _signUpResult = MutableLiveData<SignUpResult>()
     val signUpResult: LiveData<SignUpResult> get() = _signUpResult
+
+    private val _signInResult = MutableLiveData<SignInResult>()
+    val signInResult: LiveData<SignInResult> get() = _signInResult
 
     private val _currentUser = MutableStateFlow<UserAccount?>(null)
     val currentUser: StateFlow<UserAccount?> = _currentUser
 
     // Function to attempt user login
-    fun login(emailAddress: String, password: String) {
+    fun signIn(emailAddress: String, password: String) {
         viewModelScope.launch {
-            if (authRepository.signIn(emailAddress, password)) {
-                val userAccount = authRepository.getUserAccountByEmailAddress(emailAddress)
-                _isLoggedIn.value = true
-                _currentUser.value = userAccount
-                userAccount?.let {
-                    // Generate the token (ideally, this would be done by a secure server)
-                    val token = UUID.randomUUID().toString()
-                    // Create the login session with the generated token
-                    sessionManager.createLoginSession(it.emailAddress, token)
+//            if (authRepository.signIn(emailAddress, password)) {
+            val signInSuccess = authRepository.signIn(emailAddress, password)
+            val isEmailExisting = authRepository.isEmailExisting(emailAddress)
+            when {
+                !signInSuccess && isEmailExisting -> {
+                    _signInResult.value = SignInResult.INVALID_CREDENTIALS
                 }
-            } else {
-                // Handle login failure, update UI accordingly
-                _isLoggedIn.value = false
-                _currentUser.value = null
+                !isNetworkAvailable() -> {
+                    _signInResult.value = SignInResult.NETWORK_ERROR
+                }
+                else -> {
+                    if(signInSuccess) {
+                        _signInResult.value = SignInResult.SUCCESS
+
+                        val userAccount = authRepository.getUserAccountByEmailAddress(emailAddress)
+                        _isLoggedIn.value = true
+                        _currentUser.value = userAccount
+                        userAccount?.let {
+                            // Generate the token (ideally, this would be done by a secure server)
+                            val token = UUID.randomUUID().toString()
+                            // Create the login session with the generated token
+                            sessionManager.createLoginSession(it.emailAddress, token)
+                        }
+
+
+                        _isLoggedIn.value = true
+                        _currentUser.value = userAccount
+                    } else {
+                        _signInResult.value = SignInResult.UNKNOWN_ERROR
+
+                        // Handle login failure, update UI accordingly
+                        _isLoggedIn.value = false
+                        _currentUser.value = null
+                    }
+                }
             }
         }
     }
@@ -87,15 +112,21 @@ class UserViewModel(
                     val success = authRepository.signUp(emailAddress, password)
                     if (success) {
                         _signUpResult.value = SignUpResult.SUCCESS
+
                         // Create login session after successful sign up
                         val token = UUID.randomUUID().toString()
                         sessionManager.createLoginSession(emailAddress, token)
+
                         // Set the current user
                         val userAccount = UserAccount(emailAddress = emailAddress, password = password) // Replace with actual user account details
                         _isLoggedIn.value = true
                         _currentUser.value = userAccount
                     } else {
                         _signUpResult.value = SignUpResult.UNKNOWN_ERROR
+
+                        // Handle sign up failure, update UI accordingly
+                        _isLoggedIn.value = false
+                        _currentUser.value = null
                     }
                 }
             }

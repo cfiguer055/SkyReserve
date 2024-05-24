@@ -19,6 +19,8 @@ class AuthRepository(private val userAccountDao: UserAccountDao) {
                 // Query the local database to find the user by username and password
                 val userAccount = userAccountDao.getUserAccountByEmailAddress(emailAddress)
 
+                // This can get easily hacked with console.log. Add security measures or 3rd party server deals with it.
+
                 return@withContext userAccount != null && userAccount.password == password
             } catch (e: Exception) {
                 // Handle exceptions (e.g., database errors)

@@ -27,14 +27,18 @@ class SignInViewModel() : ViewModel() {
     fun signIn(email: String, password: String, callback: (SignInResult) -> Unit) {
         // Mock some conditions for different results
         when {
+            // Condition 1: Valid email format and correct password
             android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() &&
                     password.equals("password", ignoreCase = true) -> {
                 callback(SignInResult.SUCCESS)
             }
+
+            // Condition 2: Invalid email format or incorrect password
             !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() ||
                     !password.equals("password", ignoreCase = true) -> {
                 callback(SignInResult.INVALID_CREDENTIALS)
             }
+
             // You can add more conditions here if needed
             else -> {
                 callback(SignInResult.UNKNOWN_ERROR)

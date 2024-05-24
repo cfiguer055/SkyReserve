@@ -96,6 +96,7 @@ class HomeActivity : AppCompatActivity() {
 
         } else {
             // Handle invalid session, e.g., navigate to login
+            email = ""
             binding.nameText.text = ""
         }
 
