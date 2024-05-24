@@ -81,6 +81,15 @@ dependencies {
     // Orchestrator for managing test runs
     androidTestUtil "androidx.test:orchestrator:1.4.2"
 
+    // Local unit tests
+    // Arch Core Testing for LiveData and other architecture components
+    testImplementation "androidx.arch.core:core-testing:2.2.0"
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1'
+    testImplementation "com.google.truth:truth:1.4.2"
+    testImplementation "com.squareup.okhttp3:mockwebserver:4.12.0"
+    testImplementation "io.mockk:mockk:1.13.11"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:1.5.0"
+
 
     // Lifecycle Components
     // ViewModel
