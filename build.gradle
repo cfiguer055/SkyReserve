@@ -21,24 +21,17 @@ plugins {
 }
 
 // Root build.gradle file
-ext {
-    kotlin_version = '1.8.10'
-}
+//ext {
+//    kotlin_version = '1.8.10'
+//}
 
-allprojects {
+//allprojects {
 //    repositories {
 //        google()
 //        mavenCentral()
 //    }
+//}
 
-    configurations.all {
-        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-            if (details.requested.group == 'org.jetbrains.kotlin') {
-                details.useVersion kotlin_version
-            }
-        }
-    }
-}
 
 task clean(type: Delete) {
     delete rootProject.buildDir
