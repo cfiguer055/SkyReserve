@@ -1,5 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+    ext.kotlin_version = '1.0.0'
     repositories {
         mavenCentral() // Add this line
         google()
@@ -9,6 +10,7 @@ buildscript {
         classpath "com.android.tools.build:gradle:7.2.2"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.5.1"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -18,12 +20,25 @@ plugins {
     id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
 }
 
-//allprojects {
+// Root build.gradle file
+ext {
+    kotlin_version = '1.8.10'
+}
+
+allprojects {
 //    repositories {
 //        google()
-//        jcenter()
+//        mavenCentral()
 //    }
-//}
+
+    configurations.all {
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            if (details.requested.group == 'org.jetbrains.kotlin') {
+                details.useVersion kotlin_version
+            }
+        }
+    }
+}
 
 task clean(type: Delete) {
     delete rootProject.buildDir
