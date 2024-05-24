@@ -59,6 +59,28 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
 
+    // Core APIs for Android testing
+    androidTestImplementation "androidx.test:core:1.5.0"
+    // Kotlin extensions for core testing APIs
+    androidTestImplementation "androidx.test:core-ktx:1.5.0"
+
+    // Espresso core for UI testing
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
+
+    // JUnit extension APIs for testing
+    androidTestImplementation "androidx.test.ext:junit:1.1.5"
+    // Kotlin extensions for JUnit
+    androidTestImplementation "androidx.test.ext:junit-ktx:1.1.5"
+
+    // Truth extension APIs for assertion
+    androidTestImplementation "androidx.test.ext:truth:1.5.0"
+
+    // Runner APIs for Android tests
+    androidTestImplementation "androidx.test:runner:1.5.2"
+
+    // Orchestrator for managing test runs
+    androidTestUtil "androidx.test:orchestrator:1.4.2"
+
 
     // Lifecycle Components
     // ViewModel
