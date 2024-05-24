@@ -38,7 +38,7 @@ class UserViewModel(
     // Function to attempt user login
     fun signIn(emailAddress: String, password: String) {
         viewModelScope.launch {
-//            if (authRepository.signIn(emailAddress, password)) {
+
             val signInSuccess = authRepository.signIn(emailAddress, password)
             val isEmailExisting = authRepository.isEmailExisting(emailAddress)
             when {

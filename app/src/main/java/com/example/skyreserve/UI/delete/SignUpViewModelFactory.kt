@@ -1,4 +1,4 @@
-package com.example.skyreserve.UI.SignUp
+package com.example.skyreserve.UI.delete
 
 import android.content.Context
 import androidx.lifecycle.ViewModel

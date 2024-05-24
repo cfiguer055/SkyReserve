@@ -15,6 +15,7 @@ import com.example.skyreserve.Repository.AuthRepository
 import com.example.skyreserve.UI.Home.HomeActivity
 import com.example.skyreserve.UI.SignUp.SignUpActivity
 import com.example.skyreserve.UI.UserViewModelFactory
+import com.example.skyreserve.UI.delete.SignInViewModel
 import com.example.skyreserve.Util.SignInResult
 import com.example.skyreserve.Util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivitySignInBinding

@@ -1,8 +1,7 @@
-package com.example.skyreserve.UI.SignIn
+package com.example.skyreserve.UI.delete
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.skyreserve.Repository.AuthRepository
 
 
 // put into constructor later

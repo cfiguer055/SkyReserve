@@ -1,10 +1,9 @@
-package com.example.skyreserve.UI.SignUp
+package com.example.skyreserve.UI.delete
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.lifecycle.ViewModel
-import com.example.skyreserve.Database.Dao.UserAccountDao
 import com.example.skyreserve.Repository.AuthRepository
 import com.example.skyreserve.Util.SignUpResult
 
