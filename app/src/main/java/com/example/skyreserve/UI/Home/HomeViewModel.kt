@@ -61,3 +61,39 @@ class HomeViewModel(private val userAccountRepository: UserAccountRepository,
     }
 }
 
+//    fun updateUserDetails(userData: UserData) {
+//        viewModelScope.launch {
+//            val userEmail = withContext(Dispatchers.IO) {
+//                sessionManager.getUserEmail()
+//            }
+//
+//            if (userEmail != null) {
+//                val userAccount = withContext(Dispatchers.IO) {
+//                    userAccountRepository.getUserAccountByEmailAddress(userEmail)
+//                }
+//
+//                if (userAccount != null) {
+//                    // Update the user account object with userData fields
+//                    userAccount.firstName = userData.firstName
+//                    userAccount.lastName = userData.lastName
+//                    userAccount.gender = userData.gender
+//                    userAccount.phone = userData.phone
+//                    userAccount.dateOfBirth = userData.dateOfBirth
+//                    userAccount.address = userData.address
+//                    userAccount.stateCode = userData.stateCode
+//                    userAccount.countryCode = userData.countryCode
+//                    userAccount.passport = userData.passport
+//                    // ... set other fields as necessary
+//
+//                    withContext(Dispatchers.IO) {
+//                        userAccountRepository.updateUserAccount(userAccount)
+//                    }
+//                    _updateStatus.postValue(true) // Notify that update is successful
+//                } else {
+//                    _updateStatus.postValue(false) // Notify about the failure
+//                }
+//            } else {
+//                _updateStatus.postValue(false) // Notify about the failure
+//            }
+//        }
+//    }
