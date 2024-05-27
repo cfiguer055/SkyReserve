@@ -1,14 +1,15 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+    ext.kotlin_version = '1.7.10'
     repositories {
         mavenCentral() // Add this line
         google()
-        jcenter()
     }
     dependencies {
         classpath "com.android.tools.build:gradle:7.2.2"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.5.1"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -18,12 +19,35 @@ plugins {
     id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
 }
 
-//allprojects {
+// Root build.gradle file
+//ext {
+//    kotlin_version = '1.8.10'
+//}
+
+allprojects {
 //    repositories {
 //        google()
-//        jcenter()
+//        mavenCentral()
 //    }
-//}
+//    configurations.all {
+//        resolutionStrategy {
+//            force "org.jetbrains.kotlin:kotlin-stdlib:1.7.10"
+//            force "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
+//            force "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0"
+//            force "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0"
+//            force "com.squareup.okio:okio:3.0.0"
+//        }
+//    }
+    configurations.all {
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            if (details.requested.group == 'org.jetbrains.kotlin') {
+                details.useVersion '1.7.10'
+            }
+        }
+    }
+
+}
+
 
 task clean(type: Delete) {
     delete rootProject.buildDir
