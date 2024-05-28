@@ -39,7 +39,7 @@ class AuthViewModel @Inject constructor(
 
 
     private val _isLoggedIn = MutableStateFlow(false)
-    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
+    val isLoggedIn: StateFlow<Boolean> get() = _isLoggedIn
 
     // LiveData or StateFlow to hold the sign-up and sign-in result
     private val _signUpResult = MutableLiveData<SignUpResult>()
@@ -186,7 +186,7 @@ class AuthViewModel @Inject constructor(
 
 
     // Network availability check function
-    private fun isNetworkAvailable(): Boolean {
+    fun isNetworkAvailable(): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false
         val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
