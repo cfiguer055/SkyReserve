@@ -42,7 +42,9 @@ class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
     //private lateinit var signUpViewModel: SignUpViewModel
+
     private val userViewModel: UserViewModel by viewModels()
+    // private lateinit var userViewModel: UserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.skyreserve.App.MyApp
@@ -27,6 +28,7 @@ import com.example.skyreserve.databinding.DialogAirportAutoCompleteBinding
 import com.example.skyreserve.databinding.DialogSignUpBinding
 import java.text.SimpleDateFormat
 import com.example.skyreserve.Repository.DatabaseRepository.UserAccountRepository
+import com.example.skyreserve.UI.UserViewModel
 import com.example.skyreserve.Util.LocalSessionManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -48,6 +50,8 @@ class HomeActivity : AppCompatActivity() {
 
     @Inject
     lateinit var logger: UserInteractionLogger
+
+    private val userViewModel: UserViewModel by viewModels()
 
     private var passengerCount = 1
     private val maxPassengerCount = 9
@@ -93,7 +97,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         // Validate session and get user email
-        if (sessionManager.isTokenValid()) {
+        if (userViewModel.validateSession()) {
             // Use userEmail to fetch user details if needed
 
             email = sessionManager.getUserEmail().toString()
@@ -263,8 +267,8 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun fetchUserDetailsAfterSignUp() {
-        if (sessionManager.isTokenValid()) {
-            email = sessionManager.getUserEmail().toString()
+        if (userViewModel.validateSession()) {
+            email = userViewModel.getUserEmail().toString()
             homeViewModel.fetchUserDetails(email)
 
             Log.d("fetchUserDetailsAfterSignUp", "Valid Email")

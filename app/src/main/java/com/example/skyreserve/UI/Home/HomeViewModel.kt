@@ -59,6 +59,9 @@ class HomeViewModel(private val userAccountRepository: UserAccountRepository,
             }
         }
     }
+
+
+
 }
 
 //    fun updateUserDetails(userData: UserData) {

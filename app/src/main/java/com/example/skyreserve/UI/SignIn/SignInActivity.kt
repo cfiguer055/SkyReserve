@@ -43,6 +43,7 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignInBinding
 
     private val userViewModel: UserViewModel by viewModels()
+    // private lateinit var userViewModel: UserViewModel
 
     private lateinit var email: String
 

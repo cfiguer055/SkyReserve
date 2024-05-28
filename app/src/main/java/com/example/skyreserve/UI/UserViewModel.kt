@@ -146,17 +146,33 @@ class UserViewModel @Inject constructor(
     }
 
     // Function to log out the user
-    private fun logout() {
+    fun logout() {
         sessionManager.logoutUser()
         _isLoggedIn.value = false
         _currentUser.value = null
     }
 
+
+    // Im thinking of moving data retrieval to a different loggedinUserViewModel while this one
+    // will remain for users not in home page yet
     // Call this when the app starts or resumes to check if the user should remain logged in
-    fun validateSession() {
-        if (!sessionManager.isTokenValid()) {
+    fun validateSession() : Boolean {
+        return if (!sessionManager.isTokenValid()) {
             logout()
+            false
+        } else {
+            true
         }
+    }
+
+
+    // Im thinking of moving data retrieval to a different loggedinUserViewModel while this one
+    // will remain for users not in home page yet
+    fun getUserEmail(): String? {
+        if (validateSession()) {
+            return getUserEmail()
+        }
+        return null
     }
 
     // Call this method to renew the token
@@ -173,6 +189,9 @@ class UserViewModel @Inject constructor(
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
+
+    // Im thinking of moving data retrieval to a different loggedinUserViewModel while this one
+    // will remain for users not in home page yet
     // Email existence check function
     private suspend fun isEmailExisting(email: String): Boolean {
         return authRepository.isEmailExisting(email)
