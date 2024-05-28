@@ -28,17 +28,26 @@ import com.example.skyreserve.databinding.DialogSignUpBinding
 import java.text.SimpleDateFormat
 import com.example.skyreserve.Repository.DatabaseRepository.UserAccountRepository
 import com.example.skyreserve.Util.LocalSessionManager
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
     private lateinit var homeViewModel: HomeViewModel
 
     // This is the request code you will use when launching the FlightSearchActivity
     private val FLIGHT_SEARCH_REQUEST_CODE = 1  // This can be any integer unique to the Activity
     private lateinit var binding: ActivityHomeBinding
-    private lateinit var sessionManager: LocalSessionManager
-    private lateinit var userAccountRepository: UserAccountRepository
-    private lateinit var logger: UserInteractionLogger
+
+    @Inject
+    lateinit var sessionManager: LocalSessionManager
+
+    @Inject
+    lateinit var userAccountRepository: UserAccountRepository
+
+    @Inject
+    lateinit var logger: UserInteractionLogger
 
     private var passengerCount = 1
     private val maxPassengerCount = 9
@@ -70,7 +79,7 @@ class HomeActivity : AppCompatActivity() {
         //sessionManager = (applicationContext as MyApp).sessionManager
 
         //val userAccountDao = (application as MyApp).userAccountDao
-        userAccountRepository = UserAccountRepository(application)
+        // userAccountRepository = UserAccountRepository(application)
         //val sessionManager = LocalSessionManager(this)
 
         homeViewModel = ViewModelProvider(this, HomeViewModelFactory(userAccountRepository, sessionManager, this))[HomeViewModel::class.java]

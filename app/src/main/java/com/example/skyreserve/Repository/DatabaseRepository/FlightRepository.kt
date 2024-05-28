@@ -8,20 +8,27 @@ import com.example.skyreserve.Database.Entity.Flight
 import com.example.skyreserve.Database.SkyReserveDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class FlightRepository(application: Application) {
-    private val flightDao: FlightDao
-    private val allFlights: LiveData<List<Flight>>
+@Singleton
+class FlightRepository  @Inject constructor(private val flightDao: FlightDao) {
+//    private val flightDao: FlightDao
+//    private val allFlights: LiveData<List<Flight>>
     // ... other properties
 
-    init {
-        val database = SkyReserveDatabase.getInstance(application)
-        flightDao = database.flightDao()
-        allFlights = flightDao.getAllFlightsFlow()
-            .flowOn(Dispatchers.IO)
-            .asLiveData()
-        // initialize other properties
-    }
+//    init {
+//        val database = SkyReserveDatabase.getInstance(application)
+//        flightDao = database.flightDao()
+//        allFlights = flightDao.getAllFlightsFlow()
+//            .flowOn(Dispatchers.IO)
+//            .asLiveData()
+//        // initialize other properties
+//    }
+
+    private val allFlights: LiveData<List<Flight>> = flightDao.getAllFlightsFlow()
+        .flowOn(Dispatchers.IO)
+        .asLiveData()
 
     //Repository Methods
     suspend fun insertFlight(flight: Flight) {

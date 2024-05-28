@@ -9,20 +9,27 @@ import com.example.skyreserve.Database.SkyReserveDatabase
 import com.example.skyreserve.UI.Home.HomeActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class UserAccountRepository(application: Application) {
-    private val userAccountDao: UserAccountDao
-    private val allUsersAccounts: LiveData<List<UserAccount>>
-    // ... other properties
+@Singleton
+class UserAccountRepository @Inject constructor(private val userAccountDao: UserAccountDao) {
+//    private val userAccountDao: UserAccountDao
+//    private val allUsersAccounts: LiveData<List<UserAccount>>
+//    // ... other properties
+//
+//    init {
+//        val database = SkyReserveDatabase.getInstance(application)
+//        userAccountDao = database.userAccountDao()
+//        allUsersAccounts = userAccountDao.getAllUsersFlow()
+//            .flowOn(Dispatchers.IO)
+//            .asLiveData()
+//        // initialize other properties
+//    }
 
-    init {
-        val database = SkyReserveDatabase.getInstance(application)
-        userAccountDao = database.userAccountDao()
-        allUsersAccounts = userAccountDao.getAllUsersFlow()
-            .flowOn(Dispatchers.IO)
-            .asLiveData()
-        // initialize other properties
-    }
+    private val allUsersAccounts: LiveData<List<UserAccount>> = userAccountDao.getAllUsersFlow()
+        .flowOn(Dispatchers.IO)
+        .asLiveData()
 
     // Repository Methods
     // MAYBE HAVE AUTHREPO USE THIS

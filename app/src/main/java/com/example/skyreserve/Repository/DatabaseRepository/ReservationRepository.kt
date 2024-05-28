@@ -8,20 +8,29 @@ import com.example.skyreserve.Database.Entity.Reservation
 import com.example.skyreserve.Database.SkyReserveDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ReservationRepository(application: Application) {
-    private val reservationDao: ReservationDao
-    private val allReservations: LiveData<List<Reservation>>
-    // ... other properties
+@Singleton
+class ReservationRepository @Inject constructor(private val reservationDao: ReservationDao) {
+//    private val reservationDao: ReservationDao
+//    private val allReservations: LiveData<List<Reservation>>
+//    // ... other properties
+//
+//    init {
+//        val database = SkyReserveDatabase.getInstance(application)
+//        reservationDao = database.reservationDao()
+//        allReservations = reservationDao.getAllReservationsFlow()
+//            .flowOn(Dispatchers.IO)
+//            .asLiveData()
+//        // initialize other properties
+//    }
 
-    init {
-        val database = SkyReserveDatabase.getInstance(application)
-        reservationDao = database.reservationDao()
-        allReservations = reservationDao.getAllReservationsFlow()
-            .flowOn(Dispatchers.IO)
-            .asLiveData()
-        // initialize other properties
-    }
+    private val allReservations: LiveData<List<Reservation>> = reservationDao.getAllReservationsFlow()
+        .flowOn(Dispatchers.IO)
+        .asLiveData()
+
+
 
     //Repository Methods
     suspend fun insertReservation(reservation: Reservation) {

@@ -13,6 +13,7 @@ import com.example.skyreserve.R
 import com.example.skyreserve.Repository.AuthRepository
 import com.example.skyreserve.UI.Home.HomeActivity
 import com.example.skyreserve.UI.SignUp.SignUpActivity
+import com.example.skyreserve.UI.UserViewModel
 import com.example.skyreserve.UI.UserViewModelFactory
 import com.example.skyreserve.UI.delete.SignInViewModel
 import com.example.skyreserve.Util.LocalSessionManager
@@ -41,7 +42,7 @@ class SignInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignInBinding
 
-    // private val userViewModel: UserViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
 
     private lateinit var email: String
 

@@ -31,7 +31,7 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor(
     private val authRepository: AuthRepository, // Handles authentication logic
     private val sessionManager: LocalSessionManager, // Manages local session state
-    private val context: Context // Added for network check
+    @ApplicationContext private val context: Context // Added for network check
 ) : ViewModel() {
 
     private val _isLoggedIn = MutableStateFlow(false)
@@ -146,7 +146,7 @@ class UserViewModel @Inject constructor(
     }
 
     // Function to log out the user
-    fun logout() {
+    private fun logout() {
         sessionManager.logoutUser()
         _isLoggedIn.value = false
         _currentUser.value = null
