@@ -3,12 +3,14 @@ package com.example.skyreserve.UI
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import androidx.activity.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skyreserve.Database.Entity.UserAccount
 import com.example.skyreserve.Repository.AuthRepository
+import com.example.skyreserve.UI.Home.UserAccountViewModel
 import com.example.skyreserve.Util.LocalSessionManager
 import com.example.skyreserve.Util.SignInResult
 import com.example.skyreserve.Util.SignUpResult
@@ -19,6 +21,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
+import androidx.activity.viewModels
 
 
 /*
@@ -28,11 +31,12 @@ import javax.inject.Inject
 * LocalSessionManager, and Context.
 * */
 @HiltViewModel
-class UserViewModel @Inject constructor(
+class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository, // Handles authentication logic
     private val sessionManager: LocalSessionManager, // Manages local session state
     @ApplicationContext private val context: Context // Added for network check
 ) : ViewModel() {
+
 
     private val _isLoggedIn = MutableStateFlow(false)
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
@@ -46,6 +50,7 @@ class UserViewModel @Inject constructor(
 
     private val _currentUser = MutableStateFlow<UserAccount?>(null)
     val currentUser: StateFlow<UserAccount?> = _currentUser
+
 
     // Function to attempt user login
     fun signIn(emailAddress: String, password: String) {
@@ -145,6 +150,15 @@ class UserViewModel @Inject constructor(
         }
     }
 
+    fun validateSession() : Boolean {
+        return sessionManager.isTokenValid()
+    }
+
+    fun refreshSessionToken() {
+        sessionManager.renewToken()
+    }
+
+
     // Function to log out the user
     fun logout() {
         sessionManager.logoutUser()
@@ -153,32 +167,22 @@ class UserViewModel @Inject constructor(
     }
 
 
-    // Im thinking of moving data retrieval to a different loggedinUserViewModel while this one
-    // will remain for users not in home page yet
+
     // Call this when the app starts or resumes to check if the user should remain logged in
-    fun validateSession() : Boolean {
-        return if (!sessionManager.isTokenValid()) {
-            logout()
-            false
-        } else {
-            true
-        }
-    }
+//    fun validateSession() : Boolean {
+//        return if (!sessionManager.isTokenValid()) {
+//            logout()
+//            false
+//        } else {
+//            true
+//        }
+//    }
 
-
-    // Im thinking of moving data retrieval to a different loggedinUserViewModel while this one
-    // will remain for users not in home page yet
-    fun getUserEmail(): String? {
-        if (validateSession()) {
-            return getUserEmail()
-        }
-        return null
-    }
 
     // Call this method to renew the token
-    fun refreshSessionToken() {
-        sessionManager.renewToken()
-    }
+//    fun refreshSessionToken() {
+//        sessionManager.renewToken()
+//    }
 
 
     // Network availability check function
@@ -189,9 +193,6 @@ class UserViewModel @Inject constructor(
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
-
-    // Im thinking of moving data retrieval to a different loggedinUserViewModel while this one
-    // will remain for users not in home page yet
     // Email existence check function
     private suspend fun isEmailExisting(email: String): Boolean {
         return authRepository.isEmailExisting(email)

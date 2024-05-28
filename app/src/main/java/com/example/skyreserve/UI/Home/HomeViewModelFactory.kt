@@ -11,8 +11,8 @@ class HomeViewModelFactory(private val userAccountRepository: UserAccountReposit
                            private val context: Context)
     : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-            return HomeViewModel(userAccountRepository, localSessionManager, context) as T
+        if (modelClass.isAssignableFrom(UserAccountViewModel::class.java)) {
+            return UserAccountViewModel(userAccountRepository, localSessionManager, context) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

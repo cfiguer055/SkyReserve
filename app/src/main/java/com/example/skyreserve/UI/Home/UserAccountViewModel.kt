@@ -8,14 +8,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skyreserve.Repository.DatabaseRepository.UserAccountRepository
 import com.example.skyreserve.Util.LocalSessionManager
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class HomeViewModel(private val userAccountRepository: UserAccountRepository,
-                    private val sessionManager: LocalSessionManager, // Manages local session state
-                    private val context: Context)
-    : ViewModel() {
+@HiltViewModel
+class UserAccountViewModel @Inject constructor (
+    private val userAccountRepository: UserAccountRepository,
+    private val sessionManager: LocalSessionManager, // Manages local session state
+    @ApplicationContext private val context: Context
+    ) : ViewModel() {
+
+
     private val _userName = MutableLiveData<String?>()
     val userName: MutableLiveData<String?> = _userName
 
@@ -35,7 +42,8 @@ class HomeViewModel(private val userAccountRepository: UserAccountRepository,
     fun updateUserDetails(userData: UserData) { // UserData is a data class holding user details
         viewModelScope.launch(Dispatchers.IO) {
             val userEmail = sessionManager.getUserEmail()
-            val userAccount = userEmail?.let { userAccountRepository.getUserAccountByEmailAddress(it) }
+            val userAccount =
+                userEmail?.let { userAccountRepository.getUserAccountByEmailAddress(it) }
 
             if (userAccount != null) {
                 // Update the user account object with userData fields
@@ -61,6 +69,21 @@ class HomeViewModel(private val userAccountRepository: UserAccountRepository,
     }
 
 
+    fun validateSession() : Boolean {
+        return sessionManager.isTokenValid()
+    }
+
+    fun getUserEmail(): String? {
+        if (validateSession()) {
+            return sessionManager.getUserEmail()
+        }
+        return null
+    }
+
+    fun clear() {
+        _userName.value = null
+        _updateStatus.value = false
+    }
 
 }
 

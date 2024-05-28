@@ -15,8 +15,6 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import com.example.skyreserve.App.MyApp
 import com.example.skyreserve.R
 import com.example.skyreserve.UI.Account.AccountActivity
 import com.example.skyreserve.UI.FlightSearch.FlightSearchActivity
@@ -28,7 +26,7 @@ import com.example.skyreserve.databinding.DialogAirportAutoCompleteBinding
 import com.example.skyreserve.databinding.DialogSignUpBinding
 import java.text.SimpleDateFormat
 import com.example.skyreserve.Repository.DatabaseRepository.UserAccountRepository
-import com.example.skyreserve.UI.UserViewModel
+import com.example.skyreserve.UI.AuthViewModel
 import com.example.skyreserve.Util.LocalSessionManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -36,7 +34,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
-    private lateinit var homeViewModel: HomeViewModel
+//    private lateinit var userAccountViewModel: UserAccountViewModel
 
     // This is the request code you will use when launching the FlightSearchActivity
     private val FLIGHT_SEARCH_REQUEST_CODE = 1  // This can be any integer unique to the Activity
@@ -51,7 +49,8 @@ class HomeActivity : AppCompatActivity() {
     @Inject
     lateinit var logger: UserInteractionLogger
 
-    private val userViewModel: UserViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
+    private val userAccountViewModel: UserAccountViewModel by viewModels()
 
     private var passengerCount = 1
     private val maxPassengerCount = 9
@@ -86,24 +85,24 @@ class HomeActivity : AppCompatActivity() {
         // userAccountRepository = UserAccountRepository(application)
         //val sessionManager = LocalSessionManager(this)
 
-        homeViewModel = ViewModelProvider(this, HomeViewModelFactory(userAccountRepository, sessionManager, this))[HomeViewModel::class.java]
+        // userAccountViewModel = ViewModelProvider(this, HomeViewModelFactory(userAccountRepository, sessionManager, this))[UserAccountViewModel::class.java]
 
 
         val isNewUser = intent.getBooleanExtra("FROM_SIGN_UP", false)
         if (isNewUser) {
             showSignUpDialog()
         } else {
-            fetchUserDetailsAfterSignUp()
+            fetchUserDetailsAfterSignIn()
         }
 
         // Validate session and get user email
-        if (userViewModel.validateSession()) {
+        if (authViewModel.validateSession()) {
             // Use userEmail to fetch user details if needed
 
             email = sessionManager.getUserEmail().toString()
-            homeViewModel.fetchUserDetails(email)
+            userAccountViewModel.fetchUserDetails(email)
 
-            homeViewModel.userName.observe(this) { name ->
+            userAccountViewModel.userName.observe(this) { name ->
                 binding.nameText.text = name
             }
 
@@ -241,7 +240,9 @@ class HomeActivity : AppCompatActivity() {
             setView(binding.root)
             setPositiveButton("Submit") { _, _ ->
                 // Get the user's email from session manager
-                val userEmail = LocalSessionManager(this@HomeActivity).getUserEmail() ?: return@setPositiveButton
+                //val userEmail = LocalSessionManager(this@HomeActivity).getUserEmail() ?: return@setPositiveButton
+
+                email = userAccountViewModel.getUserEmail().toString()
 
                 // Collect data from the UI
                 val userData = UserData(
@@ -256,24 +257,24 @@ class HomeActivity : AppCompatActivity() {
                     passport = binding.passportEditText.text.toString()
                 )
                 // Pass data to ViewModel to handle the update
-                homeViewModel.updateUserDetails(userData)
+                userAccountViewModel.updateUserDetails(userData)
 
                 // After updating, fetch user details to update UI
-                fetchUserDetailsAfterSignUp()
+                fetchUserDetailsAfterSignIn()
             }
             setNegativeButton("Cancel", null)
         }.create()
         dialog.show()
     }
 
-    private fun fetchUserDetailsAfterSignUp() {
-        if (userViewModel.validateSession()) {
-            email = userViewModel.getUserEmail().toString()
-            homeViewModel.fetchUserDetails(email)
+    private fun fetchUserDetailsAfterSignIn() {
+        if (authViewModel.validateSession()) {
+            email = userAccountViewModel.getUserEmail().toString()
+            userAccountViewModel.fetchUserDetails(email)
 
             Log.d("fetchUserDetailsAfterSignUp", "Valid Email")
 
-            homeViewModel.userName.observe(this) { name ->
+            userAccountViewModel.userName.observe(this) { name ->
                 Log.d("fetchUserDetailsAfterSignUp", name.toString())
                 binding.nameText.text = name
             }

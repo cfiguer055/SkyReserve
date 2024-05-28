@@ -4,8 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.skyreserve.App.MyApp
-import com.example.skyreserve.UI.UserViewModel
+import com.example.skyreserve.UI.AuthViewModel
+import com.example.skyreserve.UI.Home.UserAccountViewModel
 import com.example.skyreserve.UI.Welcome.WelcomeActivity
 import com.example.skyreserve.Util.LocalSessionManager
 import com.example.skyreserve.Util.UserInteractionLogger
@@ -23,7 +23,8 @@ class AccountActivity : AppCompatActivity() {
     @Inject
     lateinit var logger: UserInteractionLogger
 
-    private val userViewModel: UserViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
+    private val userAccountViewModel: UserAccountViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +59,8 @@ class AccountActivity : AppCompatActivity() {
         // dont call this directly from sessionManager. use userviewmodel
         //sessionManager.logoutUser()
 
-        userViewModel.logout()
+        authViewModel.logout()
+        userAccountViewModel.clear()
 
         val intent = Intent(this, WelcomeActivity::class.java)
         startActivity(intent)

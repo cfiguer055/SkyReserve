@@ -7,15 +7,11 @@ import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.ViewModelProvider
-import com.example.skyreserve.App.MyApp
 import com.example.skyreserve.R
 import com.example.skyreserve.Repository.AuthRepository
 import com.example.skyreserve.UI.Home.HomeActivity
 import com.example.skyreserve.UI.SignUp.SignUpActivity
-import com.example.skyreserve.UI.UserViewModel
-import com.example.skyreserve.UI.UserViewModelFactory
-import com.example.skyreserve.UI.delete.SignInViewModel
+import com.example.skyreserve.UI.AuthViewModel
 import com.example.skyreserve.Util.LocalSessionManager
 import com.example.skyreserve.Util.SignInResult
 import com.example.skyreserve.Util.UserInteractionLogger
@@ -42,7 +38,7 @@ class SignInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignInBinding
 
-    private val userViewModel: UserViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
     // private lateinit var userViewModel: UserViewModel
 
     private lateinit var email: String
@@ -81,7 +77,7 @@ class SignInActivity : AppCompatActivity() {
 //                        SignInResult.UNKNOWN_ERROR -> showSignInError("An unknown error occurred.")
 //                    }
 //                }
-                userViewModel.signIn(email, password)
+                authViewModel.signIn(email, password)
                 observeSignInResult()
 
             } catch (e: Exception) {
@@ -149,7 +145,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun observeSignInResult() {
-        userViewModel.signInResult.observe(this) { result ->
+        authViewModel.signInResult.observe(this) { result ->
             when (result) {
                 SignInResult.SUCCESS -> navigateToHome()
                 SignInResult.INVALID_CREDENTIALS -> showSignInError("Invalid credentials. Please try again.")

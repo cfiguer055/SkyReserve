@@ -10,6 +10,7 @@ import com.example.skyreserve.Database.Dao.UserAccountDao
 import com.example.skyreserve.Database.Entity.UserAccount
 import com.example.skyreserve.Database.SkyReserveDatabase
 import com.example.skyreserve.Repository.AuthRepository
+import com.example.skyreserve.Repository.DatabaseRepository.UserAccountRepository
 import com.example.skyreserve.Util.LocalSessionManager
 // import com.example.skyreserve.Util.DatabaseInitializer
 import com.example.skyreserve.Util.UserInteractionLogger
@@ -26,16 +27,6 @@ import javax.inject.Singleton
 @Module // Indicates that this class is a Dagger module
 @InstallIn(SingletonComponent::class) // Specifies the component where this module will be installed
 class AppModule {
-
-//    @Provides
-//    @Singleton
-//    fun provideDatabase(@ApplicationContext context: Context): SkyReserveDatabase {
-//        return Room.databaseBuilder(
-//            context.applicationContext,
-//            SkyReserveDatabase::class.java,
-//            "skyreserve_database"
-//        ).build()
-//    }
 
     @Provides
     @Singleton
@@ -70,16 +61,6 @@ class AppModule {
         return database.userAccountDao()
     }
 
-    @Provides
-    @Singleton
-    fun provideUserInteractionLogger(@ApplicationContext context: Context): UserInteractionLogger {
-        return UserInteractionLogger(context)
-    }
-
-//    @Provides // Indicates that this function provides a dependency
-//    fun provideAuthRepository(userAccountDao: UserAccountDao): AuthRepository {
-//        return AuthRepository(userAccountDao)
-//    }
 
     @Provides // Indicates that this function provides a dependency
     @Singleton
@@ -87,10 +68,21 @@ class AppModule {
         return LocalSessionManager(context) // Creates and returns an instance of LocalSessionManager
     }
 
-
     @Provides
     @Singleton
     fun provideAuthRepository(userAccountDao: UserAccountDao): AuthRepository {
         return AuthRepository(userAccountDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserAccountRepository(database: SkyReserveDatabase): UserAccountRepository {
+        return UserAccountRepository(database.userAccountDao())
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserInteractionLogger(@ApplicationContext context: Context): UserInteractionLogger {
+        return UserInteractionLogger(context)
     }
 }

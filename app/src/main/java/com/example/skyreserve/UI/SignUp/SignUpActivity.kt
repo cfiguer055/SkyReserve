@@ -7,14 +7,11 @@ import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.ViewModelProvider
-import com.example.skyreserve.App.MyApp
 import com.example.skyreserve.R
 import com.example.skyreserve.Repository.AuthRepository
 import com.example.skyreserve.UI.Home.HomeActivity
 import com.example.skyreserve.UI.SignIn.SignInActivity
-import com.example.skyreserve.UI.UserViewModel
-import com.example.skyreserve.UI.UserViewModelFactory
+import com.example.skyreserve.UI.AuthViewModel
 import com.example.skyreserve.Util.LocalSessionManager
 import com.example.skyreserve.Util.SignUpResult
 import com.example.skyreserve.Util.UserInteractionLogger
@@ -43,7 +40,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
     //private lateinit var signUpViewModel: SignUpViewModel
 
-    private val userViewModel: UserViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
     // private lateinit var userViewModel: UserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,7 +78,7 @@ class SignUpActivity : AppCompatActivity() {
             try {
                 disableSignUpUI()
 
-                userViewModel.signUp(email, password, confirmPassword)
+                authViewModel.signUp(email, password, confirmPassword)
                 observeSignUpResult()
             } catch (e: Exception) {
                 Log.e("SignUpActivity", "Error during sign up", e)
@@ -146,7 +143,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun observeSignUpResult() {
-        userViewModel.signUpResult.observe(this) { result ->
+        authViewModel.signUpResult.observe(this) { result ->
             when (result) {
                 SignUpResult.SUCCESS -> navigateToHome()
                 SignUpResult.MISSING_INFORMATION -> showSignUpError("Please fill out all fields.", "MISSING_INFORMATION")
