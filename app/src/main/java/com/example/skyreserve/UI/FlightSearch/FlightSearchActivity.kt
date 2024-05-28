@@ -50,7 +50,7 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         binding = ActivityFlightSearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        logger = (application as MyApp).logger
+        //logger = (application as MyApp).logger
         logger.logInteraction("FlightSearchActivity:")
 
         loadIntentData()

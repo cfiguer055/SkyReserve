@@ -1,6 +1,5 @@
 package com.example.skyreserve.UI.SignUp
 
-import LocalSessionManager
 import UserViewModel
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +14,7 @@ import com.example.skyreserve.Repository.AuthRepository
 import com.example.skyreserve.UI.Home.HomeActivity
 import com.example.skyreserve.UI.SignIn.SignInActivity
 import com.example.skyreserve.UI.UserViewModelFactory
+import com.example.skyreserve.Util.LocalSessionManager
 import com.example.skyreserve.Util.SignUpResult
 import com.example.skyreserve.databinding.ActivitySignUpBinding
 
@@ -35,11 +35,11 @@ class SignUpActivity : AppCompatActivity() {
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val userAccountDao = (application as MyApp).userAccountDao
-        authRepository = AuthRepository(userAccountDao) // Create an instance of AuthRepository with the required dependencies
+        //val userAccountDao = (application as MyApp).userAccountDao
+        //authRepository = AuthRepository(userAccountDao) // Create an instance of AuthRepository with the required dependencies
         //signUpViewModel = ViewModelProvider(this, SignUpViewModelFactory(authRepository, this))[SignUpViewModel::class.java]
-        val sessionManager = LocalSessionManager(this)
-        userViewModel = ViewModelProvider(this, UserViewModelFactory(authRepository, sessionManager, this))[UserViewModel::class.java]
+        //val sessionManager = LocalSessionManager(this)
+        // userViewModel = ViewModelProvider(this, UserViewModelFactory(authRepository, sessionManager, this))[UserViewModel::class.java]
 
 
 

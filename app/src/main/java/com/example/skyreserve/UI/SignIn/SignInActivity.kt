@@ -1,12 +1,11 @@
 package com.example.skyreserve.UI.SignIn
 
-import LocalSessionManager
-import UserViewModel
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.example.skyreserve.App.MyApp
@@ -16,17 +15,33 @@ import com.example.skyreserve.UI.Home.HomeActivity
 import com.example.skyreserve.UI.SignUp.SignUpActivity
 import com.example.skyreserve.UI.UserViewModelFactory
 import com.example.skyreserve.UI.delete.SignInViewModel
+import com.example.skyreserve.Util.LocalSessionManager
 import com.example.skyreserve.Util.SignInResult
 import com.example.skyreserve.Util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivitySignInBinding
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+/*
+* If you annotate an Android class with @AndroidEntryPoint, then you also must annotate
+* Android classes that depend on it (Inject). For example, if you annotate a fragment, then you must
+*  also annotate any activities where you use that fragment.*/
+@AndroidEntryPoint
 class SignInActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var authRepository: AuthRepository
+
+    @Inject
+    lateinit var sessionManager: LocalSessionManager
+
+    @Inject
+    lateinit var logger: UserInteractionLogger
+
+
     private lateinit var binding: ActivitySignInBinding
-    private lateinit var userViewModel: UserViewModel
-    private lateinit var signInViewModel: SignInViewModel
-    private lateinit var authRepository: AuthRepository
-    private lateinit var logger: UserInteractionLogger
+
+    // private val userViewModel: UserViewModel by viewModels()
 
     private lateinit var email: String
 
@@ -35,14 +50,14 @@ class SignInActivity : AppCompatActivity() {
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val userAccountDao = (application as MyApp).userAccountDao
-        authRepository = AuthRepository(userAccountDao)
-        val sessionManager = LocalSessionManager(this)
+        //val userAccountDao = (application as MyApp).userAccountDao
+        //authRepository = AuthRepository(userAccountDao)
+        // val sessionManager = LocalSessionManager(this)
 
-        userViewModel = ViewModelProvider(this, UserViewModelFactory(authRepository, sessionManager, this))[UserViewModel::class.java]
-        //signInViewModel = ViewModelProvider(this, SignInViewModelFactory()).get(SignInViewModel::class.java)
+        // userViewModel = ViewModelProvider(this, UserViewModelFactory(authRepository, sessionManager, this))[UserViewModel::class.java]
+        // signInViewModel = ViewModelProvider(this, SignInViewModelFactory()).get(SignInViewModel::class.java)
 
-        logger = (application as MyApp).logger
+        //logger = (application as MyApp).logger
 
 
         // Add TextChangedListeners to reset the colors when the user starts typing

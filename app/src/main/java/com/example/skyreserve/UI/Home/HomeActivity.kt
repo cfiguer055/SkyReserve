@@ -1,6 +1,5 @@
 package com.example.skyreserve.UI.Home
 
-import LocalSessionManager
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
@@ -28,6 +27,7 @@ import com.example.skyreserve.databinding.DialogAirportAutoCompleteBinding
 import com.example.skyreserve.databinding.DialogSignUpBinding
 import java.text.SimpleDateFormat
 import com.example.skyreserve.Repository.DatabaseRepository.UserAccountRepository
+import com.example.skyreserve.Util.LocalSessionManager
 import java.util.*
 
 class HomeActivity : AppCompatActivity() {
@@ -65,13 +65,13 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Initialize logger
-        logger = (applicationContext as MyApp).logger
+        //logger = (applicationContext as MyApp).logger
         // Initialize sessionManager
-        sessionManager = (applicationContext as MyApp).sessionManager
+        //sessionManager = (applicationContext as MyApp).sessionManager
 
-        val userAccountDao = (application as MyApp).userAccountDao
+        //val userAccountDao = (application as MyApp).userAccountDao
         userAccountRepository = UserAccountRepository(application)
-        val sessionManager = LocalSessionManager(this)
+        //val sessionManager = LocalSessionManager(this)
 
         homeViewModel = ViewModelProvider(this, HomeViewModelFactory(userAccountRepository, sessionManager, this))[HomeViewModel::class.java]
 
@@ -102,7 +102,7 @@ class HomeActivity : AppCompatActivity() {
 
         setupBottomNavigation()
 
-        logger = (application as MyApp).logger
+       // logger = (application as MyApp).logger
         logger.logInteraction("HomeActivity:")
 
         binding.oneWayRadioButton.setOnClickListener {

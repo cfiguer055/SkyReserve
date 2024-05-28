@@ -1,7 +1,6 @@
 package com.example.skyreserve.Util
 
 import org.junit.Test
-import LocalSessionManager
 import android.content.Context
 import android.content.SharedPreferences
 

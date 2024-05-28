@@ -1,12 +1,14 @@
+package com.example.skyreserve.Util
+
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import java.util.*
+import javax.inject.Singleton
 
 
-
-
+@Singleton
 class LocalSessionManager(private val prefs: SharedPreferences) {
     /**
      * Primary constructor to initialize LocalSessionManager in testing (To not mock

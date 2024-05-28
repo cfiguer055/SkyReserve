@@ -1,10 +1,10 @@
 package com.example.skyreserve.UI.Home
 
-import LocalSessionManager
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.skyreserve.Repository.DatabaseRepository.UserAccountRepository
+import com.example.skyreserve.Util.LocalSessionManager
 
 class HomeViewModelFactory(private val userAccountRepository: UserAccountRepository,
                            private val localSessionManager: LocalSessionManager,

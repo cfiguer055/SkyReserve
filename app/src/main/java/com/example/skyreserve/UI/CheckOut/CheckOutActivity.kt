@@ -41,7 +41,7 @@ class CheckOutActivity : AppCompatActivity() {
         binding = ActivityCheckOutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        logger = (application as MyApp).logger
+        //logger = (application as MyApp).logger
         logger.logInteraction("CheckOutActivity:")
 
         // Retrieve intent extras

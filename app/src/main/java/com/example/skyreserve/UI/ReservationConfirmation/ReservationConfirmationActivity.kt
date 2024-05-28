@@ -40,7 +40,7 @@ class ReservationConfirmationActivity: AppCompatActivity() {
         binding = ActivityReservationConfirmationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        logger = (application as MyApp).logger
+        //logger = (application as MyApp).logger
         logger.logInteraction("ReservationConfirmationActivity:")
 
         loadIntentData()

@@ -1,12 +1,12 @@
 package com.example.skyreserve.UI
 
-import LocalSessionManager
 import UserViewModel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.skyreserve.Repository.AuthRepository
 import com.example.skyreserve.UI.Home.HomeActivity
+import com.example.skyreserve.Util.LocalSessionManager
 
 class UserViewModelFactory(private val authRepository: AuthRepository,
                            private val localSessionManager: LocalSessionManager,

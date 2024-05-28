@@ -1,4 +1,4 @@
-
+package com.example.skyreserve.UI
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -9,14 +9,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skyreserve.Database.Entity.UserAccount
 import com.example.skyreserve.Repository.AuthRepository
+import com.example.skyreserve.Util.LocalSessionManager
 import com.example.skyreserve.Util.SignInResult
 import com.example.skyreserve.Util.SignUpResult
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
-class UserViewModel(
+
+/*
+* The parameters of an annotated constructor of a class are the dependencies of that class.
+* In the example, UserViewModel has AuthRepository, LocalSessionManager, and Context as a
+* dependency. Therefore, Hilt must also know how to provide instances of AuthRepository,
+* LocalSessionManager, and Context.
+* */
+@HiltViewModel
+class UserViewModel @Inject constructor(
     private val authRepository: AuthRepository, // Handles authentication logic
     private val sessionManager: LocalSessionManager, // Manages local session state
     private val context: Context // Added for network check

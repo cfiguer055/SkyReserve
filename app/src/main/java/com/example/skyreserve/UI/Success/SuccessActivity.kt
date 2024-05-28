@@ -19,7 +19,7 @@ class SuccessActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val email = intent.getStringExtra("EXTRA_EMAIL") ?: ""
-        logger = (application as MyApp).logger
+        //logger = (application as MyApp).logger
         logger.logInteraction("SuccessActivity:")
         //logger.sendLogToEmail(this)
 
