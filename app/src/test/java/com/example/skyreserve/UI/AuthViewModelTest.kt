@@ -31,14 +31,17 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.doNothing
 import org.mockito.junit.MockitoJUnitRunner
 
+/**
+ * Unit tests for the AuthViewModel class, focusing on the authentication methods.
+ * These tests validate the behavior of signIn and signUp methods in different scenarios.
+ * It also tests Network availability checks.
+ */
 @RunWith(MockitoJUnitRunner::class)
 @ExperimentalCoroutinesApi
 class AuthViewModelTest {
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
-//    @get:Rule
-//    var hiltRule = HiltAndroidRule(this)
 
     @Mock
     private lateinit var authRepository: AuthRepository
@@ -60,20 +63,17 @@ class AuthViewModelTest {
 
     private lateinit var authViewModel: AuthViewModel
 
-    // 1 test fail
+    // Dispatcher for running coroutine tests
     private val testDispatcher = TestCoroutineDispatcher()
 
-    // 4 test fails / 3 with runTest
-    //private val testDispatcher = StandardTestDispatcher()
 
-    // 3 test fails /
-    //private val testDispatcher = StandardTestDispatcher()
-
-
+    /**
+     * Set up the test environment before each test.
+     * Initialize dependencies and inject them into the AuthViewModel.
+     * Mocks the network and context-related services.
+     */
     @Before
     fun setUp() {
-        //hiltRule.inject()
-
         Dispatchers.setMain(testDispatcher)
         val mockNetwork = Mockito.mock(Network::class.java)
 
@@ -85,21 +85,23 @@ class AuthViewModelTest {
 
     }
 
-//    @Before
-//    fun setUp() {
-//        Dispatchers.setMain(testDispatcher)
-//        Mockito.`when`(context.getSystemService(Context.CONNECTIVITY_SERVICE)).thenReturn(connectivityManager)
-//        Mockito.`when`(connectivityManager.activeNetwork).thenReturn(Mockito.mock(Network::class.java))
-//        authViewModel = AuthViewModel(authRepository, sessionManager, context)
-//    }
-
+    /**
+     * Clean up the test environment after each test.
+     */
     @After
     fun tearDown() {
+        // Resets the main dispatcher to the original state.
         Dispatchers.resetMain()
+        // Cleans up the TestCoroutineDispatcher.
         testDispatcher.cleanupTestCoroutines()
     }
 
 
+    /**
+     * Tests the signIn method of the AuthViewModel with valid credentials.
+     * Verifies that the signInResult LiveData emits [SignInResult.SUCCESS].
+     * Ensures that the user is logged in after a successful sign-in.
+     */
     @Test
     fun `signIn with valid credentials returns SUCCESS`() = runTest {
         val email = "test@example.com"
@@ -146,8 +148,6 @@ class AuthViewModelTest {
         val observer = Mockito.mock(Observer::class.java) as Observer<SignInResult>
         authViewModel.signInResult.observeForever(observer)
 
-
-
         // -------------Test----------------
         //
         // Calling the signIn function
@@ -159,30 +159,18 @@ class AuthViewModelTest {
     }
 
 
+    /**
+     * Tests the signUp method of the AuthViewModel with valid information.
+     * Verifies that the signUpResult LiveData emits [SignUpResult.SUCCESS].
+     * Ensures that the user is logged in after a successful sign-up.
+     */
     @Test
     fun `signUp with valid information returns SUCCESS`() = runTest  {
         val email = "newuser@example.com"
         val password = "Password123"
         val confirmPassword = "Password123"
 
-        val userAccount = UserAccount(emailAddress = email, password = password)
-
-        //`when`(userAccountDao.getUserAccountByEmailAddress(email)).thenReturn(null)
-        //doNothing().`when`(userAccountDao).insertUserAccount(any(UserAccount::class.java))
-
-        // Mocking the DAO methods
-//        runBlocking {
-//            `when`(userAccountDao.getUserAccountByEmailAddress(email)).thenReturn(null)
-//            doNothing().`when`(userAccountDao).insertUserAccount(any(UserAccount::class.java))
-//        }
-//
-//         //Mocking the repository methods
-//        `when`(authRepository.signUp(email, password)).thenAnswer {
-//            runBlocking {
-//                userAccountDao.insertUserAccount(userAccount)
-//                true
-//            }
-//        }
+        // val userAccount = UserAccount(emailAddress = email, password = password)
 
         // Mock authRepository
         //
@@ -193,25 +181,16 @@ class AuthViewModelTest {
         // Mock getUserAccountByEmailAddress(email) in AuthRepository
         // Mocking the network availability check in AuthViewModel
         `when`(authViewModel.isNetworkAvailable()).thenReturn(true)
-        //`when`(authRepository.getUserAccountByEmailAddress(email)).thenReturn(userAccount)
-
-
-
-
 
         // Observing the signUpResult LiveData
-//        val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
-//        authViewModel.signUpResult.observeForever(observer)
-
-
-
-        // Observing the signUpResult LiveData and logging the result
         val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
-        authViewModel.signUpResult.observeForever {
-            println("signUpResult: $it")
-            observer.onChanged(it)
-        }
+        authViewModel.signUpResult.observeForever(observer)
 
+        // logging the result for troubleshooting
+//        authViewModel.signUpResult.observeForever {
+//            println("signUpResult: $it")
+//            observer.onChanged(it)
+//        }
 
         // -------------Test----------------
         //
@@ -219,21 +198,25 @@ class AuthViewModelTest {
         authViewModel.signUp(email, password, confirmPassword)
 
         // Ensure LiveData changes are observed
-        advanceUntilIdle()
+        // advanceUntilIdle()
 
         // Log current state of signUpResult
         println("Current signUpResult: ${authViewModel.signUpResult.value}")
-
 
         // Verifying the result
         Mockito.verify(observer).onChanged(SignUpResult.SUCCESS)
         assertEquals(authViewModel.isLoggedIn.value, true)
 
-
         // Direct assertion for signUpResult
         assertEquals(SignUpResult.SUCCESS, authViewModel.signUpResult.value)
     }
 
+
+    /**
+     * Tests the signIn method of the AuthViewModel when invalid credentials are provided.
+     * It verifies that the signInResult LiveData emits [SignInResult.INVALID_CREDENTIALS] and
+     * ensures that the user is not logged in after the sign-in attempt.
+     */
     @Test
     fun `signIn with invalid credentials returns INVALID_CREDENTIALS`() = runTest {
         val email = "invalid@example.com"
@@ -251,6 +234,11 @@ class AuthViewModelTest {
         assertEquals(authViewModel.isLoggedIn.value, false)
     }
 
+
+    /**
+     * Tests the isNetworkAvailable method of the AuthViewModel.
+     * Verifies that it returns false when the network is not available.
+     */
     @Test
     fun `isNetworkAvailable returns false when network is not available`() {
         `when`(connectivityManager.activeNetwork).thenReturn(null)
@@ -260,6 +248,11 @@ class AuthViewModelTest {
         assertFalse(result)
     }
 
+
+    /**
+     * Tests the isNetworkAvailable method of the AuthViewModel.
+     * Verifies that it returns true when the network is available.
+     */
     @Test
     fun `isNetworkAvailable returns true when network is available`() {
         val mockNetwork = Mockito.mock(Network::class.java)
@@ -270,5 +263,52 @@ class AuthViewModelTest {
         val result = authViewModel.isNetworkAvailable()
 
         assertTrue(result)
+    }
+
+
+    /**
+     * Tests the validateSession method of the AuthViewModel.
+     * Verifies that it returns true for a valid token and false for an invalid token.
+     */
+    @Test
+    fun `validateSession returns true for valid token`() {
+        `when`(sessionManager.isTokenValid()).thenReturn(true)
+        assertTrue(authViewModel.validateSession())
+    }
+
+    @Test
+    fun `validateSession returns false for invalid token`() {
+        `when`(sessionManager.isTokenValid()).thenReturn(false)
+        assertFalse(authViewModel.validateSession())
+    }
+
+    /**
+     * Tests the refreshSessionToken method of the AuthViewModel.
+     * Verifies that the session token is renewed correctly.
+     */
+    @Test
+    fun `refreshSessionToken renews the token`() {
+        // Call the method to be tested
+        authViewModel.refreshSessionToken()
+
+        // Verify that the sessionManager.renewToken() was called
+        Mockito.verify(sessionManager).renewToken()
+    }
+
+    /**
+     * Tests the logout method of the AuthViewModel.
+     * Verifies that it clears the user session and updates the relevant states.
+     */
+    @Test
+    fun `logout clears the user session`() {
+        // Call the method to be tested
+        authViewModel.logout()
+
+        // Verify that the sessionManager.logoutUser() was called
+        Mockito.verify(sessionManager).logoutUser()
+
+        // Verify that the ViewModel states are updated
+        assertFalse(authViewModel.isLoggedIn.value)
+        assertNull(authViewModel.currentUser.value)
     }
 }

@@ -201,7 +201,7 @@ class AuthViewModel @Inject constructor(
     // Additional ViewModel logic...
 
     // Function to validate email
-    fun isValidEmail(email: String): Boolean {
+    private fun isValidEmail(email: String): Boolean {
         /*
         28-05-2024
         If you're creating this as a standard unit test (in /test), then JUnit does not use the Android
