@@ -5,6 +5,7 @@ import com.example.skyreserve.Database.Entity.UserAccount
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
+import javax.inject.Inject
 import javax.inject.Singleton
 
 // LATER BACKEND IMPLEMENTATION
@@ -12,7 +13,7 @@ import javax.inject.Singleton
 // user authentication, it will make network requests to the backend for user sign-in, sign-up, and
 // token validation.
 @Singleton
-class AuthRepository(private val userAccountDao: UserAccountDao) {
+class AuthRepository @Inject constructor(private val userAccountDao: UserAccountDao) {
 
     // Perform user sign-in
     suspend fun signIn(emailAddress: String, password: String): Boolean {

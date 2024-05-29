@@ -4,9 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.skyreserve.Model.FlightInfo
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 
-class FlightSearchViewModel() : ViewModel() {
+@HiltViewModel
+class FlightSearchViewModel @Inject constructor() : ViewModel() {
     private val _isFormFilled = MutableLiveData<Boolean>()
     val isFormFilled: LiveData<Boolean> get() = _isFormFilled
 

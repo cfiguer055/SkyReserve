@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 import androidx.activity.viewModels
+import androidx.core.util.PatternsCompat
 
 
 /*
@@ -34,7 +35,7 @@ import androidx.activity.viewModels
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository, // Handles authentication logic
     private val sessionManager: LocalSessionManager, // Manages local session state
-    @ApplicationContext private val context: Context // Added for network check
+    @ApplicationContext private val context: Context, // Added for network check
 ) : ViewModel() {
 
 
@@ -101,7 +102,7 @@ class AuthViewModel @Inject constructor(
                 emailAddress.isBlank() || password.isBlank() || confirmPassword.isBlank() -> {
                     _signUpResult.value = SignUpResult.MISSING_INFORMATION
                 }
-                !android.util.Patterns.EMAIL_ADDRESS.matcher(emailAddress).matches() -> {
+                !isValidEmail(emailAddress) -> {
                     _signUpResult.value = SignUpResult.INVALID_EMAIL
                 }
                 isEmailExisting(emailAddress) -> {
@@ -198,5 +199,20 @@ class AuthViewModel @Inject constructor(
         return authRepository.isEmailExisting(email)
     }
     // Additional ViewModel logic...
+
+    // Function to validate email
+    fun isValidEmail(email: String): Boolean {
+        /*
+        28-05-2024
+        If you're creating this as a standard unit test (in /test), then JUnit does not use the Android
+         framework. Any Android-specific methods are stubbed and will fail to run.
+        You'd either need to define Patterns.EMAIL_ADDRESS yourself from scratch (or use "PatternsCompat.EMAIL_ADRESS.matcher()") or run this test as an
+        Instrumentation test in /androidTest. Alternatively, take a look at using Robolectric as it provides an
+        implementation of the Android SDK for use in local JUnit tests.
+         */
+        // return android.util.PatternsCompat.EMAIL_ADRESS.matcher(email).matches()
+
+        return PatternsCompat.EMAIL_ADDRESS.matcher(email).matches()
+    }
 }
 

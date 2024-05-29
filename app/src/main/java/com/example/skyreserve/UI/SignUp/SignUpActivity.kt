@@ -60,7 +60,7 @@ class SignUpActivity : AppCompatActivity() {
         binding.passwordEditText.addTextChangedListener { resetInputUI() }
         binding.confirmPasswordEditText.addTextChangedListener { resetInputUI() }
 
-        binding.passwordEditText.setOnFocusChangeListener { v, hasFocus ->
+        binding.passwordEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 // User has focused on the password field
                 displayPasswordRequirements()
