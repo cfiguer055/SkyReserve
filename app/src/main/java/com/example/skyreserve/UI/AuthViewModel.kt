@@ -60,11 +60,12 @@ class AuthViewModel @Inject constructor(
             val signInSuccess = authRepository.signIn(emailAddress, password)
             val isEmailExisting = authRepository.isEmailExisting(emailAddress)
             when {
+                !isNetworkAvailable() -> {
+                    // Simulate Network even though Room db is local
+                    _signInResult.value = SignInResult.NETWORK_ERROR
+                }
                 !signInSuccess && isEmailExisting -> {
                     _signInResult.value = SignInResult.INVALID_CREDENTIALS
-                }
-                !isNetworkAvailable() -> {
-                    _signInResult.value = SignInResult.NETWORK_ERROR
                 }
                 else -> {
                     if(signInSuccess) {
@@ -214,5 +215,20 @@ class AuthViewModel @Inject constructor(
 
         return PatternsCompat.EMAIL_ADDRESS.matcher(email).matches()
     }
+
+
+//    private fun isValidPassword(password: String, confirmPassword: String): Boolean {
+//        return when {
+//            password.length < 8 ||
+//                    !password.matches(Regex(".*[A-Z].*")) || // Missing capital letter
+//                    !password.matches(Regex(".*[a-z].*")) || // Missing lowercase letter
+//                    !password.matches(Regex(".*\\d.*")) ||   // Missing digit
+//                    password != confirmPassword -> {                // Passwords don't match
+//                false
+//            } else -> {
+//                true // Valid Password
+//            }
+//        }
+//    }
 }
 

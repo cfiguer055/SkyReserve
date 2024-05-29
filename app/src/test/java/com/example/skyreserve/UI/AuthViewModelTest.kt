@@ -105,7 +105,7 @@ class AuthViewModelTest {
     @Test
     fun `signIn with valid credentials returns SUCCESS`() = runTest {
         val email = "test@example.com"
-        val password = "password"
+        val password = "Password123"
         val userAccount = UserAccount(emailAddress = email, password = password)
 
         // -----------Test-Preparation---------------
@@ -153,62 +153,25 @@ class AuthViewModelTest {
         // Calling the signIn function
         authViewModel.signIn(email, password)
 
-        // Verifying the result
-        Mockito.verify(observer).onChanged(SignInResult.SUCCESS)
-        assertEquals(authViewModel.isLoggedIn.value, true)
-    }
-
-
-    /**
-     * Tests the signUp method of the AuthViewModel with valid information.
-     * Verifies that the signUpResult LiveData emits [SignUpResult.SUCCESS].
-     * Ensures that the user is logged in after a successful sign-up.
-     */
-    @Test
-    fun `signUp with valid information returns SUCCESS`() = runTest  {
-        val email = "newuser@example.com"
-        val password = "Password123"
-        val confirmPassword = "Password123"
-
-        // val userAccount = UserAccount(emailAddress = email, password = password)
-
-        // Mock authRepository
-        //
-        // Mock isEmailExisting(email) in AuthRepository
-        `when`(authRepository.isEmailExisting(email)).thenReturn(false)
-        // Mock signUp() in AuthRepository
-        `when`(authRepository.signUp(email, password)).thenReturn(true)
-        // Mock getUserAccountByEmailAddress(email) in AuthRepository
-        // Mocking the network availability check in AuthViewModel
-        `when`(authViewModel.isNetworkAvailable()).thenReturn(true)
-
-        // Observing the signUpResult LiveData
-        val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
-        authViewModel.signUpResult.observeForever(observer)
-
         // logging the result for troubleshooting
-//        authViewModel.signUpResult.observeForever {
-//            println("signUpResult: $it")
+//        authViewModel.signInResult.observeForever {
+//            println("signInResult: $it")
 //            observer.onChanged(it)
 //        }
 
-        // -------------Test----------------
-        //
-        // Calling the signUp function
-        authViewModel.signUp(email, password, confirmPassword)
 
-        // Ensure LiveData changes are observed
-        // advanceUntilIdle()
-
-        // Log current state of signUpResult
-        println("Current signUpResult: ${authViewModel.signUpResult.value}")
+        // Advance coroutines to completion of pending jobs, important for LiveData updates
+        advanceUntilIdle()
 
         // Verifying the result
-        Mockito.verify(observer).onChanged(SignUpResult.SUCCESS)
+        Mockito.verify(observer).onChanged(SignInResult.SUCCESS)
         assertEquals(authViewModel.isLoggedIn.value, true)
 
         // Direct assertion for signUpResult
-        assertEquals(SignUpResult.SUCCESS, authViewModel.signUpResult.value)
+        assertEquals(SignInResult.SUCCESS, authViewModel.signInResult.value)
+
+        // Clean up observer
+        authViewModel.signInResult.removeObserver(observer)
     }
 
 
@@ -230,8 +193,417 @@ class AuthViewModelTest {
 
         authViewModel.signIn(email, password)
 
+        // Advance coroutines to completion of pending jobs, important for LiveData updates
+        advanceUntilIdle()
+
         Mockito.verify(observer).onChanged(SignInResult.INVALID_CREDENTIALS)
         assertEquals(authViewModel.isLoggedIn.value, false)
+
+        // Direct assertion for signUpResult
+        assertEquals(SignInResult.INVALID_CREDENTIALS, authViewModel.signInResult.value)
+
+        // Clean up observer
+        authViewModel.signInResult.removeObserver(observer)
+    }
+
+
+    @Test
+    fun `signIn with network error return NETWORK_ERROR` () = runTest {
+        val email = "test@example.com"
+        val password = "Password123"
+
+        `when`(authRepository.signIn(email, password)).thenReturn(true)
+        `when`(authRepository.isEmailExisting(email)).thenReturn(true)
+
+        // Simulate network unavailability
+        `when`(authViewModel.isNetworkAvailable()).thenReturn(false)
+
+        val observer = Mockito.mock(Observer::class.java) as Observer<SignInResult>
+        authViewModel.signInResult.observeForever(observer)
+
+        authViewModel.signIn(email, password)
+
+        // Advance coroutines to completion of pending jobs, important for LiveData updates
+        advanceUntilIdle()
+
+        Mockito.verify(observer).onChanged(SignInResult.NETWORK_ERROR)
+        assertEquals(authViewModel.isLoggedIn.value, false)
+
+        // Direct assertion for signUpResult
+        assertEquals(SignInResult.NETWORK_ERROR, authViewModel.signInResult.value)
+
+        // Clean up observer
+        authViewModel.signInResult.removeObserver(observer)
+    }
+
+
+    @Test
+    fun `unexpected signIn failure return UNKNOWN_ERROR` () = runTest {
+        val email = "test@example.com"
+        val password = "Password123"
+
+        `when`(authRepository.signIn(email, password)).thenReturn(false)
+        `when`(authRepository.isEmailExisting(email)).thenReturn(true)
+
+        // Simulate network unavailability
+        //`when`(authViewModel.isNetworkAvailable()).thenReturn(true)
+
+        val observer = Mockito.mock(Observer::class.java) as Observer<SignInResult>
+        authViewModel.signInResult.observeForever(observer)
+
+        authViewModel.signIn(email, password)
+
+        // Advance coroutines to completion of pending jobs, important for LiveData updates
+        advanceUntilIdle()
+
+        Mockito.verify(observer).onChanged(SignInResult.UNKNOWN_ERROR)
+        assertEquals(authViewModel.isLoggedIn.value, false)
+
+        // Direct assertion for signUpResult
+        assertEquals(SignInResult.UNKNOWN_ERROR, authViewModel.signInResult.value)
+
+        // Clean up observer
+        authViewModel.signInResult.removeObserver(observer)
+    }
+
+
+    /**
+     * Tests the signUp method of the AuthViewModel with valid information.
+     * Verifies that the signUpResult LiveData emits [SignUpResult.SUCCESS].
+     * Ensures that the user is logged in after a successful sign-up.
+     */
+    @Test
+    fun `signUp with valid information returns SUCCESS`() = runTest  {
+        val email = "newuser@example.com"
+        val password = "Password123"
+        val confirmPassword = "Password123"
+
+        // val userAccount = UserAccount(emailAddress = email, password = password)
+
+        // Mock isEmailExisting(email) in AuthRepository
+        `when`(authRepository.isEmailExisting(email)).thenReturn(false)
+        // Mock signUp() in AuthRepository
+        `when`(authRepository.signUp(email, password)).thenReturn(true)
+        // Mock getUserAccountByEmailAddress(email) in AuthRepository
+        // Mocking the network availability check in AuthViewModel
+        `when`(authViewModel.isNetworkAvailable()).thenReturn(true)
+
+        // Observing the signUpResult LiveData
+        val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
+        authViewModel.signUpResult.observeForever(observer)
+
+        // Calling the signUp function
+        authViewModel.signUp(email, password, confirmPassword)
+
+        // Advance coroutines to completion of pending jobs, important for LiveData updates
+        advanceUntilIdle()
+
+        // Verifying the result
+        Mockito.verify(observer).onChanged(SignUpResult.SUCCESS)
+        assertEquals(authViewModel.isLoggedIn.value, true)
+
+        // Direct assertion for signUpResult
+        assertEquals(SignUpResult.SUCCESS, authViewModel.signUpResult.value)
+
+        // Clean up observer
+        authViewModel.signUpResult.removeObserver(observer)
+    }
+
+
+    /**
+     * Tests the signUp method of the AuthViewModel with invalid email.
+     * Verifies that the signUpResult LiveData emits [SignUpResult.INVALID_EMAIL].
+     */
+    @Test
+    fun `signUp with invalid email returns INVALID_EMAIL`() = runTest {
+        val email = "invalidemail"
+        val password = "Password123"
+        val confirmPassword = "Password123"
+
+
+        //`when`(authRepository.isEmailExisting(email)).thenReturn(false)
+        val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
+        authViewModel.signUpResult.observeForever(observer)
+
+        // Trigger the signUp action
+        authViewModel.signUp(email, password, confirmPassword)
+
+        // Advance coroutines to completion of pending jobs, important for LiveData updates
+        advanceUntilIdle()
+
+        // Verify that the LiveData was updated with the correct value
+        Mockito.verify(observer).onChanged(SignUpResult.INVALID_EMAIL)
+        assertEquals(SignUpResult.INVALID_EMAIL, authViewModel.signUpResult.value)
+
+        // Clean up observer
+        authViewModel.signUpResult.removeObserver(observer)
+    }
+
+
+    /**
+     * Tests the signUp method of the AuthViewModel with existing email.
+     * Verifies that the signUpResult LiveData emits [SignUpResult.EXISTING_EMAIL].
+     * Ensures that the user is not logged in after a unsuccessful sign-up.
+     */
+    @Test
+    fun `signUp with existing email returns EXISTING_EMAIL`() = runTest  {
+        val email = "newuser@example.com"
+        val password = "Password123"
+        val confirmPassword = "Password123"
+
+
+        // Mock authRepository
+        //
+        // Mock isEmailExisting(email) in AuthRepository
+        `when`(authRepository.isEmailExisting(email)).thenReturn(true)
+        // Mocking the network availability check in AuthViewModel
+        `when`(authViewModel.isNetworkAvailable()).thenReturn(true)
+
+        // Observing the signUpResult LiveData
+        val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
+        authViewModel.signUpResult.observeForever(observer)
+
+
+        // Calling the signUp function
+        authViewModel.signUp(email, password, confirmPassword)
+
+        // Advance coroutines to completion of pending jobs, important for LiveData updates
+        advanceUntilIdle()
+
+        // Verifying the result
+        Mockito.verify(observer).onChanged(SignUpResult.EXISTING_EMAIL)
+        assertEquals(authViewModel.isLoggedIn.value, false)
+
+        // Direct assertion for signUpResult
+        assertEquals(SignUpResult.EXISTING_EMAIL, authViewModel.signUpResult.value)
+
+        // Clean up observer
+        authViewModel.signUpResult.removeObserver(observer)
+    }
+
+
+    /**
+     * Tests the signUp method of the AuthViewModel with short password.
+     * Verifies that the signUpResult LiveData emits [SignUpResult.SHORT_PASSWORD].
+     */
+    @Test
+    fun `signUp with short password returns SHORT_PASSWORD`() = runTest {
+        val email = "newuser@example.com"
+        val password = "Pass1"
+        val confirmPassword = "Pass1"
+
+        `when`(authRepository.isEmailExisting(email)).thenReturn(false)
+
+        val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
+        authViewModel.signUpResult.observeForever(observer)
+
+        // Trigger the signUp action
+        authViewModel.signUp(email, password, confirmPassword)
+
+        // Advance coroutines to completion of pending jobs, important for LiveData updates
+        advanceUntilIdle()
+
+        // Verify that the LiveData was updated with the correct value
+        Mockito.verify(observer).onChanged(SignUpResult.SHORT_PASSWORD)
+        assertEquals(SignUpResult.SHORT_PASSWORD, authViewModel.signUpResult.value)
+
+        // Clean up observer
+        authViewModel.signUpResult.removeObserver(observer)
+    }
+
+
+    /**
+     * Tests the signUp method of the AuthViewModel with missing capital letter in password.
+     * Verifies that the signUpResult LiveData emits [SignUpResult.MISSING_CAPITAL_LETTER].
+     */
+    @Test
+    fun `signUp with missing capital letter returns MISSING_CAPITAL_LETTER`() = runTest {
+        val email = "newuser@example.com"
+        val password = "password123"
+        val confirmPassword = "password123"
+
+        `when`(authRepository.isEmailExisting(email)).thenReturn(false)
+
+        val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
+        authViewModel.signUpResult.observeForever(observer)
+
+        authViewModel.signUp(email, password, confirmPassword)
+
+        // Advance coroutines to completion of pending jobs, important for LiveData updates
+        advanceUntilIdle()
+
+        Mockito.verify(observer).onChanged(SignUpResult.MISSING_CAPITAL_LETTER)
+        assertEquals(SignUpResult.MISSING_CAPITAL_LETTER, authViewModel.signUpResult.value)
+
+        // Clean up observer
+        authViewModel.signUpResult.removeObserver(observer)
+    }
+
+    /**
+     * Tests the signUp method of the AuthViewModel with missing lowercase letter in password.
+     * Verifies that the signUpResult LiveData emits [SignUpResult.MISSING_LOWCASE_LETTER].
+     */
+    @Test
+    fun `signUp with missing lowercase letter returns MISSING_LOWCASE_LETTER`() = runTest {
+        val email = "newuser@example.com"
+        val password = "PASSWORD123"
+        val confirmPassword = "PASSWORD123"
+
+        `when`(authRepository.isEmailExisting(email)).thenReturn(false)
+
+        val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
+        authViewModel.signUpResult.observeForever(observer)
+
+        authViewModel.signUp(email, password, confirmPassword)
+
+        // Advance coroutines to completion of pending jobs, important for LiveData updates
+        advanceUntilIdle()
+
+        Mockito.verify(observer).onChanged(SignUpResult.MISSING_LOWCASE_LETTER)
+        assertEquals(SignUpResult.MISSING_LOWCASE_LETTER, authViewModel.signUpResult.value)
+
+        // Clean up observer
+        authViewModel.signUpResult.removeObserver(observer)
+    }
+
+    /**
+     * Tests the signUp method of the AuthViewModel with missing digit in password.
+     * Verifies that the signUpResult LiveData emits [SignUpResult.MISSING_DIGIT].
+     */
+    @Test
+    fun `signUp with missing digit returns MISSING_DIGIT`() = runTest {
+        val email = "newuser@example.com"
+        val password = "Password"
+        val confirmPassword = "Password"
+
+        `when`(authRepository.isEmailExisting(email)).thenReturn(false)
+
+        val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
+        authViewModel.signUpResult.observeForever(observer)
+
+        authViewModel.signUp(email, password, confirmPassword)
+
+        Mockito.verify(observer).onChanged(SignUpResult.MISSING_DIGIT)
+        assertEquals(SignUpResult.MISSING_DIGIT, authViewModel.signUpResult.value)
+
+        // Clean up observer
+        authViewModel.signUpResult.removeObserver(observer)
+    }
+
+    /**
+     * Tests the signUp method of the AuthViewModel with password mismatch.
+     * Verifies that the signUpResult LiveData emits [SignUpResult.PASSWORD_NO_MATCH].
+     */
+    @Test
+    fun `signUp with password mismatch returns PASSWORD_NO_MATCH`() = runTest {
+        val email = "newuser@example.com"
+        val password = "Password123"
+        val confirmPassword = "Password321"
+
+        `when`(authRepository.isEmailExisting(email)).thenReturn(false)
+
+        val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
+        authViewModel.signUpResult.observeForever(observer)
+
+        authViewModel.signUp(email, password, confirmPassword)
+
+        Mockito.verify(observer).onChanged(SignUpResult.PASSWORD_NO_MATCH)
+        assertEquals(SignUpResult.PASSWORD_NO_MATCH, authViewModel.signUpResult.value)
+
+        // Clean up observer
+        authViewModel.signUpResult.removeObserver(observer)
+    }
+
+    /**
+     * Tests the signUp method of the AuthViewModel with missing information.
+     * Verifies that the signUpResult LiveData emits [SignUpResult.MISSING_INFORMATION].
+     */
+    @Test
+    fun `signUp with missing information returns MISSING_INFORMATION`() = runTest {
+        val email = ""
+        val password = "Password123"
+        val confirmPassword = "Password123"
+
+        //`when`(authRepository.isEmailExisting(email)).thenReturn(false)
+
+        val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
+        authViewModel.signUpResult.observeForever(observer)
+
+        authViewModel.signUp(email, password, confirmPassword)
+
+        Mockito.verify(observer).onChanged(SignUpResult.MISSING_INFORMATION)
+        assertEquals(SignUpResult.MISSING_INFORMATION, authViewModel.signUpResult.value)
+
+        // Clean up observer
+        authViewModel.signUpResult.removeObserver(observer)
+    }
+
+
+    /*
+    @Test
+    fun `signUp without terms of service being accepted`() = runTest {
+        val email = "newuser@example.com"
+        val password = "Password123"
+        val confirmPassword = "Password123"
+    }
+     */
+
+
+    /**
+     * Tests the signUp method of the AuthViewModel without network availability.
+     * Verifies that the signUpResult LiveData emits [SignUpResult.NETWORK_ERROR].
+     */
+    @Test
+    fun `signUp without network returns NETWORK_ERROR`() = runTest {
+        val email = "newuser@example.com"
+        val password = "Password123"
+        val confirmPassword = "Password123"
+
+        `when`(authRepository.isEmailExisting(email)).thenReturn(false)
+        `when`(authViewModel.isNetworkAvailable()).thenReturn(false)
+
+        val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
+        authViewModel.signUpResult.observeForever(observer)
+
+        authViewModel.signUp(email, password, confirmPassword)
+
+        Mockito.verify(observer).onChanged(SignUpResult.NETWORK_ERROR)
+        assertEquals(SignUpResult.NETWORK_ERROR, authViewModel.signUpResult.value)
+
+        // Clean up observer
+        authViewModel.signUpResult.removeObserver(observer)
+    }
+
+    /**
+     * Tests the signUp method of the AuthViewModel with unknown error.
+     * Verifies that the signUpResult LiveData emits [SignUpResult.UNKNOWN_ERROR].
+     */
+    @Test
+    fun `signUp with unknown error returns UNKNOWN_ERROR`() = runTest {
+        val email = "newuser@example.com"
+        val password = "Password123"
+        val confirmPassword = "Password123"
+
+        `when`(authRepository.isEmailExisting(email)).thenReturn(false)
+        `when`(authRepository.signUp(email, password)).thenReturn(false)
+        `when`(authViewModel.isNetworkAvailable()).thenReturn(true)
+
+        val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
+        authViewModel.signUpResult.observeForever(observer)
+
+        authViewModel.signUp(email, password, confirmPassword)
+
+        // logging the result for troubleshooting
+//        authViewModel.signUpResult.observeForever {
+//            println("signUpResult: $it")
+//            observer.onChanged(it)
+//        }
+
+        Mockito.verify(observer).onChanged(SignUpResult.UNKNOWN_ERROR)
+        assertEquals(SignUpResult.UNKNOWN_ERROR, authViewModel.signUpResult.value)
+
+        // Clean up observer
+        authViewModel.signUpResult.removeObserver(observer)
     }
 
 

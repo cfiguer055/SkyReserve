@@ -180,6 +180,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
     implementation "androidx.core:core-ktx:1.7.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+
+    // hashing algorithm - prevent attacks using rainbow tables
+    implementation 'org.mindrot:jbcrypt:0.4'
 }
 kapt {
     correctErrorTypes true

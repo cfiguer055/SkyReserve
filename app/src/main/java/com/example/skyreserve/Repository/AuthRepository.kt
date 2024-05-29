@@ -2,8 +2,10 @@ package com.example.skyreserve.Repository
 
 import com.example.skyreserve.Database.Dao.UserAccountDao
 import com.example.skyreserve.Database.Entity.UserAccount
+import com.example.skyreserve.Util.EncryptionUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.mindrot.jbcrypt.BCrypt
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -43,10 +45,13 @@ class AuthRepository @Inject constructor(private val userAccountDao: UserAccount
                 val existingUser = userAccountDao.getUserAccountByEmailAddress(emailAddress)
 
                 if (existingUser == null) {
+                    // Hash the password before storing it
+                    val hashedPassword = hashPassword(password)
+
                     // Create a new UserAccount entity and insert it into the database
                     val newUserAccount = UserAccount(
                         emailAddress = emailAddress,
-                        password = password
+                        password = hashedPassword
                     )
                     userAccountDao.insertUserAccount(newUserAccount)
                     return@withContext true // Sign-up successful
@@ -64,7 +69,10 @@ class AuthRepository @Inject constructor(private val userAccountDao: UserAccount
     suspend fun isEmailExisting(email: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val userAccount = userAccountDao.getUserAccountByEmailAddress(email)
+                val encryptedEmail = EncryptionUtil.encrypt(email)
+                val userAccount = userAccountDao.getUserAccountByEmailAddress(encryptedEmail)
+
+                //val userAccount = userAccountDao.getUserAccountByEmailAddress(email)
                 return@withContext userAccount != null
             } catch (e: Exception) {
                 // Handle exceptions (e.g., database errors)
@@ -74,51 +82,29 @@ class AuthRepository @Inject constructor(private val userAccountDao: UserAccount
     }
 
     suspend fun getUserAccountByEmailAddress(emailAddress: String): UserAccount? {
-        return userAccountDao.getUserAccountByEmailAddress(emailAddress)
+        val encryptedEmail = EncryptionUtil.encrypt(emailAddress)
+        val userAccount = userAccountDao.getUserAccountByEmailAddress(encryptedEmail)
+        userAccount?.apply {
+            this.emailAddress = EncryptionUtil.decrypt(this.emailAddress)
+            this.phone = this.phone?.let { EncryptionUtil.decrypt(it) }
+            this.dateOfBirth = this.dateOfBirth?.let { EncryptionUtil.decrypt(it) }
+            this.address = this.address?.let { EncryptionUtil.decrypt(it) }
+            this.stateCode = this.stateCode?.let { EncryptionUtil.decrypt(it) }
+            this.countryCode = this.countryCode?.let { EncryptionUtil.decrypt(it) }
+            this.passport = this.passport?.let { EncryptionUtil.decrypt(it) }
+        }
+        return userAccount
     }
 
     // Helper functions for password hashing and checking
     private fun hashPassword(password: String): String {
-        // TODO: Implement password hashing
-        return ""
+        return BCrypt.hashpw(password, BCrypt.gensalt())
     }
 
     private fun checkPassword(plainPassword: String, hashedPassword: String): Boolean {
-        // TODO: Implement password checking against hashed password
-        return false
+        return BCrypt.checkpw(plainPassword, hashedPassword)
     }
 
 
     // Additional methods can be added for managing user sessions, tokens, etc.
 }
-
-
-// FOR SERVER BASED
-//suspend fun signUp(
-//    emailAddress: String,
-//    password: String,
-//    firstName: String,
-//    lastName: String
-//): SignUpResult {
-//    return withContext(Dispatchers.IO) {
-//        try {
-//            val existingUser = userAccountDao.getUserAccountByEmailAddress(emailAddress)
-//
-//            if (existingUser == null) {
-//                val newUserAccount = UserAccount(
-//                    emailAddress = emailAddress,
-//                    password = password, // Make sure to hash the password here
-//                    firstName = firstName,
-//                    lastName = lastName
-//                )
-//                userAccountDao.insertUserAccount(newUserAccount)
-//                SignUpResult.SUCCESS // Enum representing successful sign-up
-//            } else {
-//                SignUpResult.EXISTING_EMAIL // Enum representing existing email
-//            }
-//        } catch (e: Exception) {
-//            // Log the exception or handle it as needed
-//            SignUpResult.UNKNOWN_ERROR // Enum representing an unknown error
-//        }
-//    }
-//}

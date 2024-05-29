@@ -3,6 +3,7 @@ package com.example.skyreserve.Database.Entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.skyreserve.Util.EncryptionUtil
 
 
 @Entity(tableName = "user_accounts")
@@ -49,6 +50,7 @@ data class UserAccount(
 
 ) {
     // No secondary constructor needed
+
 }
 
 
