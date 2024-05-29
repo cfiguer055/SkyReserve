@@ -12,6 +12,11 @@ import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 
 
+/**
+ * Unit tests for the LocalSessionManager class.
+ * These tests validate the behavior of session management methods such as createLoginSession, logoutUser,
+ * isTokenValid, and renewToken. Mocking is used to simulate the SharedPreferences and its Editor.
+ */
 class LocalSessionManagerTest {
     @Mock
     private lateinit var context: Context
@@ -100,6 +105,10 @@ class LocalSessionManagerTest {
         assertFalse(sessionManager.isTokenValid())
     }
 
+    /**
+     * Test for the renewToken function.
+     * This test verifies that the function correctly renews the session token and updates the expiry time.
+     */
     @Test
     fun testRenewToken() {
         val userEmail = "user@example.com"
