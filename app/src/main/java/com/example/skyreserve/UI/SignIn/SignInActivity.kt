@@ -120,9 +120,9 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun navigateToHome() {
-        logger.init(email)
-        logger.logInteraction("Log Start: $email")
-        logger.logInteraction("Navigating to HomeActivity")
+//        logger.init(email)
+//        logger.logInteraction("Log Start: $email")
+//        logger.logInteraction("Navigating to HomeActivity")
 
         val intent = Intent(this, HomeActivity::class.java)
 

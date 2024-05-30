@@ -2,6 +2,7 @@ package com.example.skyreserve.Util
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import java.util.*
@@ -21,13 +22,18 @@ class LocalSessionManager(private val prefs: SharedPreferences) {
      * @param context the context used to create EncryptedSharedPreferences
      */
     constructor(context: Context) : this(
-        EncryptedSharedPreferences.create(
-            "AppSessionPrefs",
-            MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
-            context,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
+        try {
+            EncryptedSharedPreferences.create(
+                "AppSessionPrefs",
+                MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
+                context,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        } catch (e: Exception) {
+            Log.e("LocalSessionManager", "Error creating EncryptedSharedPreferences", e)
+            context.getSharedPreferences("AppSessionPrefs", Context.MODE_PRIVATE) // Fallback to regular SharedPreferences
+        }
     )
 
     // Creates a login session by storing user email and token in SharedPreferences

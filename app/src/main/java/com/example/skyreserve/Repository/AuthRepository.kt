@@ -1,5 +1,6 @@
 package com.example.skyreserve.Repository
 
+import android.util.Log
 import com.example.skyreserve.Database.Dao.UserAccountDao
 import com.example.skyreserve.Database.Entity.UserAccount
 import com.example.skyreserve.Util.EncryptionUtil
@@ -21,13 +22,23 @@ class AuthRepository @Inject constructor(private val userAccountDao: UserAccount
     suspend fun signIn(emailAddress: String, password: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
+                Log.d("AuthRepo","emailAddress: $emailAddress")
+                val encryptedEmail = EncryptionUtil.encrypt(emailAddress)
+                Log.d("AuthRepo","emailAddress: $encryptedEmail")
+
                 // Query the local database to find the user by username and password
-                val userAccount = userAccountDao.getUserAccountByEmailAddress(emailAddress)
+                val userAccount = userAccountDao.getUserAccountByEmailAddress(encryptedEmail)
+
+                Log.d("AuthRepo","emailAddress: $userAccount")
+                if (userAccount != null) {
+                    Log.d("AuthRepo","password: ${userAccount.password}")
+                }
 
                 // This can get easily hacked with console.log. Add security measures or 3rd party server deals with it.
 
                 return@withContext userAccount != null && userAccount.password == password
             } catch (e: Exception) {
+                Log.e("AuthRepo", "Error SignIn", e)
                 // Handle exceptions (e.g., database errors)
                 return@withContext false
             }
@@ -45,13 +56,19 @@ class AuthRepository @Inject constructor(private val userAccountDao: UserAccount
                 val existingUser = userAccountDao.getUserAccountByEmailAddress(emailAddress)
 
                 if (existingUser == null) {
+                    Log.d("AuthRepo","emailAddress: $emailAddress")
+
+                    val encryptedEmail = EncryptionUtil.encrypt(emailAddress)
+
+                    Log.d("AuthRepo","emailAddress: $encryptedEmail")
+
                     // Hash the password before storing it
                     val hashedPassword = hashPassword(password)
 
                     // Create a new UserAccount entity and insert it into the database
                     val newUserAccount = UserAccount(
-                        emailAddress = emailAddress,
-                        password = hashedPassword
+                        emailAddress = encryptedEmail,
+                        password = password
                     )
                     userAccountDao.insertUserAccount(newUserAccount)
                     return@withContext true // Sign-up successful
@@ -59,6 +76,7 @@ class AuthRepository @Inject constructor(private val userAccountDao: UserAccount
                     return@withContext false // User with the same username already exists
                 }
             } catch (e: Exception) {
+                Log.e("AuthRepo", "Error SignUpo", e)
                 // Handle exceptions (e.g., database errors)
                 return@withContext false
             }
@@ -92,6 +110,9 @@ class AuthRepository @Inject constructor(private val userAccountDao: UserAccount
             this.stateCode = this.stateCode?.let { EncryptionUtil.decrypt(it) }
             this.countryCode = this.countryCode?.let { EncryptionUtil.decrypt(it) }
             this.passport = this.passport?.let { EncryptionUtil.decrypt(it) }
+        }
+        if (userAccount != null) {
+            Log.d("AuthRepo", "emailAddress: ${userAccount.emailAddress}")
         }
         return userAccount
     }

@@ -60,12 +60,12 @@ class AuthViewModel @Inject constructor(
             val signInSuccess = authRepository.signIn(emailAddress, password)
             val isEmailExisting = authRepository.isEmailExisting(emailAddress)
             when {
+                !signInSuccess && isEmailExisting -> {
+                    _signInResult.value = SignInResult.INVALID_CREDENTIALS
+                }
                 !isNetworkAvailable() -> {
                     // Simulate Network even though Room db is local
                     _signInResult.value = SignInResult.NETWORK_ERROR
-                }
-                !signInSuccess && isEmailExisting -> {
-                    _signInResult.value = SignInResult.INVALID_CREDENTIALS
                 }
                 else -> {
                     if(signInSuccess) {

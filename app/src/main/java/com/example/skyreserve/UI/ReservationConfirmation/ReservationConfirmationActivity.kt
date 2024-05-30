@@ -41,7 +41,7 @@ class ReservationConfirmationActivity: AppCompatActivity() {
         setContentView(binding.root)
 
         //logger = (application as MyApp).logger
-        logger.logInteraction("ReservationConfirmationActivity:")
+        //logger.logInteraction("ReservationConfirmationActivity:")
 
         loadIntentData()
         calculatePaymentSummary()
@@ -53,33 +53,33 @@ class ReservationConfirmationActivity: AppCompatActivity() {
         passengerLabelTextView.text = "\t$username:"
 
         binding.departureChangeSeatsButton.setOnClickListener {
-            logger.logInteraction("Button clicked: ${binding.departureChangeSeatsButton.text}")
+            //logger.logInteraction("Button clicked: ${binding.departureChangeSeatsButton.text}")
         }
 
         binding.departureDecrementBaggageButton.setOnClickListener {
-            logger.logInteraction("Button clicked: ${binding.departureDecrementBaggageButton.text}")
+            //logger.logInteraction("Button clicked: ${binding.departureDecrementBaggageButton.text}")
             if (baggageCount > 1) {
                 baggageCount--
                 binding.departureBaggageCountTextView.text = baggageCount.toString()
             }
-            logger.logInteraction("Passenger Count: $baggageCount")
+            //logger.logInteraction("Passenger Count: $baggageCount")
         }
 
         binding.departureIncrementBaggageButton.setOnClickListener {
-            logger.logInteraction("Button clicked: ${binding.departureIncrementBaggageButton.text}")
+            //logger.logInteraction("Button clicked: ${binding.departureIncrementBaggageButton.text}")
             if (baggageCount < maxBaggageCount) {
                 baggageCount++
                 binding.departureBaggageCountTextView.text = baggageCount.toString()
             }
-            logger.logInteraction("Passenger Count: $baggageCount")
+            //logger.logInteraction("Passenger Count: $baggageCount")
         }
 
         binding.editPartyButton.setOnClickListener {
-            logger.logInteraction("Button clicked: ${binding.editPartyButton.text}")
+            //logger.logInteraction("Button clicked: ${binding.editPartyButton.text}")
         }
 
         binding.confirmButton.setOnClickListener {
-            logger.logInteraction("Button clicked: ${binding.confirmButton.text}")
+            //logger.logInteraction("Button clicked: ${binding.confirmButton.text}")
             navigateToCheckOut()
         }
     }
@@ -134,7 +134,7 @@ class ReservationConfirmationActivity: AppCompatActivity() {
     }
 
     private fun navigateToCheckOut() {
-        logger.logInteraction("Navigating To CheckOutActivity - TASK 2 Complete")
+        //logger.logInteraction("Navigating To CheckOutActivity - TASK 2 Complete")
 
         val intent = Intent(this, CheckOutActivity::class.java)
         intent.putExtra("EXTRA_NUM_PASSENGERS", numPassengers)

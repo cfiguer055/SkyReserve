@@ -42,7 +42,7 @@ class CheckOutActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //logger = (application as MyApp).logger
-        logger.logInteraction("CheckOutActivity:")
+        //logger.logInteraction("CheckOutActivity:")
 
         // Retrieve intent extras
         loadIntentData()
@@ -70,7 +70,7 @@ class CheckOutActivity : AppCompatActivity() {
                     val textContent = editText.text.toString()
                     "Defocused from ${getResourceName(view.id)} with text: $textContent"
                 }
-                logger.logInteraction(logMsg)
+                //logger.logInteraction(logMsg)
             }
             editText.addTextChangedListener { resetErrorState() }
         }
@@ -88,13 +88,13 @@ class CheckOutActivity : AppCompatActivity() {
 //        binding.zipCodeEditText.addTextChangedListener { resetErrorState() }
 
         binding.completePaymentButton.setOnClickListener {
-            logger.logInteraction("Button clicked: ${binding.completePaymentButton.text}")
+            //logger.logInteraction("Button clicked: ${binding.completePaymentButton.text}")
             if(areAllFieldsFilled()) {
-                logger.logInteraction("Are All Fields Filled?: ${areAllFieldsFilled()}")
+                //logger.logInteraction("Are All Fields Filled?: ${areAllFieldsFilled()}")
                 navigateToSuccess()
             } else {
-                logger.logInteraction("Are All Fields Filled?: ${areAllFieldsFilled()}")
-                logger.logInteraction("Errors Displayed:")
+                //logger.logInteraction("Are All Fields Filled?: ${areAllFieldsFilled()}")
+                //logger.logInteraction("Errors Displayed:")
                 showError()
             }
         }
@@ -102,7 +102,7 @@ class CheckOutActivity : AppCompatActivity() {
 
 
     private fun navigateToSuccess() {
-        logger.logInteraction("Navigating To SuccessActivity - TASK 3 Complete")
+        //logger.logInteraction("Navigating To SuccessActivity - TASK 3 Complete")
 
         val intent = Intent(this, SuccessActivity::class.java)
 
@@ -186,9 +186,9 @@ class CheckOutActivity : AppCompatActivity() {
         binding.errorPaymentTextView.visibility = View.VISIBLE
         binding.errorBillingAddressTextView.visibility = View.VISIBLE
 
-        logger.logInteraction("Error Display is Visible")
-        logger.logInteraction("Payment Errors: $paymentErrors")
-        logger.logInteraction("Billing Address Errors: $billingAddressErrors")
+        //logger.logInteraction("Error Display is Visible")
+        //logger.logInteraction("Payment Errors: $paymentErrors")
+        //logger.logInteraction("Billing Address Errors: $billingAddressErrors")
     }
 
     private fun resetErrorState() {
@@ -220,12 +220,12 @@ class CheckOutActivity : AppCompatActivity() {
         reservationTotal = intent.getDoubleExtra("EXTRA_RESERVATION_TOTAL", 0.00)
         email = intent.getStringExtra("EXTRA_EMAIL") ?: ""
 
-        logger.logInteraction("Passengers: ${numPassengers}")
-        logger.logInteraction("Base Price: ${"%.2f".format(basePrice)}")
-        logger.logInteraction("Seat Change Fee: ${"%.2f".format(seatChangeFee)}")
-        logger.logInteraction("Baggage Fee: ${"%.2f".format(baggageFee)}")
-        logger.logInteraction("Tax: ${"%.2f".format(tax)}")
-        logger.logInteraction("Reservation Total: ${"%.2f".format(reservationTotal)}")
+        //logger.logInteraction("Passengers: ${numPassengers}")
+        //logger.logInteraction("Base Price: ${"%.2f".format(basePrice)}")
+        //logger.logInteraction("Seat Change Fee: ${"%.2f".format(seatChangeFee)}")
+        //logger.logInteraction("Baggage Fee: ${"%.2f".format(baggageFee)}")
+        //logger.logInteraction("Tax: ${"%.2f".format(tax)}")
+        //logger.logInteraction("Reservation Total: ${"%.2f".format(reservationTotal)}")
 
         binding.numberPassengersTextView.text = "Passengers: ${numPassengers}"
         binding.basePriceTextView.text = String.format("$%.2f\nper passenger", basePrice)

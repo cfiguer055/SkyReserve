@@ -51,44 +51,44 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         setContentView(binding.root)
 
         //logger = (application as MyApp).logger
-        logger.logInteraction("FlightSearchActivity:")
+        //logger.logInteraction("FlightSearchActivity:")
 
         loadIntentData()
         if(areAllFieldsFilled()) {
-            logger.logInteraction("All Fields Are Filled?: ${areAllFieldsFilled()}")
+            //logger.logInteraction("All Fields Are Filled?: ${areAllFieldsFilled()}")
             showFlightResults()
         } else {
-            logger.logInteraction("All Fields Are Filled?: ${areAllFieldsFilled()}")
-            logger.logInteraction("Flight Results Not Displayed Yet")
+            //logger.logInteraction("All Fields Are Filled?: ${areAllFieldsFilled()}")
+            //logger.logInteraction("Flight Results Not Displayed Yet")
         }
         //Log.d("areAllFieldsFilled(): ", areAllFieldsFilled().toString())
 
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             // When any RadioButton is checked, change the text color back to black
             resetErrorState()
-            logger.logInteraction("Button clicked: ${binding.oneWayRadioButton.text}")
+            //logger.logInteraction("Button clicked: ${binding.oneWayRadioButton.text}")
         }
 
 
         binding.departButton.setOnClickListener {
-            logger.logInteraction("Button clicked: ${binding.departButton}")
+            //logger.logInteraction("Button clicked: ${binding.departButton}")
             showAirportAutoCompleteDialog(true)
         }
 
         binding.arriveButton.setOnClickListener {
-            logger.logInteraction("Button clicked: ${binding.arriveButton}")
+            //logger.logInteraction("Button clicked: ${binding.arriveButton}")
             showAirportAutoCompleteDialog(false)
         }
 
         binding.departureDateEditText.setOnClickListener {
-            logger.logInteraction("Button clicked: ${binding.departureDateEditText}")
+            //logger.logInteraction("Button clicked: ${binding.departureDateEditText}")
             val calendar = Calendar.getInstance()
             val datePickerDialog = DatePickerDialog(
                 this,
                 { _, year, month, dayOfMonth ->
                     val selectedDate = "$dayOfMonth ${getMonthShortName(month)}"
                     binding.departureDateEditText.setText(selectedDate)
-                    logger.logInteraction("Date Selected: ${binding.departureDateEditText.text}")
+                    //logger.logInteraction("Date Selected: ${binding.departureDateEditText.text}")
                     resetErrorState()
                 },
                 calendar.get(Calendar.YEAR),
@@ -117,25 +117,25 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         binding.passengerCountTextView.text = passengerCount.toString()
 
         binding.decrementPassengerButton.setOnClickListener {
-            logger.logInteraction("Button clicked: Decrement(${binding.decrementPassengerButton.text})")
+            //logger.logInteraction("Button clicked: Decrement(${binding.decrementPassengerButton.text})")
             if (passengerCount > 1) {
                 passengerCount--
                 binding.passengerCountTextView.text = passengerCount.toString()
             }
-            logger.logInteraction("Passenger Count: $passengerCount")
+            //logger.logInteraction("Passenger Count: $passengerCount")
         }
 
         binding.incrementPassengerButton.setOnClickListener {
-            logger.logInteraction("Button clicked: Increment(${binding.incrementPassengerButton.text})")
+            //logger.logInteraction("Button clicked: Increment(${binding.incrementPassengerButton.text})")
             if (passengerCount < maxPassengerCount) {
                 passengerCount++
                 binding.passengerCountTextView.text = passengerCount.toString()
             }
-            logger.logInteraction("Passenger Count: $passengerCount")
+            //logger.logInteraction("Passenger Count: $passengerCount")
         }
 
         binding.searchFlightButton.setOnClickListener {
-            logger.logInteraction("Button clicked: ${binding.searchFlightButton.text}")
+            //logger.logInteraction("Button clicked: ${binding.searchFlightButton.text}")
             if (areAllFieldsFilled()) {
                 showFlightResults()
             } else {
@@ -163,19 +163,19 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         if (binding.radioGroup.checkedRadioButtonId == -1) {
             binding.oneWayRadioButton.setTextColor(ContextCompat.getColor(this, R.color.red10))
             binding.roundTripRadioButton.setTextColor(ContextCompat.getColor(this, R.color.red10))
-            logger.logInteraction("Search Error: ${binding.radioGroup.id}")
+            //logger.logInteraction("Search Error: ${binding.radioGroup.id}")
         }
         if (binding.departButton.text.toString().isEmpty()) {
             binding.departButton.setBackgroundResource(R.drawable.edit_text_error_background)
-            logger.logInteraction("Search Error: ${binding.departButton}")
+            //logger.logInteraction("Search Error: ${binding.departButton}")
         }
         if (binding.arriveButton.text.toString().isEmpty()) {
             binding.arriveButton.setBackgroundResource(R.drawable.edit_text_error_background)
-            logger.logInteraction("Search Error: ${binding.arriveButton}")
+            //logger.logInteraction("Search Error: ${binding.arriveButton}")
         }
         if (binding.departureDateEditText.text.toString().isEmpty()) {
             binding.departureDateEditText.setBackgroundResource(R.drawable.edit_text_error_background)
-            logger.logInteraction("Search Error: ${binding.departureDateEditText}")
+            //logger.logInteraction("Search Error: ${binding.departureDateEditText}")
         }
         if (binding.passengerCountTextView.text.toString().isEmpty()) {
             // Change background of passengers count to indicate error
@@ -183,7 +183,7 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         // If any field is not filled, show the error message
         binding.errorTextView.text = getString(R.string.all_fields_required_error)
         binding.errorTextView.visibility = View.VISIBLE
-        logger.logInteraction("Search Error Text View: ${binding.errorTextView.text}")
+        //logger.logInteraction("Search Error Text View: ${binding.errorTextView.text}")
     }
 
     private fun resetErrorState() {
@@ -219,7 +219,7 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         val arriveCity = arriveParts.getOrNull(1)?.split(",")?.getOrNull(0) ?: ""
 
         binding.headerTitle.text = "$departAirportCode to $arriveAirportCode"
-        logger.logInteraction("Flight Results Displayed for $departAirportCode to $arriveAirportCode")
+        //logger.logInteraction("Flight Results Displayed for $departAirportCode to $arriveAirportCode")
 
         val flightList = listOf(
             FlightInfo("08:00", "10:00", departCity , arriveCity, departAirportCode, arriveAirportCode,"7h", "Spirit Airlines", "$500", roundTrip),
@@ -308,9 +308,9 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
     }
 
     override fun onFlightClick(selectedFlightInfo: FlightInfo) {
-        logger.logInteraction("Flight Selected: ${selectedFlightInfo.departureAirport} to ${selectedFlightInfo.arrivalAirport}" +
-                "\tfrom${selectedFlightInfo.departureTime} to ${selectedFlightInfo.arrivalTime}")
-        logger.logInteraction("Navigating to ReservationConfirmationActivity - TASK 1 Complete")
+        //logger.logInteraction("Flight Selected: ${selectedFlightInfo.departureAirport} to ${selectedFlightInfo.arrivalAirport}" +
+        //        "\tfrom${selectedFlightInfo.departureTime} to ${selectedFlightInfo.arrivalTime}")
+        //logger.logInteraction("Navigating to ReservationConfirmationActivity - TASK 1 Complete")
 
         // Handle the click, navigate to the confirmation page
         val intent = Intent(this, ReservationConfirmationActivity::class.java)
@@ -341,7 +341,7 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
             searchEditText.hint = if (departure) "Enter departure airport" else "Enter arrival airport"
             setView(binding.root) // This sets the custom view for the dialog
             setNegativeButton("Cancel") { dialog, which ->
-                logger.logInteraction("Alert Dialog Cancelled")
+                //logger.logInteraction("Alert Dialog Cancelled")
                 dialog.cancel()
             }
         }.create()
@@ -387,7 +387,7 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
                 val airportCode = parts.getOrNull(1) ?: "" // This will get "LAX" or an empty string if the part is not found.
                 val city = parts.getOrNull(2)?.split(",")?.getOrNull(0) ?: "" // This will get "LOS ANGELES" or an empty string if the part is not found.
                 if(departure) binding.departButton.text = "$airportCode - $city" else binding.arriveButton.text = "$airportCode - $city"
-                logger.logInteraction("Alert Dialog Button clicked: $airportCode - $city")
+                //logger.logInteraction("Alert Dialog Button clicked: $airportCode - $city")
 
                 dialog.dismiss()
                 resetErrorState()

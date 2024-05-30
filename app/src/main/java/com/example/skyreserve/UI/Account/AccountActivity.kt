@@ -43,11 +43,11 @@ class AccountActivity : AppCompatActivity() {
         }
 
         binding.emailCurrentUserInteractionButton.setOnClickListener {
-            logger.sendLogToEmail(this)
+            //logger.sendLogToEmail(this)
         }
 
         binding.emailAllUserInteractionButton.setOnClickListener {
-            logger.sendAllLogsToEmail(this)
+            //logger.sendAllLogsToEmail(this)
         }
 
         binding.emailUserListButton.setOnClickListener {
