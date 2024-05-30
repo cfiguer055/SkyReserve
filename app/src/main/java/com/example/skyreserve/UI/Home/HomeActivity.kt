@@ -115,31 +115,31 @@ class HomeActivity : AppCompatActivity() {
         setupBottomNavigation()
 
        // logger = (application as MyApp).logger
-        logger.logInteraction("HomeActivity:")
+        //logger.logInteraction("HomeActivity:")
 
         binding.oneWayRadioButton.setOnClickListener {
-            logger.logInteraction("Button clicked: ${binding.oneWayRadioButton.text}")
+            //logger.logInteraction("Button clicked: ${binding.oneWayRadioButton.text}")
         }
 
         binding.departButton.setOnClickListener {
-            logger.logInteraction("Button clicked: ${binding.departButton.id}")
+            //logger.logInteraction("Button clicked: ${binding.departButton.id}")
             showAirportAutoCompleteDialog(true)
         }
 
         binding.arriveButton.setOnClickListener {
-            logger.logInteraction("Button clicked: ${binding.arriveButton.id}")
+            //logger.logInteraction("Button clicked: ${binding.arriveButton.id}")
             showAirportAutoCompleteDialog(false)
         }
 
         binding.departureDateEditText.setOnClickListener {
-            logger.logInteraction("Button clicked: ${binding.departureDateEditText.id}")
+            //logger.logInteraction("Button clicked: ${binding.departureDateEditText.id}")
             val calendar = Calendar.getInstance()
             val datePickerDialog = DatePickerDialog(
                 this,
                 { _, year, month, dayOfMonth ->
                     val selectedDate = "$dayOfMonth ${getMonthShortName(month)}"
                     binding.departureDateEditText.setText(selectedDate)
-                    logger.logInteraction("Date Selected: ${binding.departureDateEditText.text}")
+                    //logger.logInteraction("Date Selected: ${binding.departureDateEditText.text}")
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
@@ -155,7 +155,7 @@ class HomeActivity : AppCompatActivity() {
                 { _, year, month, dayOfMonth ->
                     val selectedDate = "$dayOfMonth ${getMonthShortName(month)}"
                     binding.returnDateEditText.setText(selectedDate)
-                    logger.logInteraction("Button clicked: ${binding.returnDateEditText.text}")
+                    //logger.logInteraction("Button clicked: ${binding.returnDateEditText.text}")
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
@@ -167,25 +167,25 @@ class HomeActivity : AppCompatActivity() {
         binding.passengerCountTextView.text = passengerCount.toString()
 
         binding.decrementPassengerButton.setOnClickListener {
-            logger.logInteraction("Button clicked: Decrement(${binding.decrementPassengerButton.text})")
+            //logger.logInteraction("Button clicked: Decrement(${binding.decrementPassengerButton.text})")
             if (passengerCount > 1) {
                 passengerCount--
                 binding.passengerCountTextView.text = passengerCount.toString()
             }
-            logger.logInteraction("Passenger Count: $passengerCount")
+            //logger.logInteraction("Passenger Count: $passengerCount")
         }
 
         binding.incrementPassengerButton.setOnClickListener {
-            logger.logInteraction("Button clicked: Increment(${binding.incrementPassengerButton.text})")
+            //logger.logInteraction("Button clicked: Increment(${binding.incrementPassengerButton.text})")
             if (passengerCount < maxPassengerCount) {
                 passengerCount++
                 binding.passengerCountTextView.text = passengerCount.toString()
             }
-            logger.logInteraction("Passenger Count: $passengerCount")
+            //logger.logInteraction("Passenger Count: $passengerCount")
         }
 
         binding.searchFlightButton.setOnClickListener {
-            logger.logInteraction("Button clicked: ${binding.searchFlightButton.text}")
+            //logger.logInteraction("Button clicked: ${binding.searchFlightButton.text}")
             navigateToFlightSearch()
         }
 
@@ -201,13 +201,13 @@ class HomeActivity : AppCompatActivity() {
             R.id.roundTripRadioButton -> "Round trip"
             else -> "Not selected"
         }
-        logger.logInteraction("Flight Search Fields")
-        logger.logInteraction("DEPART_AIRPORT : ${binding.departButton.text}")
-        logger.logInteraction("ARRIVE_AIRPORT : ${binding.arriveButton.text}")
-        logger.logInteraction("DEPART_DATE : ${binding.departureDateEditText.text}")
-        logger.logInteraction("ROUND_TRIP : $tripType")
-        logger.logInteraction("NUM_PASSENGERS : $passengerCount")
-        logger.logInteraction("Navigating To FlightSearchActivity")
+//        logger.logInteraction("Flight Search Fields")
+//        logger.logInteraction("DEPART_AIRPORT : ${binding.departButton.text}")
+//        logger.logInteraction("ARRIVE_AIRPORT : ${binding.arriveButton.text}")
+//        logger.logInteraction("DEPART_DATE : ${binding.departureDateEditText.text}")
+//        logger.logInteraction("ROUND_TRIP : $tripType")
+//        logger.logInteraction("NUM_PASSENGERS : $passengerCount")
+//        logger.logInteraction("Navigating To FlightSearchActivity")
 
         intent.putExtra("EXTRA_EMAIL", email)
         intent.putExtra("ROUND_TRIP", tripType)
@@ -343,7 +343,7 @@ class HomeActivity : AppCompatActivity() {
                 val airportCode = parts.getOrNull(1) ?: "" // This will get "LAX" or an empty string if the part is not found.
                 val city = parts.getOrNull(2)?.split(",")?.getOrNull(0) ?: "" // This will get "LOS ANGELES" or an empty string if the part is not found.
                 if(departure) binding.departButton.text = "$airportCode - $city" else binding.arriveButton.text = "$airportCode - $city"
-                logger.logInteraction("Alert Dialog Button clicked: $airportCode - $city")
+                //logger.logInteraction("Alert Dialog Button clicked: $airportCode - $city")
 
                 dialog.dismiss()
             }

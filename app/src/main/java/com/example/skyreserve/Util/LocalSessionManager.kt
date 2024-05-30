@@ -3,32 +3,48 @@ package com.example.skyreserve.Util
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import androidx.security.crypto.MasterKeys
+import java.io.IOException
+import java.security.GeneralSecurityException
 import java.util.*
 import javax.inject.Singleton
 
 
+/**
+ * Primary constructor to initialize LocalSessionManager in testing (To not mock
+ * Encryption SharedPreferences)
+ * Secondary constructor to initialize LocalSessionManager using Context.
+ * This maintains backward compatibility with existing code that passes Context.
+ *
+ * Initializes the SharedPreferences using EncryptedSharedPreferences.
+ *
+ * @param context the context used to create EncryptedSharedPreferences
+ */
 @Singleton
 class LocalSessionManager(private val prefs: SharedPreferences) {
-    /**
-     * Primary constructor to initialize LocalSessionManager in testing (To not mock
-     * Encryption SharedPreferences)
-     * Secondary constructor to initialize LocalSessionManager using Context.
-     * This maintains backward compatibility with existing code that passes Context.
-     *
-     * Initializes the SharedPreferences using EncryptedSharedPreferences.
-     *
-     * @param context the context used to create EncryptedSharedPreferences
-     */
     constructor(context: Context) : this(
-        EncryptedSharedPreferences.create(
-            "AppSessionPrefs",
-            MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
-            context,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
+        createEncryptedSharedPreferences(context)
     )
+
+    companion object {
+        private const val PREF_NAME = "AppSessionPrefs"
+
+        @Throws(GeneralSecurityException::class, IOException::class)
+        private fun createEncryptedSharedPreferences(context: Context): SharedPreferences {
+            val masterKey = MasterKey.Builder(context)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
+
+            return EncryptedSharedPreferences.create(
+                context,
+                PREF_NAME,
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        }
+    }
 
     // Creates a login session by storing user email and token in SharedPreferences
     fun createLoginSession(userEmail: String, token: String) {

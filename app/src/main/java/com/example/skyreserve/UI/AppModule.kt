@@ -68,6 +68,7 @@ class AppModule {
         return LocalSessionManager(context) // Creates and returns an instance of LocalSessionManager
     }
 
+
     @Provides
     @Singleton
     fun provideAuthRepository(userAccountDao: UserAccountDao): AuthRepository {

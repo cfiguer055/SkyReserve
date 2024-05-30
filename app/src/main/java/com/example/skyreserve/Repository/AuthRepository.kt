@@ -1,5 +1,6 @@
 package com.example.skyreserve.Repository
 
+import android.util.Log
 import com.example.skyreserve.Database.Dao.UserAccountDao
 import com.example.skyreserve.Database.Entity.UserAccount
 import com.example.skyreserve.Util.EncryptionUtil
@@ -21,13 +22,34 @@ class AuthRepository @Inject constructor(private val userAccountDao: UserAccount
     suspend fun signIn(emailAddress: String, password: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                // Query the local database to find the user by username and password
-                val userAccount = userAccountDao.getUserAccountByEmailAddress(emailAddress)
+                val encryptedEmail = EncryptionUtil.encrypt(emailAddress)
+                Log.d("AuthRepository", "encryptedEmail: $emailAddress")
+                val userAccount = userAccountDao.getUserAccountByEmailAddress(encryptedEmail)
+                Log.d("AuthRepository", "userAccount: $emailAddress")
 
-                // This can get easily hacked with console.log. Add security measures or 3rd party server deals with it.
-
-                return@withContext userAccount != null && userAccount.password == password
+                if (userAccount != null && checkPassword(password, userAccount.password)) {
+                    Log.d("AuthRepository", "Sign-in successful for email: $emailAddress")
+                    return@withContext true
+                } else {
+                    Log.d("AuthRepository", "Invalid credentials for email: $emailAddress")
+                    return@withContext false
+                }
+//
+//                // Encrypt the email address before querying the database
+//                val encryptedEmail = EncryptionUtil.encrypt(emailAddress)
+//                // val hashedPassword = hashPassword(password)
+//                val userAccount = userAccountDao.getUserAccountByEmailAddress(encryptedEmail)
+//
+//                // Check if the user exists and the password is correct
+//                return@withContext userAccount != null && checkPassword(password, userAccount.password)
+//
+//
+//                // Query the local database to find the user by username and password
+//                //val userAccount = userAccountDao.getUserAccountByEmailAddress(emailAddress)
+//
+//                //return@withContext userAccount != null && userAccount.password == password
             } catch (e: Exception) {
+                Log.e("AuthRepository", "Error during sign-in", e)
                 // Handle exceptions (e.g., database errors)
                 return@withContext false
             }
@@ -54,11 +76,14 @@ class AuthRepository @Inject constructor(private val userAccountDao: UserAccount
                         password = hashedPassword
                     )
                     userAccountDao.insertUserAccount(newUserAccount)
+                    Log.d("AuthRepository", "Sign-up successful for email: $emailAddress")
                     return@withContext true // Sign-up successful
                 } else {
+                    Log.d("AuthRepository", "User with email $emailAddress already exists")
                     return@withContext false // User with the same username already exists
                 }
             } catch (e: Exception) {
+                Log.e("AuthRepository", "Error during sign-up for email: $emailAddress", e)
                 // Handle exceptions (e.g., database errors)
                 return@withContext false
             }

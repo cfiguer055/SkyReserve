@@ -20,7 +20,7 @@ class SuccessActivity : AppCompatActivity() {
 
         val email = intent.getStringExtra("EXTRA_EMAIL") ?: ""
         //logger = (application as MyApp).logger
-        logger.logInteraction("SuccessActivity:")
+        //logger.logInteraction("SuccessActivity:")
         //logger.sendLogToEmail(this)
 
 
