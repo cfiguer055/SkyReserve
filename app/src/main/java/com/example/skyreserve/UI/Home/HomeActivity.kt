@@ -257,7 +257,8 @@ class HomeActivity : AppCompatActivity() {
                     passport = binding.passportEditText.text.toString()
                 )
                 // Pass data to ViewModel to handle the update
-                userAccountViewModel.updateUserDetails(userData)
+                //userAccountViewModel.updateUserDetails(userData)
+                userAccountViewModel.insertUserDetails(userData)
 
                 // After updating, fetch user details to update UI
                 fetchUserDetailsAfterSignIn()

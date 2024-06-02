@@ -39,6 +39,36 @@ class UserAccountViewModel @Inject constructor (
         }
     }
 
+    fun insertUserDetails(userData: UserData) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val userEmail = sessionManager.getUserEmail()
+            val userAccount =
+                userEmail?.let { userAccountRepository.getUserAccountByEmailAddress(it) }
+
+            if (userAccount != null) {
+                // Update the user account object with userData fields
+                userAccount.apply {
+                    firstName = userData.firstName
+                    lastName = userData.lastName
+                    gender = userData.gender
+                    phone = userData.phone
+                    dateOfBirth = userData.dateOfBirth
+                    address = userData.address
+                    stateCode = userData.stateCode
+                    countryCode = userData.countryCode
+                    passport = userData.passport
+                    // ... set other fields as necessary
+                }
+
+                userAccountRepository.insertUserAccount(userAccount)
+                _updateStatus.postValue(true) // Notify that update is successful
+            } else {
+                _updateStatus.postValue(false) // Notify about the failure
+            }
+        }
+    }
+
+
     fun updateUserDetails(userData: UserData) { // UserData is a data class holding user details
         viewModelScope.launch(Dispatchers.IO) {
             val userEmail = sessionManager.getUserEmail()
