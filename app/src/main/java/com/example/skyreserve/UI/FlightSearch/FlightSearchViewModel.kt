@@ -8,8 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 
-@HiltViewModel
-class FlightSearchViewModel @Inject constructor() : ViewModel() {
+class FlightSearchViewModel constructor() : ViewModel() {
     private val _isFormFilled = MutableLiveData<Boolean>()
     val isFormFilled: LiveData<Boolean> get() = _isFormFilled
 

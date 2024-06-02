@@ -90,6 +90,14 @@ class CheckOutActivity : AppCompatActivity() {
         binding.completePaymentButton.setOnClickListener {
             //logger.logInteraction("Button clicked: ${binding.completePaymentButton.text}")
             if(areAllFieldsFilled()) {
+
+
+                // Reserve the flight here using hilt
+
+
+
+
+
                 //logger.logInteraction("Are All Fields Filled?: ${areAllFieldsFilled()}")
                 navigateToSuccess()
             } else {
