@@ -53,6 +53,7 @@ android {
 dependencies {
     //classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.5.1"
     implementation 'androidx.navigation:navigation-fragment:2.5.1'
+    implementation 'org.chromium.net:cronet-embedded:119.6045.31'
     testImplementation 'junit:junit:4.13.2'
     def lifecycle_version = "2.4.0"
     def room_version = "2.5.0"

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/purple20"
-    tools:context=".UI.Welcome.WelcomeActivity">
+    tools:context=".ui.welcome.WelcomeActivity">
 
 
     <androidx.viewpager2.widget.ViewPager2
