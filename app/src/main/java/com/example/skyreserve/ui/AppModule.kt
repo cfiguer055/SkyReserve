@@ -1,4 +1,4 @@
-package com.example.skyreserve.app
+package com.example.skyreserve.ui
 
 import android.content.Context
 import androidx.room.Room
@@ -36,7 +36,7 @@ class AppModule {
             RoomDatabase.DATABASE_NAME
         )
             .fallbackToDestructiveMigration()
-            .addCallback(object : RoomDatabase.Callback() {
+            .addCallback(object : androidx.room.RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
                     // Perform operations when the database is created (if needed)
@@ -87,65 +87,65 @@ class AppModule {
 }
 
 
+
 //@Module // Indicates that this class is a Dagger module
 //@InstallIn(SingletonComponent::class) // Specifies the component where this module will be installed
 //class AppModule {
 //
-//    @Provides
-//    @Singleton
-//    fun provideDatabase(@ApplicationContext context: Context): RoomDatabase {
-//        return Room.databaseBuilder(
-//            context.applicationContext,
-//            RoomDatabase::class.java,
-//            RoomDatabase.DATABASE_NAME
-//        )
-//            .fallbackToDestructiveMigration()
-//            .addCallback(object : androidx.room.RoomDatabase.Callback.Callback() {
-//                override fun onCreate(db: SupportSQLiteDatabase) {
-//                    super.onCreate(db)
-//                    // Perform operations when the database is created (if needed)
-//                    CoroutineScope(Dispatchers.IO).launch {
-//                        // Populate the database in a background thread
-//                        val userDao = provideDatabase(context).userAccountDao()
-//                        // Insert initial data
-//                        val newUserAccount = UserAccount(
-//                            emailAddress = "john_doe@gmail.com",
-//                            password = "secretpassword"
-//                        )
-//                        userDao.insertUserAccount(newUserAccount)
-//                    }
+//@Provides
+//@Singleton
+//fun provideDatabase(@ApplicationContext context: Context): RoomDatabase {
+//    return Room.databaseBuilder(
+//        context.applicationContext,
+//        RoomDatabase::class.java,
+//        RoomDatabase.DATABASE_NAME
+//    )
+//        .fallbackToDestructiveMigration()
+//        .addCallback(object : RoomDatabase.Callback() {
+//            override fun onCreate(db: SupportSQLiteDatabase) {
+//                super.onCreate(db)
+//                // Perform operations when the database is created (if needed)
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    // Populate the database in a background thread
+//                    val userDao = provideDatabase(context).userAccountDao()
+//                    // Insert initial data
+//                    val newUserAccount = UserAccount(
+//                        emailAddress = "john_doe@gmail.com",
+//                        password = "secretpassword"
+//                    )
+//                    userDao.insertUserAccount(newUserAccount)
 //                }
-//            })
-//            .build()
-//    }
+//            }
+//        })
+//        .build()
+//}
 //
-//    @Provides
-//    fun provideUserAccountDao(database: RoomDatabase): UserAccountDao {
-//        return database.userAccountDao()
-//    }
+//@Provides
+//fun provideUserAccountDao(database: RoomDatabase): UserAccountDao {
+//    return database.userAccountDao()
+//}
 //
 //
-//    @Provides // Indicates that this function provides a dependency
-//    @Singleton
-//    fun provideLocalSessionManager(@ApplicationContext context: Context): LocalSessionManager {
-//        return LocalSessionManager(context) // Creates and returns an instance of LocalSessionManager
-//    }
+//@Provides // Indicates that this function provides a dependency
+//@Singleton
+//fun provideLocalSessionManager(@ApplicationContext context: Context): LocalSessionManager {
+//    return LocalSessionManager(context) // Creates and returns an instance of LocalSessionManager
+//}
 //
-//    @Provides
-//    @Singleton
-//    fun provideAuthRepository(userAccountDao: UserAccountDao): AuthRepository {
-//        return AuthRepository(userAccountDao)
-//    }
+//@Provides
+//@Singleton
+//fun provideAuthRepository(userAccountDao: UserAccountDao): AuthRepository {
+//    return AuthRepository(userAccountDao)
+//}
 //
-//    @Provides
-//    @Singleton
-//    fun provideUserAccountRepository(database: RoomDatabase): UserAccountRepository {
-//        return UserAccountRepository(database.userAccountDao())
-//    }
+//@Provides
+//@Singleton
+//fun provideUserAccountRepository(database: RoomDatabase): UserAccountRepository {
+//    return UserAccountRepository(database.userAccountDao())
+//}
 //
-//    @Provides
-//    @Singleton
-//    fun provideUserInteractionLogger(@ApplicationContext context: Context): UserInteractionLogger {
-//        return UserInteractionLogger(context)
-//    }
-}
+//@Provides
+//@Singleton
+//fun provideUserInteractionLogger(@ApplicationContext context: Context): UserInteractionLogger {
+//    return UserInteractionLogger(context)
+//}
