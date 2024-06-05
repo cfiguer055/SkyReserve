@@ -11,22 +11,10 @@ import javax.inject.Singleton
 
 @Singleton
 class UserAccountRepository @Inject constructor(private val userAccountDao: UserAccountDao) {
-//    private val userAccountDao: UserAccountDao
-//    private val allUsersAccounts: LiveData<List<UserAccount>>
-//    // ... other properties
-//
-//    init {
-//        val database = SkyReserveDatabase.getInstance(application)
-//        userAccountDao = database.userAccountDao()
-//        allUsersAccounts = userAccountDao.getAllUsersFlow()
-//            .flowOn(Dispatchers.IO)
-//            .asLiveData()
-//        // initialize other properties
-//    }
 
-    private val allUsersAccounts: LiveData<List<UserAccount>> = userAccountDao.getAllUsersFlow()
-        .flowOn(Dispatchers.IO)
-        .asLiveData()
+//    private val allUsersAccounts: LiveData<List<UserAccount>> = userAccountDao.getAllUsersFlow()
+//        .flowOn(Dispatchers.IO)
+//        .asLiveData()
 
     // Repository Methods
     // MAYBE HAVE AUTHREPO USE THIS
@@ -47,9 +35,9 @@ class UserAccountRepository @Inject constructor(private val userAccountDao: User
     }
 
 
-    fun getAllUsers(): LiveData<List<UserAccount>> {
-        return allUsersAccounts
-    }
+//    fun getAllUsers(): LiveData<List<UserAccount>> {
+//        return allUsersAccounts
+//    }
 
     // ... other repository methods
 }

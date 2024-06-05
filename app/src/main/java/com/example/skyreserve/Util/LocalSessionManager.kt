@@ -85,17 +85,3 @@ class LocalSessionManager(private val prefs: SharedPreferences) {
     }
 }
 
-
-
-
-//class LocalSessionManager(context: Context) {
-//    private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
-//
-//    //private val prefs: SharedPreferences = context.getSharedPreferences("AppSessionPrefs", Context.MODE_PRIVATE)
-//    private val prefs: SharedPreferences = EncryptedSharedPreferences.create(
-//        "AppSessionPrefs",
-//        masterKeyAlias,
-//        context,
-//        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-//        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-//    )

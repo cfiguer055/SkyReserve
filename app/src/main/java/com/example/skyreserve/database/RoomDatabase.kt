@@ -1,4 +1,4 @@
-package com.example.skyreserve.database.room
+package com.example.skyreserve.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

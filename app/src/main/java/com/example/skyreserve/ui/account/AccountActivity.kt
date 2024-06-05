@@ -23,7 +23,7 @@ class AccountActivity : AppCompatActivity() {
     lateinit var logger: UserInteractionLogger
 
     private val authViewModel: AuthViewModel by viewModels()
-    private val accountViewModel: AccountViewModel by viewModels()
+    private val userAccountViewModel: UserAccountViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +59,7 @@ class AccountActivity : AppCompatActivity() {
         //sessionManager.logoutUser()
 
         authViewModel.logout()
-        accountViewModel.clear()
+        userAccountViewModel.clear()
 
         val intent = Intent(this, WelcomeActivity::class.java)
         startActivity(intent)

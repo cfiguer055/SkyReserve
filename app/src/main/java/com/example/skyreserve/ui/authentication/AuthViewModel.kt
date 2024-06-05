@@ -222,7 +222,7 @@ class AuthViewModel @Inject constructor(
 //                    !password.matches(Regex(".*\\d.*")) ||   // Missing digit
 //                    password != confirmPassword -> {                // Passwords don't match
 //                false
-//            } else -> {
+//            } else ->
 //                true // Valid Password
 //            }
 //        }
