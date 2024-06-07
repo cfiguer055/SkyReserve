@@ -18,16 +18,31 @@ class UserAccountRepository @Inject constructor(private val userAccountDao: User
 
     // Repository Methods
     // MAYBE HAVE AUTHREPO USE THIS
-    suspend fun insertUserAccount(userAccount: UserAccount) {
-        userAccountDao.insertUserAccount(userAccount)
+    suspend fun insertUserAccount(userAccount: UserAccount): Boolean {
+        return try {
+            userAccountDao.insertUserAccount(userAccount)
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
-    suspend fun updateUserAccount(userAccount: UserAccount) {
-        userAccountDao.updateUserAccount(userAccount)
+    suspend fun updateUserAccount(userAccount: UserAccount): Boolean {
+        return try {
+            userAccountDao.updateUserAccount(userAccount)
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
-    suspend fun deleteUserAccount(userAccount: UserAccount) {
-        userAccountDao.deleteUserAccount(userAccount)
+    suspend fun deleteUserAccount(userAccount: UserAccount): Boolean {
+        return try {
+            userAccountDao.deleteUserAccount(userAccount)
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
     suspend fun getUserAccountByEmailAddress(emailAddress: String): UserAccount? {
