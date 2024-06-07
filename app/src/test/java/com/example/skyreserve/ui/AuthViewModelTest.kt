@@ -240,10 +240,8 @@ class AuthViewModelTest {
         val password = "Password123"
 
         `when`(authRepository.signIn(email, password)).thenReturn(false)
-        `when`(authRepository.isEmailExisting(email)).thenReturn(true)
-
-        // Simulate network unavailability
-        //`when`(authViewModel.isNetworkAvailable()).thenReturn(true)
+        `when`(authRepository.isEmailExisting(email)).thenReturn(false)
+        `when`(authViewModel.isNetworkAvailable()).thenReturn(true)
 
         val observer = Mockito.mock(Observer::class.java) as Observer<SignInResult>
         authViewModel.signInResult.observeForever(observer)

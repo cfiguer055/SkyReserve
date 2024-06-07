@@ -68,7 +68,7 @@ class UserAccountViewModelTest {
 
 
     @Test
-    fun `fetchUserDetails retrieves userDetails LiveData`() = runTest {
+    fun `fetchUserDetails retrieves userDetails LiveData with valid email`() = runTest {
         val email = "test@gmail.com"
         val userAccount = UserAccount(
             emailAddress = email, password = "Password123",
@@ -92,6 +92,38 @@ class UserAccountViewModelTest {
         Mockito.verify(observer).onChanged(expectedUserData)
 
         userAccountViewModel.userDetails.removeObserver(observer)
+    }
+
+
+    @Test
+    fun `fetchUserDetails does not retrieve userDetails LiveData with invalid email`() = runTest {
+        val email = "invalid_email@gmail.com"
+        val expectedUserData = null
+
+        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(null)
+
+        val observer = Mockito.mock(Observer::class.java) as Observer<UserData?>
+        userAccountViewModel.userDetails.observeForever(observer)
+
+        userAccountViewModel.fetchUserDetails(email)
+
+        advanceUntilIdle() // This replaces advanceTimeBy and ensures all coroutines are executed
+
+        Mockito.verify(observer).onChanged(expectedUserData)
+
+        userAccountViewModel.userDetails.removeObserver(observer)
+    }
+
+
+    @Test
+    fun `insertUserDetails adds and updates with non-existing email`() = kotlin.run {
+
+    }
+
+
+    @Test
+    fun `insertUserDetails returns false with existing email`() = kotlin.run {
+
     }
 }
 

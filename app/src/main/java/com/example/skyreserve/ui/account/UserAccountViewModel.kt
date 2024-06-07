@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skyreserve.repository.UserAccountRepository
 import com.example.skyreserve.Util.LocalSessionManager
+import com.example.skyreserve.database.room.entity.UserAccount
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import gen._base._base_java__assetres.srcjar.R.id.info
@@ -62,37 +63,36 @@ class UserAccountViewModel @Inject constructor (
 
     // Insert both New User Account and Optional Personal Data
     // This is more for adminstrative purposes as AuthRepo deals with creating new users and not UserAccountRepo
-    fun insertUserDetails(userData: UserData) {
+    // ByPass SignUp
+    fun insertUserDetails(email: String, password: String, userData: UserData) {
         viewModelScope.launch(Dispatchers.IO) {
             val userEmail = sessionManager.getUserEmail()
-            val userAccount =
-                userEmail?.let { userAccountRepository.getUserAccountByEmailAddress(it) }
 
-            if (userAccount != null) {
-                // Update the user account object with userData fields
-                userAccount.apply {
-                    firstName = userData.firstName
-                    lastName = userData.lastName
-                    gender = userData.gender
-                    phone = userData.phone
-                    dateOfBirth = userData.dateOfBirth
-                    address = userData.address
-                    stateCode = userData.stateCode
-                    countryCode = userData.countryCode
+            if(userEmail == null) {
+                val userAccount = UserAccount(
+                    emailAddress = email,
+                    password = password,
+                    firstName = userData.firstName,
+                    lastName = userData.lastName,
+                    gender = userData.gender,
+                    phone = userData.phone,
+                    dateOfBirth = userData.dateOfBirth,
+                    address = userData.address,
+                    stateCode = userData.stateCode,
+                    countryCode = userData.countryCode,
                     passport = userData.passport
-                    // ... set other fields as necessary
-                }
+                )
 
                 userAccountRepository.insertUserAccount(userAccount)
-                //_updateStatus.postValue(true) // Notify that update is successful
+
                 withContext(Dispatchers.Main) {
                     _updateStatus.value = true // Notify that update is successful
+                    _userDetails.value = userData
                 }
             } else {
-                //_updateStatus.postValue(false) // Notify about the failure
-                withContext(Dispatchers.Main) {
-                    _updateStatus.value = false // Notify about the failure
-                }
+                // email already in database
+                _updateStatus.value = false
+                _userDetails.value = null
             }
         }
     }
