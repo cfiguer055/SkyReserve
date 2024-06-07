@@ -204,6 +204,11 @@ class AuthViewModelTest {
     }
 
 
+    /**
+     * Tests the signIn method of the AuthViewModel when network is not available.
+     * It verifies that the signInResult LiveData emits [SignInResult.NETWORK_ERROR] and
+     * ensures that the user is not logged in after the sign-in attempt.
+     */
     @Test
     fun `signIn with network error return NETWORK_ERROR` () = runTest {
         val email = "test@example.com"
@@ -234,6 +239,11 @@ class AuthViewModelTest {
     }
 
 
+    /**
+     * Tests the signIn method of the AuthViewModel when unknown error occurs.
+     * It verifies that the signInResult LiveData emits [SignInResult.UNKNOWN_ERROR] and
+     * ensures that the user is not logged in after the sign-in attempt.
+     */
     @Test
     fun `unexpected signIn failure return UNKNOWN_ERROR` () = runTest {
         val email = "test@example.com"
