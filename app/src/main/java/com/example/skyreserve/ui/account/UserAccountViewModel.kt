@@ -65,22 +65,18 @@ class UserAccountViewModel @Inject constructor (
     // This is more for adminstrative purposes as AuthRepo deals with creating new users and not UserAccountRepo
     // ByPass SignUp
     fun insertUserDetails(email: String, password: String, userData: UserData) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val userEmail = sessionManager.getUserEmail()
             if (userEmail == null) {
                 val userAccount = UserAccount(email, password, userData)
                 val success = userAccountRepository.insertUserAccount(userAccount)
 
-                withContext(Dispatchers.Main) {
-                    _updateStatus.value = if (success) success else false
-                    _userDetails.value = if (success) userData else null
-                }
+                _updateStatus.value = if (success) success else false
+                _userDetails.value = if (success) userData else null
                 success
             } else {
-                withContext(Dispatchers.Main) {
-                    _updateStatus.value = false
-                    _userDetails.value = null
-                }
+                _updateStatus.value = false
+                _userDetails.value = null
                 false
             }
         }
@@ -90,7 +86,7 @@ class UserAccountViewModel @Inject constructor (
     // TO SEE IF THAT WAS ISSUE LAST NIGHT
 
     fun updateUserDetails(userData: UserData) { // UserData is a data class holding user details
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val userEmail = sessionManager.getUserEmail()
             val userAccount = userEmail?.let { userAccountRepository.getUserAccountByEmailAddress(it) }
 
@@ -111,15 +107,11 @@ class UserAccountViewModel @Inject constructor (
 
                 val success = userAccountRepository.updateUserAccount(userAccount)
 
-                withContext(Dispatchers.Main) {
-                    _updateStatus.value = success // Notify that update is successful
-                    _userDetails.value = if (success) userData else null
-                }
+                _updateStatus.value = success // Notify that update is successful
+                _userDetails.value = if (success) userData else null
             } else {
-                withContext(Dispatchers.Main) {
-                    _updateStatus.value = false // Notify about the failure
-                    _userDetails.value = null
-                }
+                _updateStatus.value = false // Notify about the failure
+                _userDetails.value = null
             }
         }
 
