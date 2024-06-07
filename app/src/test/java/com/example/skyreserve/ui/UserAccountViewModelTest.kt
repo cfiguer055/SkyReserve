@@ -55,8 +55,7 @@ class UserAccountViewModelTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
 
-       userAccountViewModel = UserAccountViewModel(userAccountRepository, sessionManager, context)
-
+        userAccountViewModel = UserAccountViewModel(userAccountRepository, sessionManager, context)
     }
 
 
