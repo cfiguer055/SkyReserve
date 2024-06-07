@@ -88,7 +88,8 @@ class UserAccountViewModel @Inject constructor (
     fun updateUserDetails(userData: UserData) { // UserData is a data class holding user details
         viewModelScope.launch {
             val userEmail = sessionManager.getUserEmail()
-            val userAccount = userEmail?.let { userAccountRepository.getUserAccountByEmailAddress(it) }
+            val userAccount =
+                userEmail?.let { userAccountRepository.getUserAccountByEmailAddress(it) }
 
             if (userAccount != null) {
                 // Update the user account object with userData fields
@@ -114,40 +115,6 @@ class UserAccountViewModel @Inject constructor (
                 _userDetails.value = null
             }
         }
-
-    //        viewModelScope.launch {
-//            val userEmail = sessionManager.getUserEmail()
-//            val userAccount =
-//                userEmail?.let { userAccountRepository.getUserAccountByEmailAddress(it) }
-//
-//            if (userAccount != null) {
-//                // Update the user account object with userData fields
-//                userAccount.apply {
-//                    firstName = userData.firstName
-//                    lastName = userData.lastName
-//                    gender = userData.gender
-//                    phone = userData.phone
-//                    dateOfBirth = userData.dateOfBirth
-//                    address = userData.address
-//                    stateCode = userData.stateCode
-//                    countryCode = userData.countryCode
-//                    passport = userData.passport
-//                    // ... set other fields as necessary
-//                }
-//                _userDetails.value = userData
-//
-//                userAccountRepository.updateUserAccount(userAccount)
-//                //_updateStatus.postValue(true) // Notify that update is successful
-//                withContext(Dispatchers.Main) {
-//                    _updateStatus.value = true // Notify that update is successful
-//                }
-//            } else {
-//                //_updateStatus.postValue(false) // Notify about the failure
-//                withContext(Dispatchers.Main) {
-//                    _updateStatus.value = false // Notify about the failure
-//                }
-//            }
-//        }
     }
 
 

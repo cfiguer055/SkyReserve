@@ -49,7 +49,11 @@ data class UserAccount(
     // Other properties if any
 
 ) {
-    // No secondary constructor needed
+    constructor(email: String, password: String) : this(
+        emailAddress = email,
+        password = password
+    )
+
     constructor(email: String, password: String, userDetails: UserData) : this(
         emailAddress = email,
         password = password,
