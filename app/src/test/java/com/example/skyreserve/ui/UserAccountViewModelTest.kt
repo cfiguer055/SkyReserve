@@ -141,36 +141,6 @@ class UserAccountViewModelTest {
 
         userAccountViewModel.userDetails.removeObserver(observer)
     }
-//    @Test
-//    fun `fetchUserDetails does not retrieve userDetails LiveData with invalid email`() = runTest {
-//        val email = "invalid_email@gmail.com"
-//        val expectedUserData = null
-//
-//        val userAccount = UserAccount(
-//            emailAddress = email, password = "Password123",
-//            firstName = "John", lastName = "Doe",
-//            gender = "Male", phone = "1234567890",
-//            dateOfBirth = "1990-01-01",
-//            address = "123 Street", stateCode = "NY",
-//            countryCode = "US", passport = "ABC123"
-//        )
-//
-//        // Mock LiveData
-//        val liveData = MutableLiveData<UserAccount>()
-//        liveData.value = userAccount
-//        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(null)
-//
-//        val observer = Mockito.mock(Observer::class.java) as Observer<UserData?>
-//        userAccountViewModel.userDetails.observeForever(observer)
-//
-//        userAccountViewModel.fetchUserDetails(email)
-//
-//        advanceUntilIdle() // This replaces advanceTimeBy and ensures all coroutines are executed
-//
-//        Mockito.verify(observer).onChanged(expectedUserData)
-//
-//        userAccountViewModel.userDetails.removeObserver(observer)
-//    }
 
 
     /**
