@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skyreserve.database.room.entity.UserAccount
 import com.example.skyreserve.repository.AuthRepository
-import com.example.skyreserve.Util.LocalSessionManager
-import com.example.skyreserve.Util.SignInResult
-import com.example.skyreserve.Util.SignUpResult
+import com.example.skyreserve.util.LocalSessionManager
+import com.example.skyreserve.util.SignInResult
+import com.example.skyreserve.util.SignUpResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow

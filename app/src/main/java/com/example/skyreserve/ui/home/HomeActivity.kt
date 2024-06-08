@@ -17,9 +17,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.skyreserve.R
 import com.example.skyreserve.ui.account.AccountActivity
 import com.example.skyreserve.ui.flightSearch.FlightSearchActivity
-import com.example.skyreserve.Util.AirportsData
-import com.example.skyreserve.Util.UserData
-import com.example.skyreserve.Util.UserInteractionLogger
+import com.example.skyreserve.util.AirportsData
+import com.example.skyreserve.util.UserData
+import com.example.skyreserve.util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivityHomeBinding
 import com.example.skyreserve.databinding.DialogAirportAutoCompleteBinding
 import com.example.skyreserve.databinding.DialogSignUpBinding
@@ -27,7 +27,7 @@ import java.text.SimpleDateFormat
 import com.example.skyreserve.repository.UserAccountRepository
 import com.example.skyreserve.ui.authentication.AuthViewModel
 import com.example.skyreserve.ui.account.UserAccountViewModel
-import com.example.skyreserve.Util.LocalSessionManager
+import com.example.skyreserve.util.LocalSessionManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import javax.inject.Inject

@@ -6,8 +6,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.skyreserve.ui.authentication.AuthViewModel
 import com.example.skyreserve.ui.welcome.WelcomeActivity
-import com.example.skyreserve.Util.LocalSessionManager
-import com.example.skyreserve.Util.UserInteractionLogger
+import com.example.skyreserve.util.LocalSessionManager
+import com.example.skyreserve.util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivityAccountBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

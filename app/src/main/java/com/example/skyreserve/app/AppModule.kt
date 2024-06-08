@@ -7,9 +7,9 @@ import com.example.skyreserve.database.room.dao.UserAccountDao
 import com.example.skyreserve.database.room.entity.UserAccount
 import com.example.skyreserve.repository.AuthRepository
 import com.example.skyreserve.repository.UserAccountRepository
-import com.example.skyreserve.Util.LocalSessionManager
+import com.example.skyreserve.util.LocalSessionManager
 // import com.example.skyreserve.Util.DatabaseInitializer
-import com.example.skyreserve.Util.UserInteractionLogger
+import com.example.skyreserve.util.UserInteractionLogger
 import com.example.skyreserve.database.RoomDatabase
 import dagger.Module
 import dagger.Provides

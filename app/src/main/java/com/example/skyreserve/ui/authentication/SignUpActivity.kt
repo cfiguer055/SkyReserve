@@ -10,9 +10,9 @@ import androidx.core.widget.addTextChangedListener
 import com.example.skyreserve.R
 import com.example.skyreserve.repository.AuthRepository
 import com.example.skyreserve.ui.home.HomeActivity
-import com.example.skyreserve.Util.LocalSessionManager
-import com.example.skyreserve.Util.SignUpResult
-import com.example.skyreserve.Util.UserInteractionLogger
+import com.example.skyreserve.util.LocalSessionManager
+import com.example.skyreserve.util.SignUpResult
+import com.example.skyreserve.util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivitySignUpBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

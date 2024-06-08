@@ -10,9 +10,9 @@ import com.example.skyreserve.database.room.dao.UserAccountDao
 import com.example.skyreserve.database.room.entity.UserAccount
 import com.example.skyreserve.repository.AuthRepository
 import com.example.skyreserve.ui.authentication.AuthViewModel
-import com.example.skyreserve.Util.LocalSessionManager
-import com.example.skyreserve.Util.SignInResult
-import com.example.skyreserve.Util.SignUpResult
+import com.example.skyreserve.util.LocalSessionManager
+import com.example.skyreserve.util.SignInResult
+import com.example.skyreserve.util.SignUpResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*

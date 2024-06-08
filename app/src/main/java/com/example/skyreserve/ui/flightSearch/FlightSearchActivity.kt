@@ -20,8 +20,8 @@ import com.example.skyreserve.model.FlightAdapter
 import com.example.skyreserve.model.FlightInfo
 import com.example.skyreserve.R
 import com.example.skyreserve.ui.reservation_confirmation.ReservationConfirmationActivity
-import com.example.skyreserve.Util.AirportsData
-import com.example.skyreserve.Util.UserInteractionLogger
+import com.example.skyreserve.util.AirportsData
+import com.example.skyreserve.util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivityFlightSearchBinding
 import com.example.skyreserve.databinding.DialogAirportAutoCompleteBinding
 import java.text.SimpleDateFormat

@@ -3,7 +3,7 @@ package com.example.skyreserve.database.room.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.skyreserve.Util.UserData
+import com.example.skyreserve.util.UserData
 
 
 @Entity(tableName = "user_accounts")

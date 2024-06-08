@@ -2,18 +2,19 @@ package com.example.skyreserve.ui
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.example.skyreserve.Util.LocalSessionManager
-import com.example.skyreserve.Util.SignInResult
-import com.example.skyreserve.Util.UserData
+import androidx.lifecycle.liveData
+import com.example.skyreserve.util.LocalSessionManager
+import com.example.skyreserve.util.UserData
 import com.example.skyreserve.database.room.dao.UserAccountDao
 import com.example.skyreserve.database.room.entity.UserAccount
 import com.example.skyreserve.repository.UserAccountRepository
 import com.example.skyreserve.ui.account.UserAccountViewModel
-import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.*
 import org.junit.After
 import org.junit.Assert
@@ -98,7 +99,10 @@ class UserAccountViewModelTest {
         )
         val expectedUserData = UserData(firstName="John", lastName="Doe", gender="Male", phone="1234567890", dateOfBirth="1990-01-01", address="123 Street", stateCode="NY", countryCode="US", passport="ABC123")
 
-        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(userAccount)
+        // Mock LiveData
+        val liveData = MutableLiveData<UserAccount>()
+        liveData.value = userAccount
+        `when`(userAccountRepository.getUserAccountByEmailAddressAsLiveData(email)).thenReturn(liveData)
 
         val observer = Mockito.mock(Observer::class.java) as Observer<UserData?>
         userAccountViewModel.userDetails.observeForever(observer)
@@ -121,19 +125,52 @@ class UserAccountViewModelTest {
         val email = "invalid_email@gmail.com"
         val expectedUserData = null
 
-        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(null)
+        val liveData = MutableLiveData<UserAccount?>()
+        liveData.value = null
+
+        `when`(userAccountRepository.getUserAccountByEmailAddressAsLiveData(email)).thenReturn(liveData)
 
         val observer = Mockito.mock(Observer::class.java) as Observer<UserData?>
         userAccountViewModel.userDetails.observeForever(observer)
 
         userAccountViewModel.fetchUserDetails(email)
 
-        advanceUntilIdle() // This replaces advanceTimeBy and ensures all coroutines are executed
+        advanceUntilIdle()
 
         Mockito.verify(observer).onChanged(expectedUserData)
 
         userAccountViewModel.userDetails.removeObserver(observer)
     }
+//    @Test
+//    fun `fetchUserDetails does not retrieve userDetails LiveData with invalid email`() = runTest {
+//        val email = "invalid_email@gmail.com"
+//        val expectedUserData = null
+//
+//        val userAccount = UserAccount(
+//            emailAddress = email, password = "Password123",
+//            firstName = "John", lastName = "Doe",
+//            gender = "Male", phone = "1234567890",
+//            dateOfBirth = "1990-01-01",
+//            address = "123 Street", stateCode = "NY",
+//            countryCode = "US", passport = "ABC123"
+//        )
+//
+//        // Mock LiveData
+//        val liveData = MutableLiveData<UserAccount>()
+//        liveData.value = userAccount
+//        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(null)
+//
+//        val observer = Mockito.mock(Observer::class.java) as Observer<UserData?>
+//        userAccountViewModel.userDetails.observeForever(observer)
+//
+//        userAccountViewModel.fetchUserDetails(email)
+//
+//        advanceUntilIdle() // This replaces advanceTimeBy and ensures all coroutines are executed
+//
+//        Mockito.verify(observer).onChanged(expectedUserData)
+//
+//        userAccountViewModel.userDetails.removeObserver(observer)
+//    }
 
 
     /**
@@ -227,7 +264,7 @@ class UserAccountViewModelTest {
 
 
         `when`(sessionManager.getUserEmail()).thenReturn(email)
-        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(userAccount)
+        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(flowOf(userAccount))
         `when`(userAccountRepository.updateUserAccount(userAccount)).thenReturn(true)
 
         val observer = Mockito.mock(Observer::class.java) as Observer<Boolean>
@@ -247,13 +284,15 @@ class UserAccountViewModelTest {
 
 
     /**
-     * Tests the behavior of updating user details when no corresponding user account exists in the database.
+     * Tests the behavior of updating user details when no corresponding email exists in the local session.
      * Ensures that the operation fails and LiveData values are updated to reflect the failure.
      */
     @Test
-    fun `updateUserDetails returns false if user account does not exist`() = runTest {
+    fun `updateUserDetails returns false if local session cannot retrieve email`() = runTest {
         val email = "nonexisting-email@gmail.com"
         val password = "Password123"
+
+        val userAccount = UserAccount(email, password)
 
         val userDetails = UserData(
             firstName = "John", lastName = "Doe",
@@ -264,6 +303,47 @@ class UserAccountViewModelTest {
 
 
         `when`(sessionManager.getUserEmail()).thenReturn(null)
+//        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(flowOf(null))
+//        `when`(userAccountRepository.updateUserAccount(userAccount)).thenReturn(true)
+
+        val observer = Mockito.mock(Observer::class.java) as Observer<Boolean>
+        userAccountViewModel.updateStatus.observeForever(observer)
+
+        userAccountViewModel.updateUserDetails(userDetails)
+
+        advanceUntilIdle() // This replaces advanceTimeBy and ensures all coroutines are executed
+
+        Mockito.verify(observer).onChanged(false)
+
+        Assert.assertEquals(userAccountViewModel.updateStatus.value, false)
+        Assert.assertEquals(userAccountViewModel.userDetails.value, null)
+
+        userAccountViewModel.updateStatus.removeObserver(observer)
+    }
+
+
+    /**
+     * Tests the behavior of updating user details when no corresponding user account exists in the database.
+     * Ensures that the operation fails and LiveData values are updated to reflect the failure.
+     */
+    @Test
+    fun `updateUserDetails returns false if user account cannot be retrieved from database`() = runTest {
+        val email = "nonexisting-email@gmail.com"
+        val password = "Password123"
+
+        val userAccount = UserAccount(email, password)
+
+        val userDetails = UserData(
+            firstName = "John", lastName = "Doe",
+            gender = "Male", phone = "1234567890",
+            dateOfBirth = "1990-01-01",
+            address = "123 Street", stateCode = "NY",
+            countryCode = "US", passport = "ABC123")
+
+
+        `when`(sessionManager.getUserEmail()).thenReturn(email)
+        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(flowOf(null))
+//        `when`(userAccountRepository.updateUserAccount(userAccount)).thenReturn(true)
 
         val observer = Mockito.mock(Observer::class.java) as Observer<Boolean>
         userAccountViewModel.updateStatus.observeForever(observer)
@@ -301,7 +381,8 @@ class UserAccountViewModelTest {
 
 
         `when`(sessionManager.getUserEmail()).thenReturn(email)
-        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(null)
+        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(flowOf(userAccount))
+        `when`(userAccountRepository.updateUserAccount(userAccount)).thenReturn(false)
 
         val observer = Mockito.mock(Observer::class.java) as Observer<Boolean>
         userAccountViewModel.updateStatus.observeForever(observer)
