@@ -20,6 +20,7 @@ interface UserAccountDao {
     suspend fun deleteUserAccount(userAccount: UserAccount)
 
 
+    // CHANGE TO FLOW FOR RESERVATION REPO AND DAO
     @Transaction
     @Query("SELECT * FROM user_accounts WHERE user_id = :userId")
     fun getUserReservations(userId: Long): LiveData<UserReservations>
@@ -30,8 +31,12 @@ interface UserAccountDao {
 //    @Query("SELECT * FROM user_accounts WHERE user_id = :userId")
 //    suspend fun getUserAccountById(userId: Long): UserAccount?
 
+//    @Query("SELECT * FROM user_accounts WHERE email_address = :emailAddress")
+//    suspend fun getUserAccountByEmailAddress(emailAddress: String): UserAccount?
+
     @Query("SELECT * FROM user_accounts WHERE email_address = :emailAddress")
-    suspend fun getUserAccountByEmailAddress(emailAddress: String): UserAccount?
+    fun getUserAccountByEmailAddress(emailAddress: String): Flow<UserAccount?>
+
 
 
     // Add more queries as needed for your app's requirements

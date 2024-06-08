@@ -264,7 +264,7 @@ class UserAccountViewModelTest {
 
 
         `when`(sessionManager.getUserEmail()).thenReturn(email)
-        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(flowOf(userAccount))
+        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(userAccount)
         `when`(userAccountRepository.updateUserAccount(userAccount)).thenReturn(true)
 
         val observer = Mockito.mock(Observer::class.java) as Observer<Boolean>
@@ -342,7 +342,7 @@ class UserAccountViewModelTest {
 
 
         `when`(sessionManager.getUserEmail()).thenReturn(email)
-        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(flowOf(null))
+        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(null)
 //        `when`(userAccountRepository.updateUserAccount(userAccount)).thenReturn(true)
 
         val observer = Mockito.mock(Observer::class.java) as Observer<Boolean>
@@ -381,7 +381,7 @@ class UserAccountViewModelTest {
 
 
         `when`(sessionManager.getUserEmail()).thenReturn(email)
-        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(flowOf(userAccount))
+        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(userAccount)
         `when`(userAccountRepository.updateUserAccount(userAccount)).thenReturn(false)
 
         val observer = Mockito.mock(Observer::class.java) as Observer<Boolean>

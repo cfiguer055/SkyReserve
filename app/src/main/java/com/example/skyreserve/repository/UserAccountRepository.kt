@@ -66,13 +66,25 @@ class UserAccountRepository @Inject constructor(private val userAccountDao: User
      * Fetches a user account by email address from the database.
      * The result is emitted as a Flow of UserAccount, which may be null if the account does not exist.
      */
-    fun getUserAccountByEmailAddress(emailAddress: String): Flow<UserAccount?> = flow {
-        emit(userAccountDao.getUserAccountByEmailAddress(emailAddress))
-    }.flowOn(Dispatchers.IO)
+//    fun getUserAccountByEmailAddress(emailAddress: String): Flow<UserAccount?> = flow {
+//        emit(userAccountDao.getUserAccountByEmailAddress(emailAddress))
+//    }.flowOn(Dispatchers.IO)
+
+    // Check Authentication?
+    suspend fun getUserAccountByEmailAddress(emailAddress: String): UserAccount? {
+        // Collect the flow to get the single user account result
+        return userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
+    }
+
 
     // Example of how to convert this flow to LiveData if needed in the ViewModel
+//    suspend fun getUserAccountByEmailAddressAsLiveData(emailAddress: String): LiveData<UserAccount?> =
+//        getUserAccountByEmailAddress(emailAddress).asLiveData()
+
+    // For UI Changes?
     fun getUserAccountByEmailAddressAsLiveData(emailAddress: String): LiveData<UserAccount?> =
-        getUserAccountByEmailAddress(emailAddress).asLiveData()
+        userAccountDao.getUserAccountByEmailAddress(emailAddress).asLiveData()
+
 }
 
 

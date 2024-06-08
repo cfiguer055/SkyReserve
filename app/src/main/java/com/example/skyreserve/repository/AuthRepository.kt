@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.skyreserve.database.room.dao.UserAccountDao
 import com.example.skyreserve.database.room.entity.UserAccount
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
 import org.mindrot.jbcrypt.BCrypt
 import javax.inject.Inject
@@ -26,7 +27,9 @@ class AuthRepository @Inject constructor(private val userAccountDao: UserAccount
 
                 // Query the local database to find the user by username and password
                 //val userAccount = userAccountDao.getUserAccountByEmailAddress(encryptedEmail)
-                val userAccount = userAccountDao.getUserAccountByEmailAddress(emailAddress)
+                //val userAccount = userAccountDao.getUserAccountByEmailAddress(emailAddress)
+                val userAccount = userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
+
 
                 // Delete this eventually
                 Log.d("AuthRepo","userAccount: $userAccount")
@@ -53,7 +56,9 @@ class AuthRepository @Inject constructor(private val userAccountDao: UserAccount
         return withContext(Dispatchers.IO) {
             try {
                 // Check if the user with the same username already exists in the database
-                val existingUser = userAccountDao.getUserAccountByEmailAddress(emailAddress)
+                //val existingUser = userAccountDao.getUserAccountByEmailAddress(emailAddress)
+                val existingUser = userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
+
 
                 if (existingUser == null) {
                     Log.d("AuthRepo","emailAddress: $emailAddress")
@@ -90,7 +95,8 @@ class AuthRepository @Inject constructor(private val userAccountDao: UserAccount
             try {
                 //val encryptedEmail = EncryptionUtil.encrypt(email)
                 //val userAccount = userAccountDao.getUserAccountByEmailAddress(encryptedEmail)
-                val userAccount = userAccountDao.getUserAccountByEmailAddress(email)
+                //val userAccount = userAccountDao.getUserAccountByEmailAddress(email)
+                val userAccount = userAccountDao.getUserAccountByEmailAddress(email).firstOrNull()
 
                 //val userAccount = userAccountDao.getUserAccountByEmailAddress(email)
                 return@withContext userAccount != null
@@ -104,7 +110,10 @@ class AuthRepository @Inject constructor(private val userAccountDao: UserAccount
     suspend fun getUserAccountByEmailAddress(emailAddress: String): UserAccount? {
         //val encryptedEmail = EncryptionUtil.encrypt(emailAddress)
         //val userAccount = userAccountDao.getUserAccountByEmailAddress(encryptedEmail)
-        val userAccount = userAccountDao.getUserAccountByEmailAddress(emailAddress)
+        //val userAccount = userAccountDao.getUserAccountByEmailAddress(emailAddress)
+        val userAccount = userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
+
+
 //        userAccount?.apply {
 //            this.emailAddress = EncryptionUtil.decrypt(this.emailAddress)
 ////            this.phone = this.phone?.let { EncryptionUtil.decrypt(it) }

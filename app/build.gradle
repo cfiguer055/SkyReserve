@@ -185,6 +185,10 @@ dependencies {
 
     // hashing algorithm - prevent attacks using rainbow tables
     implementation 'org.mindrot:jbcrypt:0.4'
+
+    // MockK, a Kotlin mocking library, which can mock static methods and constructors
+    testImplementation "io.mockk:mockk:1.10.0"
+
 }
 kapt {
     correctErrorTypes true

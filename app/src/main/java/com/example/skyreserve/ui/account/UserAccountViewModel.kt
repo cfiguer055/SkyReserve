@@ -29,52 +29,6 @@ class UserAccountViewModel @Inject constructor (
     val updateStatus: LiveData<Boolean> = _updateStatus
 
 
-//    fun fetchUserDetails(email: String) {
-//        viewModelScope.launch {
-//            try {
-//                // Assuming we are back to not using Dispatchers.IO for simplicity here.
-//                val userAccount = userAccountRepository.getUserAccountByEmailAddress(email)
-//
-//                val userData = userAccount?.run {
-//                    UserData(
-//                        firstName = firstName ?: "",
-//                        lastName = lastName ?: "",
-//                        gender = gender ?: "",
-//                        phone = phone ?: "",
-//                        dateOfBirth = dateOfBirth ?: "",
-//                        address = address ?: "",
-//                        stateCode = stateCode ?: "",
-//                        countryCode = countryCode ?: "",
-//                        passport = passport ?: ""
-//                    )
-//                }
-//                _userDetails.value = userData
-//            } catch (e: Exception) {
-//                System.out.println("error: ${e.message}")
-//            }
-//        }
-//    }
-//    fun fetchUserDetails(email: String) {
-//        viewModelScope.launch {
-//            userAccountRepository.getUserAccountByEmailAddress(email).collect { userAccount ->
-//                // Check for null and update LiveData
-//                val userData = userAccount?.run {
-//                    UserData(
-//                        firstName = firstName ?: "",
-//                        lastName = lastName ?: "",
-//                        gender = gender ?: "",
-//                        phone = phone ?: "",
-//                        dateOfBirth = dateOfBirth ?: "",
-//                        address = address ?: "",
-//                        stateCode = stateCode ?: "",
-//                        countryCode = countryCode ?: "",
-//                        passport = passport ?: ""
-//                    )
-//                }
-//                _userDetails.value = userData
-//            }
-//        }
-//    }
 
     fun fetchUserDetails(email: String) {
         val userAccountLiveData = userAccountRepository.getUserAccountByEmailAddressAsLiveData(email)
@@ -118,114 +72,19 @@ class UserAccountViewModel @Inject constructor (
         }
     }
 
-    //  TRY TESTING WITH 'viewModelScope.launch(Dispatchers.IO)'
-    // TO SEE IF THAT WAS ISSUE LAST NIGHT
 
-//    fun updateUserDetails(userData: UserData) { // UserData is a data class holding user details
+//    fun updateUserDetails(userData: UserData) {
 //        viewModelScope.launch {
 //            val userEmail = sessionManager.getUserEmail()
-//            val userAccount =
-//                userEmail?.let { userAccountRepository.getUserAccountByEmailAddress(it) }
-//
-//            if (userAccount != null) {
-//                // Update the user account object with userData fields
-//                userAccount.apply {
-//                    firstName = userData.firstName
-//                    lastName = userData.lastName
-//                    gender = userData.gender
-//                    phone = userData.phone
-//                    dateOfBirth = userData.dateOfBirth
-//                    address = userData.address
-//                    stateCode = userData.stateCode
-//                    countryCode = userData.countryCode
-//                    passport = userData.passport
-//                    // ... set other fields as necessary
-//                }
-//
-//                val success = userAccountRepository.updateUserAccount(userAccount)
-//
-//                _updateStatus.value = success // Notify that update is successful
-//                _userDetails.value = if (success) userData else null
-//            } else {
-//                _updateStatus.value = false // Notify about the failure
+//            if (userEmail == null) {
+//                _updateStatus.value = false
 //                _userDetails.value = null
+//                return@launch
 //            }
-//        }
-//    }
-
-//    fun updateUserDetails(userData: UserData) {
-//        viewModelScope.launch {
-//            val userEmail = sessionManager.getUserEmail()
-//            userEmail?.let {
-//                userAccountRepository.getUserAccountByEmailAddress(it).collect { userAccount ->
-//                    if (userAccount != null) {
-//                        // Update the user account object with userData fields
-//                        userAccount.apply {
-//                            firstName = userData.firstName
-//                            lastName = userData.lastName
-//                            gender = userData.gender
-//                            phone = userData.phone
-//                            dateOfBirth = userData.dateOfBirth
-//                            address = userData.address
-//                            stateCode = userData.stateCode
-//                            countryCode = userData.countryCode
-//                            passport = userData.passport
-//                        }
-//                        val success = userAccountRepository.updateUserAccount(userAccount)
-//                        _updateStatus.value = success // Notify that update is successful
-//                        _userDetails.value = if (success) userData else null
-//                    } else {
-//                        _updateStatus.value = false // Notify about the failure
-//                        _userDetails.value = null
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-//    fun updateUserDetails(userData: UserData) {
-//        viewModelScope.launch {
-//            sessionManager.getUserEmail()?.let { userEmail ->
-//                // Asynchronously fetch the user account
-//                userAccountRepository.getUserAccountByEmailAddress(userEmail).collect { userAccount ->
-//                    if (userAccount != null) {
-//                        // Update the user account object with new user details
-//                        userAccount.apply {
-//                            firstName = userData.firstName
-//                            lastName = userData.lastName
-//                            gender = userData.gender
-//                            phone = userData.phone
-//                            dateOfBirth = userData.dateOfBirth
-//                            address = userData.address
-//                            stateCode = userData.stateCode
-//                            countryCode = userData.countryCode
-//                            passport = userData.passport
-//                        }
 //
-//                        // Try to update the user account in the database
-//                        val success = userAccountRepository.updateUserAccount(userAccount)
-//                        _updateStatus.postValue(success) // Notify that update is successful
-//                        _userDetails.postValue(if (success) userData else null)
-//                    } else {
-//                        _updateStatus.postValue(false) // Notify about the failure
-//                        _userDetails.postValue(null)
-//                    }
-//                }
-//            } ?: run {
-//                _updateStatus.postValue(false) // Email is null, post failure
-//                _userDetails.postValue(null)
-//            }
-//        }
-//    }
-
-//    fun updateUserDetails(userData: UserData) {
-//        viewModelScope.launch {
-//            val userEmail = sessionManager.getUserEmail()
-//            userEmail?.let { email ->
-//                val userAccount = userAccountRepository.getUserAccountByEmailAddressAsLiveData(email)
+//            userAccountRepository.getUserAccountByEmailAddress(userEmail).collect { userAccount ->
 //                if (userAccount != null) {
-//                    // Apply new data to the fetched user account
-//                    val updatedUserAccount = userAccount.apply {
+//                    userAccount.apply {
 //                        firstName = userData.firstName
 //                        lastName = userData.lastName
 //                        gender = userData.gender
@@ -236,47 +95,12 @@ class UserAccountViewModel @Inject constructor (
 //                        countryCode = userData.countryCode
 //                        passport = userData.passport
 //                    }
-//                    // Attempt to update the user account in the repository
-//                    val success = userAccountRepository.updateUserAccount(updatedUserAccount)
-//                    _updateStatus.postValue(success)
-//                    _userDetails.postValue(if (success) userData else null)
+//                    val success = userAccountRepository.updateUserAccount(userAccount)
+//                    _updateStatus.value = success
+//                    _userDetails.value = if (success) userData else null
 //                } else {
-//                    _updateStatus.postValue(false)
-//                    _userDetails.postValue(null)
-//                }
-//            } ?: run {
-//                // No email found in session, post failure
-//                _updateStatus.postValue(false)
-//                _userDetails.postValue(null)
-//            }
-//        }
-//    }
-
-
-//    fun updateUserDetails(userData: UserData) {
-//        viewModelScope.launch {
-//            val userEmail = sessionManager.getUserEmail()
-//            userEmail?.let { email ->
-//                userAccountRepository.getUserAccountByEmailAddress(email).collect { userAccount ->
-//                    if (userAccount != null) {
-//                        userAccount.apply {
-//                            firstName = userData.firstName
-//                            lastName = userData.lastName
-//                            gender = userData.gender
-//                            phone = userData.phone
-//                            dateOfBirth = userData.dateOfBirth
-//                            address = userData.address
-//                            stateCode = userData.stateCode
-//                            countryCode = userData.countryCode
-//                            passport = userData.passport
-//                        }
-//                        val success = userAccountRepository.updateUserAccount(userAccount)
-//                        _updateStatus.value = success
-//                        _userDetails.value = if (success) userData else null
-//                    } else {
-//                        _updateStatus.value = false
-//                        _userDetails.value = null
-//                    }
+//                    _updateStatus.value = false
+//                    _userDetails.value = null
 //                }
 //            }
 //        }
@@ -288,22 +112,21 @@ class UserAccountViewModel @Inject constructor (
             if (userEmail == null) {
                 _updateStatus.value = false
                 _userDetails.value = null
-                return@launch
-            }
-
-            userAccountRepository.getUserAccountByEmailAddress(userEmail).collect { userAccount ->
+            } else {
+                val userAccount = userAccountRepository.getUserAccountByEmailAddress(userEmail)
                 if (userAccount != null) {
-                    userAccount.apply {
-                        firstName = userData.firstName
-                        lastName = userData.lastName
-                        gender = userData.gender
-                        phone = userData.phone
-                        dateOfBirth = userData.dateOfBirth
-                        address = userData.address
-                        stateCode = userData.stateCode
-                        countryCode = userData.countryCode
-                        passport = userData.passport
-                    }
+                    // Since UserAccount properties should be mutable (declared with 'var'), we can modify them directly
+                    userAccount.firstName = userData.firstName
+                    userAccount.lastName = userData.lastName
+                    userAccount.gender = userData.gender
+                    userAccount.phone = userData.phone
+                    userAccount.dateOfBirth = userData.dateOfBirth
+                    userAccount.address = userData.address
+                    userAccount.stateCode = userData.stateCode
+                    userAccount.countryCode = userData.countryCode
+                    userAccount.passport = userData.passport
+
+                    // Attempt to update the user account in the database
                     val success = userAccountRepository.updateUserAccount(userAccount)
                     _updateStatus.value = success
                     _userDetails.value = if (success) userData else null
@@ -314,6 +137,7 @@ class UserAccountViewModel @Inject constructor (
             }
         }
     }
+
 
 
     fun validateSession() : Boolean {
@@ -334,44 +158,4 @@ class UserAccountViewModel @Inject constructor (
 
 }
 
-
-//    fun fetchUserDetails(email: String) {
-//        System.out.println("1")
-//        viewModelScope.launch {
-//            System.out.println("2")
-//            System.out.println("3")
-//            val userAccount = withContext(Dispatchers.IO) {
-//                userAccountRepository.getUserAccountByEmailAddress(email)
-//            }
-//            System.out.println("4")
-//            Log.d("UserAccountViewModel", "userAccount: $userAccount")
-//            System.out.println("userAccount: $userAccount")
-//
-//            System.out.println("5")
-//            _userDetails.value = userAccount?.run {
-//                UserData(
-//                    firstName = userAccount.firstName ?: "",
-//                    lastName = userAccount.lastName ?: "",
-//                    gender = userAccount.gender ?: "",
-//                    phone = userAccount.phone ?: "",
-//                    dateOfBirth = userAccount.dateOfBirth ?: "",
-//                    address = userAccount.address ?: "",
-//                    stateCode = userAccount.stateCode ?: "",
-//                    countryCode = userAccount.countryCode ?: "",
-//                    passport = userAccount.passport ?: ""
-//                ).toString()
-//            }
-//
-//            System.out.println("6")
-//            Log.d("UserAccountViewModel", "userAccount: ${_userDetails.value}")
-//            System.out.println("userAccount: ${_userDetails.value}")
-//        }
-//
-////        viewModelScope.launch {
-////            val userAccount = withContext(Dispatchers.IO) {
-////                userAccountRepository.getUserAccountByEmailAddress(email)
-////            }
-////            _userDetails.postValue(userAccount?.firstName) // update LiveData on the main thread
-////        }
-//    }
 
