@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -71,10 +72,15 @@ class UserAccountRepository @Inject constructor(private val userAccountDao: User
 //    }.flowOn(Dispatchers.IO)
 
     // Check Authentication?
-    suspend fun getUserAccountByEmailAddress(emailAddress: String): UserAccount? {
-        // Collect the flow to get the single user account result
-        return userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
-    }
+//    suspend fun getUserAccountByEmailAddress(emailAddress: String): UserAccount? {
+//        // Collect the flow to get the single user account result
+//        return userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
+//    }
+    fun getUserAccountByEmailAddress(emailAddress: String): Flow<UserAccount?> = flow {
+        emit(withContext(Dispatchers.IO) {
+            userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
+        })
+    }.flowOn(Dispatchers.IO)
 
 
     // Example of how to convert this flow to LiveData if needed in the ViewModel
@@ -82,8 +88,8 @@ class UserAccountRepository @Inject constructor(private val userAccountDao: User
 //        getUserAccountByEmailAddress(emailAddress).asLiveData()
 
     // For UI Changes?
-    fun getUserAccountByEmailAddressAsLiveData(emailAddress: String): LiveData<UserAccount?> =
-        userAccountDao.getUserAccountByEmailAddress(emailAddress).asLiveData()
+//    fun getUserAccountByEmailAddressAsLiveData(emailAddress: String): LiveData<UserAccount?> =
+//        userAccountDao.getUserAccountByEmailAddress(emailAddress).asLiveData()
 
 }
 

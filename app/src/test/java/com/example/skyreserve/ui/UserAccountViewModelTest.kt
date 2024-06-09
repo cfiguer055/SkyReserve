@@ -100,9 +100,9 @@ class UserAccountViewModelTest {
         val expectedUserData = UserData(firstName="John", lastName="Doe", gender="Male", phone="1234567890", dateOfBirth="1990-01-01", address="123 Street", stateCode="NY", countryCode="US", passport="ABC123")
 
         // Mock LiveData
-        val liveData = MutableLiveData<UserAccount>()
-        liveData.value = userAccount
-        `when`(userAccountRepository.getUserAccountByEmailAddressAsLiveData(email)).thenReturn(liveData)
+//        val liveData = MutableLiveData<UserAccount>()
+//        liveData.value = userAccount
+        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(flowOf(userAccount))
 
         val observer = Mockito.mock(Observer::class.java) as Observer<UserData?>
         userAccountViewModel.userDetails.observeForever(observer)
@@ -125,10 +125,8 @@ class UserAccountViewModelTest {
         val email = "invalid_email@gmail.com"
         val expectedUserData = null
 
-        val liveData = MutableLiveData<UserAccount?>()
-        liveData.value = null
 
-        `when`(userAccountRepository.getUserAccountByEmailAddressAsLiveData(email)).thenReturn(liveData)
+        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(flowOf(null))
 
         val observer = Mockito.mock(Observer::class.java) as Observer<UserData?>
         userAccountViewModel.userDetails.observeForever(observer)
@@ -234,7 +232,7 @@ class UserAccountViewModelTest {
 
 
         `when`(sessionManager.getUserEmail()).thenReturn(email)
-        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(userAccount)
+        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(flowOf(userAccount))
         `when`(userAccountRepository.updateUserAccount(userAccount)).thenReturn(true)
 
         val observer = Mockito.mock(Observer::class.java) as Observer<Boolean>
@@ -351,7 +349,7 @@ class UserAccountViewModelTest {
 
 
         `when`(sessionManager.getUserEmail()).thenReturn(email)
-        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(userAccount)
+        `when`(userAccountRepository.getUserAccountByEmailAddress(email)).thenReturn(flowOf(userAccount))
         `when`(userAccountRepository.updateUserAccount(userAccount)).thenReturn(false)
 
         val observer = Mockito.mock(Observer::class.java) as Observer<Boolean>
