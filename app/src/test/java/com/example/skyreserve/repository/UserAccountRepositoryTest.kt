@@ -234,71 +234,6 @@ class UserAccountRepositoryTest {
     }
 
 
-    // ---------------- UserAccountRepo Wrappers -----------------------
-
-
-//    /**
-//     * Ensures that the LiveData wrapper for getUserAccountByEmailAddress correctly emits a UserAccount when it exists.
-//     * This test is crucial for UI components that depend on observing this LiveData.
-//     */
-//    @Test
-//    fun `getUserAccountByEmailAddressAsLiveData returns LiveData with correct user account`() =
-//        runTest {
-//            val email = "live-data-email@gmail.com"
-//            val userAccount = UserAccount(email, "Password123")
-//
-//            // Mock the DAO to return a specific user account
-//            `when`(userAccountDao.getUserAccountByEmailAddress(email)).thenReturn(flowOf(userAccount))
-//
-//            // Get LiveData and observe it
-//            val liveData = userAccountRepository.getUserAccountByEmailAddressAsLiveData(email)
-//            val observedData = mutableListOf<UserAccount?>()
-//
-//            // Observer setup
-//            val observer = Observer<UserAccount?> {
-//                observedData.add(it)
-//            }
-//            liveData.observeForever(observer)
-//
-//            advanceUntilIdle() // Make sure all pending operations are completed
-//
-//            Assert.assertEquals(listOf(userAccount), observedData)
-//
-//
-//            liveData.removeObserver(observer)
-//        }
-//
-//
-//    /**
-//     * Tests the repository's LiveData wrapper for the scenario where no user account exists for the given email.
-//     * This test ensures that the LiveData properly emits null, which is vital for UI error handling.
-//     */
-//    @Test
-//    fun `getUserAccountByEmailAddressAsLiveData returns null LiveData for email not in database`() =
-//        runTest {
-//            val email = "null-live-email@gmail.com"
-//            val userAccount = UserAccount(email, "Password123")
-//
-//            // Mock the DAO to return a specific user account
-//            `when`(userAccountDao.getUserAccountByEmailAddress(email)).thenReturn(flowOf(null))
-//
-//            // Get LiveData and observe it
-//            val liveData = userAccountRepository.getUserAccountByEmailAddressAsLiveData(email)
-//            val observedData = mutableListOf<UserAccount?>()
-//
-//            // Observer setup
-//            val observer = Observer<UserAccount?> {
-//                observedData.add(it)
-//            }
-//            liveData.observeForever(observer)
-//
-//            advanceUntilIdle() // Make sure all pending operations are completed
-//
-//            Assert.assertTrue(observedData.all { it == null }) // Check that all observed items are null
-//
-//            liveData.removeObserver(observer)
-//        }
-
 
     /**
      * Verifies that when there are no users in the database, the repository correctly returns an empty list.
@@ -341,8 +276,7 @@ class UserAccountRepositoryTest {
      * This test is critical for verifying the system's ability to process and present multiple data entries from the database.
      */
     @Test
-    fun `getAllUsersAccounts returns a list with multiple users when multiple users are present`() =
-        runTest {
+    fun `getAllUsersAccounts returns a list with multiple users when multiple users are present`() = runTest {
             val userOne = UserAccount("user1@domain.com", "Password1")
             val userTwo = UserAccount("user2@domain.com", "Password2")
             val userThree = UserAccount("user3@domain.com", "Password3")
@@ -355,6 +289,8 @@ class UserAccountRepositoryTest {
             // Assert that the list contains the correct number of users
             Assert.assertEquals(3, result[0].size)
             Assert.assertTrue(result[0].containsAll(listOf(userOne, userTwo, userThree)))
+    }
 
-        }
+
+    
 }
