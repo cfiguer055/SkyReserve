@@ -62,7 +62,6 @@ class UserAccountRepositoryTest {
         mockkStatic(Looper::class)
         every { Looper.getMainLooper() } returns mockk(relaxed = true)
 
-
         userAccountRepository = UserAccountRepository(userAccountDao)
     }
 
@@ -292,5 +291,5 @@ class UserAccountRepositoryTest {
     }
 
 
-    
+
 }

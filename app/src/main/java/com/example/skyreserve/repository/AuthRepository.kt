@@ -17,173 +17,69 @@ import javax.inject.Singleton
 // This class will need significant modifications. Instead of directly querying the local database for
 // user authentication, it will make network requests to the backend for user sign-in, sign-up, and
 // token validation.
+
+
 @Singleton
 class AuthRepository @Inject constructor(private val userAccountDao: UserAccountDao) {
 
-    // Perform user sign-in
-//    suspend fun signIn(emailAddress: String, password: String): Boolean {
-//        return withContext(Dispatchers.IO) {
-//            try {
-//                Log.d("AuthRepo","emailAddress: $emailAddress")
-//                //val encryptedEmail = EncryptionUtil.encrypt(emailAddress)
-//                //Log.d("AuthRepo","emailAddress: $encryptedEmail")
-//
-//                // Query the local database to find the user by username and password
-//                //val userAccount = userAccountDao.getUserAccountByEmailAddress(encryptedEmail)
-//                //val userAccount = userAccountDao.getUserAccountByEmailAddress(emailAddress)
-//                val userAccount = userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
-//
-//                // Delete this eventually
-//                Log.d("AuthRepo","userAccount: $userAccount")
-//                if (userAccount != null) {
-//                    Log.d("AuthRepo","password: ${userAccount.password}")
-//                }
-//
-//                return@withContext userAccount != null && checkPassword(password, userAccount.password)
-//
-//            } catch (e: Exception) {
-//                Log.e("AuthRepo", "Error SignIn", e)
-//                // Handle exceptions (e.g., database errors)
-//                return@withContext false
-//            }
-//        }
-//    }
-
     fun signIn(emailAddress: String, password: String): Flow<Boolean> = flow {
-        emit(withContext(Dispatchers.IO) {
-            try {
-                val userAccount = userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
-                userAccount != null && checkPassword(password, userAccount.password)
-            } catch (e: Exception) {
-                Log.e("AuthRepo", "Error in signIn", e)
-                false
+        try {
+            val userAccount = withContext(Dispatchers.IO) {
+                userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
             }
-        })
+            val isValid = userAccount != null && checkPassword(password, userAccount.password)
+            emit(isValid)
+        } catch (e: Exception) {
+            Log.e("AuthRepo", "Error in signIn", e)
+            emit(false)
+        }
     }.flowOn(Dispatchers.IO)
 
-    // Perform user sign-up
-//    suspend fun signUp(
-//        emailAddress: String,
-//        password: String,
-//    ): Boolean {
-//        return withContext(Dispatchers.IO) {
-//            try {
-//                // Check if the user with the same username already exists in the database
-//                //val existingUser = userAccountDao.getUserAccountByEmailAddress(emailAddress)
-//                val existingUser = userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
-//
-//
-//                if (existingUser == null) {
-//                    Log.d("AuthRepo","emailAddress: $emailAddress")
-//
-//                    //val encryptedEmail = EncryptionUtil.encrypt(emailAddress)
-//
-//                    //Log.d("AuthRepo","emailAddress: $encryptedEmail")
-//
-//                    // Hash the password before storing it
-//                    val hashedPassword = hashPassword(password)
-//
-//                    // Create a new UserAccount entity and insert it into the database
-//                    val newUserAccount = UserAccount(
-//                        //emailAddress = encryptedEmail,
-//                        emailAddress = emailAddress,
-//                        password = hashedPassword
-//                    )
-//                    userAccountDao.insertUserAccount(newUserAccount)
-//                    return@withContext true // Sign-up successful
-//                } else {
-//                    return@withContext false // User with the same username already exists
-//                }
-//            } catch (e: Exception) {
-//                Log.e("AuthRepo", "Error SignUpo", e)
-//                // Handle exceptions (e.g., database errors)
-//                return@withContext false
-//            }
-//        }
-//    }
     fun signUp(emailAddress: String, password: String): Flow<Boolean> = flow {
-        emit(withContext(Dispatchers.IO) {
-            try {
-                val existingUser = userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
-                if (existingUser == null) {
-                    val hashedPassword = hashPassword(password)
-                    val newUserAccount = UserAccount(emailAddress = emailAddress, password = hashedPassword)
+        try {
+            val existingUser = withContext(Dispatchers.IO) {
+                userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
+            }
+            if (existingUser == null) {
+                val hashedPassword = hashPassword(password)
+                val newUserAccount = UserAccount(emailAddress = emailAddress, password = hashedPassword)
+                withContext(Dispatchers.IO) {
                     userAccountDao.insertUserAccount(newUserAccount)
-                    true
-                } else {
-                    false
                 }
-            } catch (e: Exception) {
-                Log.e("AuthRepo", "Error in signUp", e)
-                false
+                emit(true)
+            } else {
+                emit(false)
             }
-        })
+        } catch (e: Exception) {
+            //Log.e("AuthRepo", "Error in signUp", e)
+            emit(false)
+        }
     }.flowOn(Dispatchers.IO)
 
-
-    // Check if an email exists in the database
-//    suspend fun isEmailExisting(email: String): Boolean {
-//        return withContext(Dispatchers.IO) {
-//            try {
-//                //val encryptedEmail = EncryptionUtil.encrypt(email)
-//                //val userAccount = userAccountDao.getUserAccountByEmailAddress(encryptedEmail)
-//                //val userAccount = userAccountDao.getUserAccountByEmailAddress(email)
-//                val userAccount = userAccountDao.getUserAccountByEmailAddress(email).firstOrNull()
-//
-//                //val userAccount = userAccountDao.getUserAccountByEmailAddress(email)
-//                return@withContext userAccount != null
-//            } catch (e: Exception) {
-//                // Handle exceptions (e.g., database errors)
-//                return@withContext false
-//            }
-//        }
-//    }
     fun isEmailExisting(email: String): Flow<Boolean> = flow {
-        emit(withContext(Dispatchers.IO) {
-            try {
-                val userAccount = userAccountDao.getUserAccountByEmailAddress(email).firstOrNull()
-                userAccount != null
-            } catch (e: Exception) {
-                Log.e("AuthRepo", "Error checking email", e)
-                false
+        try {
+            val userAccount = withContext(Dispatchers.IO) {
+                userAccountDao.getUserAccountByEmailAddress(email).firstOrNull()
             }
-        })
+            emit(userAccount != null)
+        } catch (e: Exception) {
+            Log.e("AuthRepo", "Error checking email", e)
+            emit(false)
+        }
     }.flowOn(Dispatchers.IO)
-
-//    suspend fun getUserAccountByEmailAddress(emailAddress: String): UserAccount? {
-//        //val encryptedEmail = EncryptionUtil.encrypt(emailAddress)
-//        //val userAccount = userAccountDao.getUserAccountByEmailAddress(encryptedEmail)
-//        //val userAccount = userAccountDao.getUserAccountByEmailAddress(emailAddress)
-//        val userAccount = userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
-//
-//
-////        userAccount?.apply {
-////            this.emailAddress = EncryptionUtil.decrypt(this.emailAddress)
-//////            this.phone = this.phone?.let { EncryptionUtil.decrypt(it) }
-//////            this.dateOfBirth = this.dateOfBirth?.let { EncryptionUtil.decrypt(it) }
-//////            this.address = this.address?.let { EncryptionUtil.decrypt(it) }
-//////            this.stateCode = this.stateCode?.let { EncryptionUtil.decrypt(it) }
-//////            this.countryCode = this.countryCode?.let { EncryptionUtil.decrypt(it) }
-//////            this.passport = this.passport?.let { EncryptionUtil.decrypt(it) }
-////        }
-//        if (userAccount != null) {
-//            Log.d("AuthRepo", "emailAddress: ${userAccount.emailAddress}")
-//        }
-//        return userAccount
-//    }
 
     fun getUserAccountByEmailAddress(emailAddress: String): Flow<UserAccount?> = flow {
-        emit(withContext(Dispatchers.IO) {
-            userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
-        })
+        try {
+            val userAccount = withContext(Dispatchers.IO) {
+                userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
+            }
+            emit(userAccount)
+        } catch (e: Exception) {
+            Log.e("AuthRepo", "Error fetching user account", e)
+            emit(null)
+        }
     }.flowOn(Dispatchers.IO)
 
-//    suspend fun getUserAccountByEmailAddress(emailAddress: String): UserAccount? {
-//    // Collect the flow to get the single user account result
-//        return userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
-//    }
-
-    // Helper functions for password hashing and checking
     private fun hashPassword(password: String): String {
         return BCrypt.hashpw(password, BCrypt.gensalt())
     }
@@ -191,7 +87,71 @@ class AuthRepository @Inject constructor(private val userAccountDao: UserAccount
     private fun checkPassword(plainPassword: String, hashedPassword: String): Boolean {
         return BCrypt.checkpw(plainPassword, hashedPassword)
     }
-
-
-    // Additional methods can be added for managing user sessions, tokens, etc.
 }
+
+
+//@Singleton
+//class AuthRepository @Inject constructor(private val userAccountDao: UserAccountDao) {
+//
+//    fun signIn(emailAddress: String, password: String): Flow<Boolean> = flow {
+//        emit(withContext(Dispatchers.IO) {
+//            try {
+//                val userAccount = userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
+//                userAccount != null && checkPassword(password, userAccount.password)
+//            } catch (e: Exception) {
+//                Log.e("AuthRepo", "Error in signIn", e)
+//                false
+//            }
+//        })
+//    }.flowOn(Dispatchers.IO)
+//
+//    fun signUp(emailAddress: String, password: String): Flow<Boolean> = flow {
+//        emit(withContext(Dispatchers.IO) {
+//            try {
+//                val existingUser = userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
+//                if (existingUser == null) {
+//                    val hashedPassword = hashPassword(password)
+//                    val newUserAccount = UserAccount(emailAddress = emailAddress, password = hashedPassword)
+//                    userAccountDao.insertUserAccount(newUserAccount)
+//                    true
+//                } else {
+//                    false
+//                }
+//            } catch (e: Exception) {
+//                Log.e("AuthRepo", "Error in signUp", e)
+//                false
+//            }
+//        })
+//    }.flowOn(Dispatchers.IO)
+//
+//
+//    fun isEmailExisting(email: String): Flow<Boolean> = flow {
+//        emit(withContext(Dispatchers.IO) {
+//            try {
+//                val userAccount = userAccountDao.getUserAccountByEmailAddress(email).firstOrNull()
+//                userAccount != null
+//            } catch (e: Exception) {
+//                Log.e("AuthRepo", "Error checking email", e)
+//                false
+//            }
+//        })
+//    }.flowOn(Dispatchers.IO)
+//
+//    fun getUserAccountByEmailAddress(emailAddress: String): Flow<UserAccount?> = flow {
+//        emit(withContext(Dispatchers.IO) {
+//            userAccountDao.getUserAccountByEmailAddress(emailAddress).firstOrNull()
+//        })
+//    }.flowOn(Dispatchers.IO)
+//
+//    // Helper functions for password hashing and checking
+//    private fun hashPassword(password: String): String {
+//        return BCrypt.hashpw(password, BCrypt.gensalt())
+//    }
+//
+//    private fun checkPassword(plainPassword: String, hashedPassword: String): Boolean {
+//        return BCrypt.checkpw(plainPassword, hashedPassword)
+//    }
+//
+//
+//    // Additional methods can be added for managing user sessions, tokens, etc.
+//}
