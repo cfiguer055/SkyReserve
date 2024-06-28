@@ -94,7 +94,7 @@ class AuthRepositoryTest {
         val result = authRepository.signUp(email, password).first()
         Assert.assertTrue(result)
     }
-
+// k
     @Test
     fun `signUp returns false if email already exists`() = runTest {
         val email = "existing-email@gmail.com"
