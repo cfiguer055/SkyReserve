@@ -11,6 +11,14 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for managing user account details.
+ * Handles fetching, inserting, and updating user details.
+ *
+ * @property userAccountRepository Repository for user account data operations.
+ * @property sessionManager Manager for handling local session state.
+ * @property context Application context for accessing resources.
+ */
 @HiltViewModel
 class UserAccountViewModel @Inject constructor (
     private val userAccountRepository: UserAccountRepository,
@@ -18,15 +26,25 @@ class UserAccountViewModel @Inject constructor (
     @ApplicationContext private val context: Context
     ) : ViewModel() {
 
-
+    /**
+     * LiveData for user details.
+     */
     private val _userDetails = MutableLiveData<UserData?>()
     val userDetails: MutableLiveData<UserData?> = _userDetails
 
+    /**
+     * LiveData for tracking the update status.
+     */
     private val _updateStatus = MutableLiveData<Boolean>()
     val updateStatus: LiveData<Boolean> = _updateStatus
 
 
-
+    /**
+     * Fetches user details by email and updates LiveData.
+     * Observes the data from the repository and maps it to UserData.
+     *
+     * @param email User email to fetch details.
+     */
     fun fetchUserDetails(email: String) {
         val userAccountLiveData = userAccountRepository.getUserAccountByEmailAddress(email).asLiveData()
         userAccountLiveData.observeForever { userAccount ->
@@ -48,9 +66,14 @@ class UserAccountViewModel @Inject constructor (
     }
 
 
-    // Insert both New User Account and Optional Personal Data
-    // This is more for adminstrative purposes as AuthRepo deals with creating new users and not UserAccountRepo
-    // ByPass SignUp
+    /**
+     * Inserts new user details into the database.
+     * Updates the LiveData based on the success of the operation.
+     *
+     * @param email User email to insert.
+     * @param password User password to insert.
+     * @param userData User data to insert.
+     */
     fun insertUserDetails(email: String, password: String, userData: UserData) {
         viewModelScope.launch {
             val userEmail = sessionManager.getUserEmail()
@@ -69,71 +92,12 @@ class UserAccountViewModel @Inject constructor (
         }
     }
 
-
-//    fun updateUserDetails(userData: UserData) {
-//        viewModelScope.launch {
-//            val userEmail = sessionManager.getUserEmail()
-//            if (userEmail == null) {
-//                _updateStatus.value = false
-//                _userDetails.value = null
-//                return@launch
-//            }
-//
-//            userAccountRepository.getUserAccountByEmailAddress(userEmail).collect { userAccount ->
-//                if (userAccount != null) {
-//                    userAccount.apply {
-//                        firstName = userData.firstName
-//                        lastName = userData.lastName
-//                        gender = userData.gender
-//                        phone = userData.phone
-//                        dateOfBirth = userData.dateOfBirth
-//                        address = userData.address
-//                        stateCode = userData.stateCode
-//                        countryCode = userData.countryCode
-//                        passport = userData.passport
-//                    }
-//                    val success = userAccountRepository.updateUserAccount(userAccount)
-//                    _updateStatus.value = success
-//                    _userDetails.value = if (success) userData else null
-//                } else {
-//                    _updateStatus.value = false
-//                    _userDetails.value = null
-//                }
-//            }
-//        }
-//    }
-
-//    fun updateUserDetails(userData: UserData) {
-//        viewModelScope.launch {
-//            val userEmail = sessionManager.getUserEmail()
-//            if (userEmail == null) {
-//                _updateStatus.value = false
-//                _userDetails.value = null
-//            } else {
-//                val userAccount = userAccountRepository.getUserAccountByEmailAddress(userEmail).asLiveData()
-//                if (userAccount != null) {
-//                    // Since UserAccount properties should be mutable (declared with 'var'), we can modify them directly
-//                    userAccount.firstName = userData.firstName
-//                    userAccount.lastName = userData.lastName
-//                    userAccount.gender = userData.gender
-//                    userAccount.phone = userData.phone
-//                    userAccount.dateOfBirth = userData.dateOfBirth
-//                    userAccount.address = userData.address
-//                    userAccount.stateCode = userData.stateCode
-//                    userAccount.countryCode = userData.countryCode
-//                    userAccount.passport = userData.passport
-//
-//                    // Attempt to update the user account in the database
-//                    val success = userAccountRepository.updateUserAccount(userAccount)
-//                    _updateStatus.value = success
-//                    _userDetails.value = if (success) userData else null
-//                } else {
-//                    _updateStatus.value = false
-//                    _userDetails.value = null
-//                }
-//            }
-//        }
-//    }
+    /**
+     * Updates existing user details in the database.
+     * Updates the LiveData based on the success of the operation.
+     *
+     * @param userData User data to update.
+     */
     fun updateUserDetails(userData: UserData) {
         viewModelScope.launch {
             val userEmail = sessionManager.getUserEmail()
@@ -174,12 +138,20 @@ class UserAccountViewModel @Inject constructor (
     }
 
 
-
-
+    /**
+     * Validates the current session.
+     *
+     * @return True if the session is valid, false otherwise.
+     */
     fun validateSession() : Boolean {
         return sessionManager.isTokenValid()
     }
 
+    /**
+     * Retrieves the user email if the session is valid.
+     *
+     * @return User email if session is valid, null otherwise.
+     */
     fun getUserEmail(): String? {
         if (validateSession()) {
             return sessionManager.getUserEmail()
@@ -187,6 +159,9 @@ class UserAccountViewModel @Inject constructor (
         return null
     }
 
+    /**
+     * Clears the user details and update status.
+     */
     fun clear() {
         _userDetails.value = null
         _updateStatus.value = false

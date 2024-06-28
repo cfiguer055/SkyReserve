@@ -86,7 +86,7 @@ class AuthRepositoryTest {
     fun `signUp returns true if new user is successfully created`() = runTest {
         val email = "new-email@gmail.com"
         val password = "NewPassword123"
-        val userAccount = UserAccount(email, BCrypt.hashpw(password, BCrypt.gensalt()))
+        //val userAccount = UserAccount(email, BCrypt.hashpw(password, BCrypt.gensalt()))
 
         `when`(userAccountDao.getUserAccountByEmailAddress(email)).thenReturn(flowOf(null))
         //`when`(userAccountDao.insertUserAccount(userAccount)).thenReturn(Unit)
@@ -112,7 +112,7 @@ class AuthRepositoryTest {
         val email = "new-email@gmail.com"
         val password = "NewPassword123"
         val hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt())
-        val userAccount = UserAccount(email, hashedPassword)
+        //val userAccount = UserAccount(email, hashedPassword)
 
         `when`(userAccountDao.getUserAccountByEmailAddress(email)).thenThrow(RuntimeException("DB Query failed"))
 
