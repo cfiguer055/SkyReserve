@@ -4,10 +4,40 @@ plugins {
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs'
     id 'dagger.hilt.android.plugin'
+    id "org.jetbrains.dokka"
 }
 apply plugin: 'kotlin-android'
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.dagger.hilt.android'
+
+subprojects {
+    apply plugin: 'org.jetbrains.dokka'
+
+    tasks.withType<org.jetbrains.dokka.gradle.DokkaTask> {
+        dokkaSourceSets {
+            configureEach {
+                perPackageOption {
+                    matchingRegex.set(".*")
+                    suppress.set(false)
+                }
+                includeNonPublic.set(false)
+                reportUndocumented.set(true)
+                skipEmptyPackages.set(false)  // Include all packages, even if empty
+                skipDeprecated.set(false)     // Include deprecated elements
+                documentedVisibilities.set(setOf(
+                        org.jetbrains.dokka.DokkaConfiguration.Visibility.PUBLIC,
+                        org.jetbrains.dokka.DokkaConfiguration.Visibility.PROTECTED
+                ))
+                sourceLink {
+                    localDirectory.set(file("src/main/kotlin"))
+                    remoteUrl.set(java.net.URL("https://github.com/cfiguer055/SkyReserve/tree/main"))
+                    remoteLineSuffix.set("#L")
+                }
+            }
+        }
+    }
+    // Other configurations for subproject
+}
 
 
 android {
