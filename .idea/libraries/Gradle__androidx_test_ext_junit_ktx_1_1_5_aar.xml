@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.test.ext:junit-ktx:1.1.5@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/fe35e76bb2c53b7349ab551882830b93/transformed/junit-ktx-1.1.5/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c244a614a6aed7f7d8f7b34c1aa7302e/transformed/junit-ktx-1.1.5/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1c4f98b6a764fd047bf8f2b818ab897e/transformed/junit-ktx-1.1.5/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/8032e0495fa86c3f546e3218b7875b2f/transformed/junit-ktx-1.1.5/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8032e0495fa86c3f546e3218b7875b2f/transformed/junit-ktx-1.1.5/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8032e0495fa86c3f546e3218b7875b2f/transformed/junit-ktx-1.1.5/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.test.ext/junit-ktx/1.1.5/a00d1570080afadd95a666a5b0664125019ef40e/junit-ktx-1.1.5-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.test.ext/junit-ktx/1.1.5/664d60a99a0526bbfc71e62f4ee6723a27ceb0f5/junit-ktx-1.1.5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

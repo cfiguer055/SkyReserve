@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="Gradle: org.chromium.net:cronet-embedded:119.6045.31@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d6092ab6283cd320ecc22a5ab2afcef0/transformed/cronet-embedded-119.6045.31/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cb0489831a2f0de129854ad4a622d460/transformed/cronet-embedded-119.6045.31/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/604309a2d06845f2b923cd56d736002a/transformed/cronet-embedded-119.6045.31/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/e7d1b5d0f9f540d42bb01263ddb59e1a/transformed/cronet-embedded-119.6045.31/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e7d1b5d0f9f540d42bb01263ddb59e1a/transformed/cronet-embedded-119.6045.31/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e7d1b5d0f9f540d42bb01263ddb59e1a/transformed/cronet-embedded-119.6045.31/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.chromium.net/cronet-embedded/119.6045.31/c94451a2aac0529d882df42fadc94dfb3d729635/cronet-embedded-119.6045.31-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

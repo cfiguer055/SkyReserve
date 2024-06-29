@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.test.ext:truth:1.5.0@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a0a7a8a77c1757fd0e694bbe6098acc5/transformed/truth-1.5.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/240fd86c802b2b8adc6e8fefdd8590e0/transformed/truth-1.5.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/89100d98a04af77a77fef9895abe6532/transformed/truth-1.5.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/2d4c9a442f9197f7673ec741c904b0b4/transformed/truth-1.5.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/2d4c9a442f9197f7673ec741c904b0b4/transformed/truth-1.5.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/2d4c9a442f9197f7673ec741c904b0b4/transformed/truth-1.5.0/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.test.ext/truth/1.5.0/eea6e3ac875fe9165f9afdb17787d4080900b52a/truth-1.5.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.test.ext/truth/1.5.0/d4c6a6e16c787e341be20a134f970f24ddb13e76/truth-1.5.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

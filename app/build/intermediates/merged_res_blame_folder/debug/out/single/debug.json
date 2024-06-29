@@ -1,0 +1,306 @@
+[
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "com.example.skyreserve.app-main-50:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_activity_welcome.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/activity_welcome.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_activity_seat_map.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/activity_seat_map.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_ic_edit.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/ic_edit.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_welcome_rounded_style.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/welcome_rounded_style.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/menu_bottom_navigation_menu.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/menu/bottom_navigation_menu.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_icon_edit.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/icon_edit.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_edit_text_background.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/edit_text_background.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "com.example.skyreserve.app-main-50:/mipmap-xxxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.skyreserve.app-main-50:/mipmap-hdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_barcode_wide_view.webp.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/barcode_wide_view.webp"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_ic_back_arrow.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/ic_back_arrow.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_header_style.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/header_style.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_fragment_sign_in.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/fragment_sign_in.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_activity_account.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/activity_account.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_tab_selector.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/tab_selector.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_fragment_plan_a_trip.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/fragment_plan_a_trip.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable-v24_ic_launcher_foreground.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable-v24/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_ic_password.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/ic_password.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.skyreserve.app-main-50:/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_signin_google.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/signin_google.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.skyreserve.app-main-50:/mipmap-xxxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_fragment_sign_up_account_info.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/fragment_sign_up_account_info.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_icon_email_grey.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/icon_email_grey.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_icon_success_medium.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/icon_success_medium.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_activity_reservation_confirmation.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/activity_reservation_confirmation.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_flight_item.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/flight_item.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "com.example.skyreserve.app-main-50:/mipmap-mdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_icon_back_big.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/icon_back_big.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_activity_success.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/activity_success.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_activity_sign_in.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/activity_sign_in.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_activity_settings.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/activity_settings.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_welcome_book_logo.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/welcome_book_logo.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_ic_email.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/ic_email.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_icon_email_red.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/icon_email_red.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_tab_dot_active.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/tab_dot_active.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_welcome_rounded_button.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/welcome_rounded_button.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_fragment_lets_travel.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/fragment_lets_travel.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_activity_sign_up.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/activity_sign_up.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_barcode_view.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/barcode_view.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_activity_check_out.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/activity_check_out.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_icon_pfp.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/icon_pfp.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_activity_flight_search.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/activity_flight_search.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.skyreserve.app-main-50:/mipmap-mdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/font_font1.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/font/font1.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_icon_password_red.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/icon_password_red.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_welcome_main_logo.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/welcome_main_logo.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/navigation_sign_up_nav_graph.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/navigation/sign_up_nav_graph.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_selectable_border.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/selectable_border.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/xml_backup_rules.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_activity_home.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/activity_home.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_welcome_logo.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/welcome_logo.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_fragment_home.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/fragment_home.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.skyreserve.app-main-50:/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_welcome_travel_logo.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/welcome_travel_logo.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/xml_file_paths.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/xml/file_paths.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_rounded_button_purple.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/rounded_button_purple.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_fragment_welcome.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/fragment_welcome.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_tab_dot_inactive.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/tab_dot_inactive.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_fragment_sign_up_personal_info.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/fragment_sign_up_personal_info.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_fragment_book_the_flight.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/fragment_book_the_flight.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_edit_text_error_background.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/edit_text_error_background.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "com.example.skyreserve.app-main-50:/mipmap-xxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_icon_back_small.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/icon_back_small.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_icon_success_large.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/icon_success_large.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/xml_data_extraction_rules.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "com.example.skyreserve.app-main-50:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_ticket_view.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/ticket_view.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_icon_email.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/icon_email.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_welcome_plan_logo.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/welcome_plan_logo.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_dialog_sign_up.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/dialog_sign_up.xml"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/drawable_icon_password_grey.png.flat",
+        "source": "com.example.skyreserve.app-main-50:/drawable/icon_password_grey.png"
+    },
+    {
+        "merged": "com.example.skyreserve.app-merged_res-48:/layout_dialog_airport_auto_complete.xml.flat",
+        "source": "com.example.skyreserve.app-main-50:/layout/dialog_airport_auto_complete.xml"
+    }
+]

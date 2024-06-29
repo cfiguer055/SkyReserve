@@ -1,0 +1,222 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.skyreserve"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="26"
+8-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="33" />
+9-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml
+10
+11    <!-- Permissions -->
+12
+13    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+13-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:9:5-79
+13-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:9:22-76
+14    <uses-permission android:name="android.permission.INTERNET" />
+14-->[org.chromium.net:cronet-embedded:119.6045.31] C:\Users\Carlos\.gradle\caches\transforms-3\e7d1b5d0f9f540d42bb01263ddb59e1a\transformed\cronet-embedded-119.6045.31\AndroidManifest.xml:19:6-67
+14-->[org.chromium.net:cronet-embedded:119.6045.31] C:\Users\Carlos\.gradle\caches\transforms-3\e7d1b5d0f9f540d42bb01263ddb59e1a\transformed\cronet-embedded-119.6045.31\AndroidManifest.xml:19:23-65
+15
+16    <permission
+16-->[androidx.core:core:1.10.1] C:\Users\Carlos\.gradle\caches\transforms-3\2503eecf429c111ff3f9043b5d57743f\transformed\core-1.10.1\AndroidManifest.xml:22:5-24:47
+17        android:name="com.example.skyreserve.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+17-->[androidx.core:core:1.10.1] C:\Users\Carlos\.gradle\caches\transforms-3\2503eecf429c111ff3f9043b5d57743f\transformed\core-1.10.1\AndroidManifest.xml:23:9-81
+18        android:protectionLevel="signature" />
+18-->[androidx.core:core:1.10.1] C:\Users\Carlos\.gradle\caches\transforms-3\2503eecf429c111ff3f9043b5d57743f\transformed\core-1.10.1\AndroidManifest.xml:24:9-44
+19
+20    <uses-permission android:name="com.example.skyreserve.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+20-->[androidx.core:core:1.10.1] C:\Users\Carlos\.gradle\caches\transforms-3\2503eecf429c111ff3f9043b5d57743f\transformed\core-1.10.1\AndroidManifest.xml:26:5-97
+20-->[androidx.core:core:1.10.1] C:\Users\Carlos\.gradle\caches\transforms-3\2503eecf429c111ff3f9043b5d57743f\transformed\core-1.10.1\AndroidManifest.xml:26:22-94
+21
+22    <application
+22-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:10:5-97:19
+23        android:name="com.example.skyreserve.app.MyApp"
+23-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:12:9-34
+24        android:allowBackup="true"
+24-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:13:9-35
+25        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+25-->[androidx.core:core:1.10.1] C:\Users\Carlos\.gradle\caches\transforms-3\2503eecf429c111ff3f9043b5d57743f\transformed\core-1.10.1\AndroidManifest.xml:28:18-86
+26        android:dataExtractionRules="@xml/data_extraction_rules"
+26-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:14:9-65
+27        android:extractNativeLibs="false"
+28        android:fullBackupContent="@xml/backup_rules"
+28-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:15:9-54
+29        android:icon="@mipmap/ic_launcher"
+29-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:16:9-43
+30        android:label="@string/app_name"
+30-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:17:9-41
+31        android:requestLegacyExternalStorage="true"
+31-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:11:9-52
+32        android:roundIcon="@mipmap/ic_launcher_round"
+32-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:18:9-54
+33        android:supportsRtl="true"
+33-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:19:9-35
+34        android:theme="@style/Theme.SkyReserve" >
+34-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:20:9-48
+35        <provider
+35-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:23:9-31:20
+36            android:name="androidx.core.content.FileProvider"
+36-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:24:13-62
+37            android:authorities="com.example.skyreserve.provider"
+37-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:25:13-66
+38            android:exported="false"
+38-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:26:13-37
+39            android:grantUriPermissions="true" >
+39-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:27:13-47
+40            <meta-data
+40-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:28:13-30:54
+41                android:name="android.support.FILE_PROVIDER_PATHS"
+41-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:29:17-67
+42                android:resource="@xml/file_paths" />
+42-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:30:17-51
+43        </provider>
+44
+45        <activity
+45-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:33:9-41:20
+46            android:name="com.example.skyreserve.ui.welcome.WelcomeActivity"
+46-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:34:13-55
+47            android:exported="true"
+47-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:36:13-36
+48            android:theme="@style/Theme.AppCompat.NoActionBar" >
+48-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:35:13-63
+49            <intent-filter>
+49-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:37:13-40:29
+50                <action android:name="android.intent.action.MAIN" />
+50-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:38:17-69
+50-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:38:25-66
+51
+52                <category android:name="android.intent.category.LAUNCHER" />
+52-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:39:17-77
+52-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:39:27-74
+53            </intent-filter>
+54        </activity>
+55        <activity
+55-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:43:9-47:20
+56            android:name="com.example.skyreserve.ui.authentication.SignInActivity"
+56-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:44:13-61
+57            android:exported="true"
+57-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:46:13-36
+58            android:theme="@style/Theme.AppCompat.NoActionBar" >
+58-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:45:13-63
+59        </activity>
+60        <activity
+60-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:49:9-53:20
+61            android:name="com.example.skyreserve.ui.authentication.SignUpActivity"
+61-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:50:13-61
+62            android:exported="true"
+62-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:52:13-36
+63            android:theme="@style/Theme.AppCompat.NoActionBar" >
+63-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:51:13-63
+64        </activity>
+65        <activity
+65-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:55:9-59:20
+66            android:name="com.example.skyreserve.ui.home.HomeActivity"
+66-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:56:13-49
+67            android:exported="true"
+67-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:58:13-36
+68            android:theme="@style/Theme.AppCompat.NoActionBar" >
+68-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:57:13-63
+69        </activity>
+70        <activity
+70-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:61:9-65:20
+71            android:name="com.example.skyreserve.ui.flightSearch.FlightSearchActivity"
+71-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:62:13-65
+72            android:exported="true"
+72-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:64:13-36
+73            android:theme="@style/Theme.AppCompat.NoActionBar" >
+73-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:63:13-63
+74        </activity>
+75        <activity
+75-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:67:9-71:20
+76            android:name="com.example.skyreserve.ui.settings.SettingsActivity"
+76-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:68:13-57
+77            android:exported="true"
+77-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:70:13-36
+78            android:theme="@style/Theme.AppCompat.NoActionBar" >
+78-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:69:13-63
+79        </activity>
+80        <activity
+80-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:73:9-77:20
+81            android:name="com.example.skyreserve.ui.reservation_confirmation.ReservationConfirmationActivity"
+81-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:74:13-88
+82            android:exported="true"
+82-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:76:13-36
+83            android:theme="@style/Theme.AppCompat.NoActionBar" >
+83-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:75:13-63
+84        </activity>
+85        <activity
+85-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:79:9-83:20
+86            android:name="com.example.skyreserve.ui.checkOut.CheckOutActivity"
+86-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:80:13-57
+87            android:exported="true"
+87-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:82:13-36
+88            android:theme="@style/Theme.AppCompat.NoActionBar" >
+88-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:81:13-63
+89        </activity>
+90        <activity
+90-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:85:9-89:20
+91            android:name="com.example.skyreserve.ui.success.SuccessActivity"
+91-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:86:13-55
+92            android:exported="true"
+92-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:88:13-36
+93            android:theme="@style/Theme.AppCompat.NoActionBar" >
+93-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:87:13-63
+94        </activity>
+95        <activity
+95-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:91:9-95:20
+96            android:name="com.example.skyreserve.ui.account.AccountActivity"
+96-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:92:13-55
+97            android:exported="true"
+97-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:94:13-36
+98            android:theme="@style/Theme.AppCompat.NoActionBar" >
+98-->C:\Users\Carlos\AndroidStudioProjects\SkyReserve\app\src\main\AndroidManifest.xml:93:13-63
+99        </activity>
+100
+101        <provider
+101-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Carlos\.gradle\caches\transforms-3\fdee1c7374f6ab980518d611c0bc4d59\transformed\emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
+102            android:name="androidx.startup.InitializationProvider"
+102-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Carlos\.gradle\caches\transforms-3\fdee1c7374f6ab980518d611c0bc4d59\transformed\emoji2-1.2.0\AndroidManifest.xml:25:13-67
+103            android:authorities="com.example.skyreserve.androidx-startup"
+103-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Carlos\.gradle\caches\transforms-3\fdee1c7374f6ab980518d611c0bc4d59\transformed\emoji2-1.2.0\AndroidManifest.xml:26:13-68
+104            android:exported="false" >
+104-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Carlos\.gradle\caches\transforms-3\fdee1c7374f6ab980518d611c0bc4d59\transformed\emoji2-1.2.0\AndroidManifest.xml:27:13-37
+105            <meta-data
+105-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Carlos\.gradle\caches\transforms-3\fdee1c7374f6ab980518d611c0bc4d59\transformed\emoji2-1.2.0\AndroidManifest.xml:29:13-31:52
+106                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+106-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Carlos\.gradle\caches\transforms-3\fdee1c7374f6ab980518d611c0bc4d59\transformed\emoji2-1.2.0\AndroidManifest.xml:30:17-75
+107                android:value="androidx.startup" />
+107-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Carlos\.gradle\caches\transforms-3\fdee1c7374f6ab980518d611c0bc4d59\transformed\emoji2-1.2.0\AndroidManifest.xml:31:17-49
+108            <meta-data
+108-->[androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\Carlos\.gradle\caches\transforms-3\1bd560ca877db1c98596aa3a79a4b7cd\transformed\lifecycle-process-2.4.1\AndroidManifest.xml:31:13-33:52
+109                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+109-->[androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\Carlos\.gradle\caches\transforms-3\1bd560ca877db1c98596aa3a79a4b7cd\transformed\lifecycle-process-2.4.1\AndroidManifest.xml:32:17-78
+110                android:value="androidx.startup" />
+110-->[androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\Carlos\.gradle\caches\transforms-3\1bd560ca877db1c98596aa3a79a4b7cd\transformed\lifecycle-process-2.4.1\AndroidManifest.xml:33:17-49
+111        </provider>
+112
+113        <uses-library
+113-->[androidx.window:window:1.0.0] C:\Users\Carlos\.gradle\caches\transforms-3\8ef04c17de0aad215c7c02821407e2cc\transformed\window-1.0.0\AndroidManifest.xml:25:9-27:40
+114            android:name="androidx.window.extensions"
+114-->[androidx.window:window:1.0.0] C:\Users\Carlos\.gradle\caches\transforms-3\8ef04c17de0aad215c7c02821407e2cc\transformed\window-1.0.0\AndroidManifest.xml:26:13-54
+115            android:required="false" />
+115-->[androidx.window:window:1.0.0] C:\Users\Carlos\.gradle\caches\transforms-3\8ef04c17de0aad215c7c02821407e2cc\transformed\window-1.0.0\AndroidManifest.xml:27:13-37
+116        <uses-library
+116-->[androidx.window:window:1.0.0] C:\Users\Carlos\.gradle\caches\transforms-3\8ef04c17de0aad215c7c02821407e2cc\transformed\window-1.0.0\AndroidManifest.xml:28:9-30:40
+117            android:name="androidx.window.sidecar"
+117-->[androidx.window:window:1.0.0] C:\Users\Carlos\.gradle\caches\transforms-3\8ef04c17de0aad215c7c02821407e2cc\transformed\window-1.0.0\AndroidManifest.xml:29:13-51
+118            android:required="false" />
+118-->[androidx.window:window:1.0.0] C:\Users\Carlos\.gradle\caches\transforms-3\8ef04c17de0aad215c7c02821407e2cc\transformed\window-1.0.0\AndroidManifest.xml:30:13-37
+119
+120        <service
+120-->[androidx.room:room-runtime:2.5.0] C:\Users\Carlos\.gradle\caches\transforms-3\2a94cd02e879ed8a54921b0c5e554e42\transformed\room-runtime-2.5.0\AndroidManifest.xml:24:9-28:63
+121            android:name="androidx.room.MultiInstanceInvalidationService"
+121-->[androidx.room:room-runtime:2.5.0] C:\Users\Carlos\.gradle\caches\transforms-3\2a94cd02e879ed8a54921b0c5e554e42\transformed\room-runtime-2.5.0\AndroidManifest.xml:25:13-74
+122            android:directBootAware="true"
+122-->[androidx.room:room-runtime:2.5.0] C:\Users\Carlos\.gradle\caches\transforms-3\2a94cd02e879ed8a54921b0c5e554e42\transformed\room-runtime-2.5.0\AndroidManifest.xml:26:13-43
+123            android:exported="false" />
+123-->[androidx.room:room-runtime:2.5.0] C:\Users\Carlos\.gradle\caches\transforms-3\2a94cd02e879ed8a54921b0c5e554e42\transformed\room-runtime-2.5.0\AndroidManifest.xml:27:13-37
+124    </application>
+125
+126</manifest>
