@@ -1,1 +1,0 @@
-{"@class":"org.jetbrains.dokka.base.templating.AddToSourcesetDependencies","moduleName":"app","content":{":app:dokkaHtmlPartial/debug":[],":app:dokkaHtmlPartial/main":[],":app:dokkaHtmlPartial/release":[]}}
