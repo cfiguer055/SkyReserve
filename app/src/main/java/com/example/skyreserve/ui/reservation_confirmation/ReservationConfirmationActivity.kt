@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.skyreserve.model.FlightInfo
 import com.example.skyreserve.ui.checkOut.CheckOutActivity
-import com.example.skyreserve.Util.UserInteractionLogger
+import com.example.skyreserve.util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivityReservationConfirmationBinding
 
 class ReservationConfirmationActivity: AppCompatActivity() {

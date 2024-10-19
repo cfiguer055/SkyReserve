@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skyreserve.database.room.entity.UserAccount
 import com.example.skyreserve.repository.AuthRepository
-import com.example.skyreserve.Util.LocalSessionManager
-import com.example.skyreserve.Util.SignInResult
-import com.example.skyreserve.Util.SignUpResult
+import com.example.skyreserve.util.LocalSessionManager
+import com.example.skyreserve.util.SignInResult
+import com.example.skyreserve.util.SignUpResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 import androidx.core.util.PatternsCompat
+import kotlinx.coroutines.flow.first
 
 
 /*
@@ -50,104 +51,95 @@ class AuthViewModel @Inject constructor(
     val currentUser: StateFlow<UserAccount?> = _currentUser
 
 
-    // Function to attempt user login
     fun signIn(emailAddress: String, password: String) {
         viewModelScope.launch {
-
-            val signInSuccess = authRepository.signIn(emailAddress, password)
-            val isEmailExisting = authRepository.isEmailExisting(emailAddress)
-            when {
-                !signInSuccess && isEmailExisting -> {
-                    _signInResult.value = SignInResult.INVALID_CREDENTIALS
-                }
-                !isNetworkAvailable() -> {
-                    // Simulate Network even though Room db is local
-                    _signInResult.value = SignInResult.NETWORK_ERROR
-                }
-                else -> {
-                    if(signInSuccess) {
-                        _signInResult.value = SignInResult.SUCCESS
-
-                        val userAccount = authRepository.getUserAccountByEmailAddress(emailAddress)
-                        _isLoggedIn.value = true
-                        _currentUser.value = userAccount
-                        userAccount?.let {
-                            // Generate the token (ideally, this would be done by a secure server)
-                            val token = UUID.randomUUID().toString()
-                            // Create the login session with the generated token
-                            sessionManager.createLoginSession(it.emailAddress, token)
+            try {
+                authRepository.signIn(emailAddress, password).collect { signInSuccess ->
+                    when {
+                        !isNetworkAvailable() -> {
+                            _signInResult.postValue(SignInResult.NETWORK_ERROR)
                         }
-
-
-                        _isLoggedIn.value = true
-                        _currentUser.value = userAccount
-                    } else {
-                        _signInResult.value = SignInResult.UNKNOWN_ERROR
-
-                        // Handle login failure, update UI accordingly
-                        _isLoggedIn.value = false
-                        _currentUser.value = null
+                        signInSuccess -> {
+                            _signInResult.postValue(SignInResult.SUCCESS)
+                            authRepository.getUserAccountByEmailAddress(emailAddress)
+                                .collect { userAccount ->
+                                    _currentUser.value = userAccount
+                                    userAccount?.let {
+                                        val token = UUID.randomUUID().toString()
+                                        sessionManager.createLoginSession(it.emailAddress, token)
+                                        _isLoggedIn.value = true
+                                    }
+                                }
+                        }
+                        else -> {
+                            _signInResult.postValue(SignInResult.INVALID_CREDENTIALS)
+                            _isLoggedIn.value = false
+                            _currentUser.value = null
+                        }
                     }
                 }
+            } catch (e: Exception) {
+                // Post an unknown error result when an exception occurs
+                _signInResult.postValue(SignInResult.UNKNOWN_ERROR)
+                _isLoggedIn.value = false
+                _currentUser.value = null
             }
         }
     }
 
-    // Function to attempt user sign-up
     fun signUp(emailAddress: String, password: String, confirmPassword: String) {
         viewModelScope.launch {
             when {
                 emailAddress.isBlank() || password.isBlank() || confirmPassword.isBlank() -> {
-                    _signUpResult.value = SignUpResult.MISSING_INFORMATION
+                    _signUpResult.postValue(SignUpResult.MISSING_INFORMATION)
                 }
                 !isValidEmail(emailAddress) -> {
-                    _signUpResult.value = SignUpResult.INVALID_EMAIL
-                }
-                isEmailExisting(emailAddress) -> {
-                    _signUpResult.value = SignUpResult.EXISTING_EMAIL
+                    _signUpResult.postValue(SignUpResult.INVALID_EMAIL)
                 }
                 password.length < 8 -> {
-                    _signUpResult.value = SignUpResult.SHORT_PASSWORD
+                    _signUpResult.postValue(SignUpResult.SHORT_PASSWORD)
                 }
                 !password.matches(Regex(".*[A-Z].*")) -> {
-                    _signUpResult.value = SignUpResult.MISSING_CAPITAL_LETTER
+                    _signUpResult.postValue(SignUpResult.MISSING_CAPITAL_LETTER)
                 }
                 !password.matches(Regex(".*[a-z].*")) -> {
-                    _signUpResult.value = SignUpResult.MISSING_LOWCASE_LETTER
+                    _signUpResult.postValue(SignUpResult.MISSING_LOWCASE_LETTER)
                 }
                 !password.matches(Regex(".*\\d.*")) -> {
-                    _signUpResult.value = SignUpResult.MISSING_DIGIT
+                    _signUpResult.postValue(SignUpResult.MISSING_DIGIT)
                 }
                 password != confirmPassword -> {
-                    _signUpResult.value = SignUpResult.PASSWORD_NO_MATCH
+                    _signUpResult.postValue(SignUpResult.PASSWORD_NO_MATCH)
                 }
                 !isNetworkAvailable() -> {
-                    _signUpResult.value = SignUpResult.NETWORK_ERROR
+                    _signUpResult.postValue(SignUpResult.NETWORK_ERROR)
                 }
                 else -> {
-                    val success = authRepository.signUp(emailAddress, password)
-                    if (success) {
-                        _signUpResult.value = SignUpResult.SUCCESS
-
-                        // Create login session after successful sign up
-                        val token = UUID.randomUUID().toString()
-                        sessionManager.createLoginSession(emailAddress, token)
-
-                        // Set the current user
-                        val userAccount = UserAccount(emailAddress = emailAddress, password = password) // Replace with actual user account details
-                        _isLoggedIn.value = true
-                        _currentUser.value = userAccount
-                    } else {
-                        _signUpResult.value = SignUpResult.UNKNOWN_ERROR
-
-                        // Handle sign up failure, update UI accordingly
-                        _isLoggedIn.value = false
-                        _currentUser.value = null
+                    authRepository.isEmailExisting(emailAddress).collect { emailExists ->
+                        if (emailExists) {
+                            _signUpResult.postValue(SignUpResult.EXISTING_EMAIL)
+                        } else {
+                            authRepository.signUp(emailAddress, password).collect { success ->
+                                if (success) {
+                                    _signUpResult.postValue(SignUpResult.SUCCESS)
+                                    val token = UUID.randomUUID().toString()
+                                    sessionManager.createLoginSession(emailAddress, token)
+                                    _currentUser.value = UserAccount(emailAddress = emailAddress, password = password) // Simplified version
+                                    _isLoggedIn.value = true
+                                } else {
+                                    _signUpResult.postValue(SignUpResult.UNKNOWN_ERROR)
+                                    _isLoggedIn.value = false
+                                    _currentUser.value = null
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     }
+
+
 
     fun validateSession() : Boolean {
         return sessionManager.isTokenValid()
@@ -165,25 +157,6 @@ class AuthViewModel @Inject constructor(
         _currentUser.value = null
     }
 
-
-
-    // Call this when the app starts or resumes to check if the user should remain logged in
-//    fun validateSession() : Boolean {
-//        return if (!sessionManager.isTokenValid()) {
-//            logout()
-//            false
-//        } else {
-//            true
-//        }
-//    }
-
-
-    // Call this method to renew the token
-//    fun refreshSessionToken() {
-//        sessionManager.renewToken()
-//    }
-
-
     // Network availability check function
     fun isNetworkAvailable(): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -194,38 +167,14 @@ class AuthViewModel @Inject constructor(
 
     // Email existence check function
     private suspend fun isEmailExisting(email: String): Boolean {
-        return authRepository.isEmailExisting(email)
+        return authRepository.isEmailExisting(email).first()
     }
     // Additional ViewModel logic...
 
     // Function to validate email
     private fun isValidEmail(email: String): Boolean {
-        /*
-        28-05-2024
-        If you're creating this as a standard unit test (in /test), then JUnit does not use the Android
-         framework. Any Android-specific methods are stubbed and will fail to run.
-        You'd either need to define Patterns.EMAIL_ADDRESS yourself from scratch (or use "PatternsCompat.EMAIL_ADRESS.matcher()") or run this test as an
-        Instrumentation test in /androidTest. Alternatively, take a look at using Robolectric as it provides an
-        implementation of the Android SDK for use in local JUnit tests.
-         */
-        // return android.util.PatternsCompat.EMAIL_ADRESS.matcher(email).matches()
 
         return PatternsCompat.EMAIL_ADDRESS.matcher(email).matches()
     }
-
-
-//    private fun isValidPassword(password: String, confirmPassword: String): Boolean {
-//        return when {
-//            password.length < 8 ||
-//                    !password.matches(Regex(".*[A-Z].*")) || // Missing capital letter
-//                    !password.matches(Regex(".*[a-z].*")) || // Missing lowercase letter
-//                    !password.matches(Regex(".*\\d.*")) ||   // Missing digit
-//                    password != confirmPassword -> {                // Passwords don't match
-//                false
-//            } else -> {
-//                true // Valid Password
-//            }
-//        }
-//    }
 }
 

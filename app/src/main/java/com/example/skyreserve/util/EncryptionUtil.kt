@@ -1,8 +1,6 @@
-package com.example.skyreserve.Util
+package com.example.skyreserve.util
 
 import android.util.Base64
-import java.nio.charset.Charset
-import java.nio.charset.StandardCharsets.UTF_8
 import java.security.Key
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec

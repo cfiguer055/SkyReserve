@@ -1,4 +1,4 @@
-package com.example.skyreserve.Util
+package com.example.skyreserve.util
 
 object ActivityState {
     var isSignUpActive = false

@@ -10,11 +10,13 @@ import com.example.skyreserve.database.room.dao.UserAccountDao
 import com.example.skyreserve.database.room.entity.UserAccount
 import com.example.skyreserve.repository.AuthRepository
 import com.example.skyreserve.ui.authentication.AuthViewModel
-import com.example.skyreserve.Util.LocalSessionManager
-import com.example.skyreserve.Util.SignInResult
-import com.example.skyreserve.Util.SignUpResult
+import com.example.skyreserve.util.LocalSessionManager
+import com.example.skyreserve.util.SignInResult
+import com.example.skyreserve.util.SignUpResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.*
 import org.junit.After
 import org.junit.Assert.*
@@ -131,13 +133,13 @@ class AuthViewModelTest {
             //    This ensures that the token is considered valid after creating the session.
         //
         // "val signInSuccess = authRepository.signIn(emailAddress, password)"
-        `when`(authRepository.signIn(email, password)).thenReturn(true)
+        `when`(authRepository.signIn(email, password)).thenReturn(flowOf(true))
         // "val isEmailExisting = authRepository.isEmailExisting(emailAddress)"
-        `when`(authRepository.isEmailExisting(email)).thenReturn(true)
+        //`when`(authRepository.isEmailExisting(email)).thenReturn(flowOf(true))
         // Boolean value is expected for "if(isNetworkAvailable())"
         `when`(authViewModel.isNetworkAvailable()).thenReturn(true)
         // "val userAccount = authRepository.getUserAccountByEmailAddress(emailAddress)"
-        `when`(authRepository.getUserAccountByEmailAddress(email)).thenReturn(userAccount)
+        `when`(authRepository.getUserAccountByEmailAddress(email)).thenReturn(flowOf(userAccount))
         // after "sessionManager.createLoginSession(it.emailAddress, token)"
         //`when`(sessionManager.isTokenValid()).thenReturn(true)
 
@@ -182,8 +184,9 @@ class AuthViewModelTest {
         val email = "invalid@example.com"
         val password = "wrongpassword"
 
-        `when`(authRepository.signIn(email, password)).thenReturn(false)
-        `when`(authRepository.isEmailExisting(email)).thenReturn(true)
+        `when`(authViewModel.isNetworkAvailable()).thenReturn(true)
+        `when`(authRepository.signIn(email, password)).thenReturn(flowOf(false))
+        //`when`(authRepository.isEmailExisting(email)).thenReturn(flowOf(true))
 
         val observer = Mockito.mock(Observer::class.java) as Observer<SignInResult>
         authViewModel.signInResult.observeForever(observer)
@@ -204,13 +207,18 @@ class AuthViewModelTest {
     }
 
 
+    /**
+     * Tests the signIn method of the AuthViewModel when network is not available.
+     * It verifies that the signInResult LiveData emits [SignInResult.NETWORK_ERROR] and
+     * ensures that the user is not logged in after the sign-in attempt.
+     */
     @Test
     fun `signIn with network error return NETWORK_ERROR` () = runTest {
         val email = "test@example.com"
         val password = "Password123"
 
-        `when`(authRepository.signIn(email, password)).thenReturn(true)
-        `when`(authRepository.isEmailExisting(email)).thenReturn(true)
+        `when`(authRepository.signIn(email, password)).thenReturn(flowOf(true))
+        //`when`(authRepository.isEmailExisting(email)).thenReturn(flowOf(true))
 
         // Simulate network unavailability
         `when`(authViewModel.isNetworkAvailable()).thenReturn(false)
@@ -234,34 +242,69 @@ class AuthViewModelTest {
     }
 
 
+    /**
+     * Tests the signIn method of the AuthViewModel when unknown error occurs.
+     * It verifies that the signInResult LiveData emits [SignInResult.UNKNOWN_ERROR] and
+     * ensures that the user is not logged in after the sign-in attempt.
+     */
     @Test
-    fun `unexpected signIn failure return UNKNOWN_ERROR` () = runTest {
+    fun `unexpected signIn failure returns UNKNOWN_ERROR`() = runTest {
         val email = "test@example.com"
         val password = "Password123"
 
-        `when`(authRepository.signIn(email, password)).thenReturn(false)
-        `when`(authRepository.isEmailExisting(email)).thenReturn(true)
-
-        // Simulate network unavailability
-        //`when`(authViewModel.isNetworkAvailable()).thenReturn(true)
+        // Setup the flow to throw an exception when signIn is called
+        `when`(authRepository.signIn(email, password)).thenAnswer {
+            flowOf { throw RuntimeException("Simulated sign-in failure") }
+        }
 
         val observer = Mockito.mock(Observer::class.java) as Observer<SignInResult>
         authViewModel.signInResult.observeForever(observer)
 
+        // Execute the signIn function to trigger the flow collection
         authViewModel.signIn(email, password)
 
         // Advance coroutines to completion of pending jobs, important for LiveData updates
         advanceUntilIdle()
 
+        // Verify that the observer received the UNKNOWN_ERROR result
         Mockito.verify(observer).onChanged(SignInResult.UNKNOWN_ERROR)
-        assertEquals(authViewModel.isLoggedIn.value, false)
 
-        // Direct assertion for signUpResult
+        // Assert that isLoggedIn state is false
+        assertEquals(false, authViewModel.isLoggedIn.value)
+
+        // Direct assertion for signInResult
         assertEquals(SignInResult.UNKNOWN_ERROR, authViewModel.signInResult.value)
 
         // Clean up observer
         authViewModel.signInResult.removeObserver(observer)
     }
+
+//    @Test
+//    fun `unexpected signIn failure return UNKNOWN_ERROR` () = runTest {
+//        val email = "test@example.com"
+//        val password = "Password123"
+//
+//        `when`(authViewModel.isNetworkAvailable()).thenReturn(true)
+//        `when`(authRepository.signIn(email, password)).thenReturn(flowOf(false))
+//        `when`(authRepository.isEmailExisting(email)).thenReturn(flowOf(false))
+//
+//        val observer = Mockito.mock(Observer::class.java) as Observer<SignInResult>
+//        authViewModel.signInResult.observeForever(observer)
+//
+//        authViewModel.signIn(email, password)
+//
+//        // Advance coroutines to completion of pending jobs, important for LiveData updates
+//        advanceUntilIdle()
+//
+//        Mockito.verify(observer).onChanged(SignInResult.UNKNOWN_ERROR)
+//        assertEquals(authViewModel.isLoggedIn.value, false)
+//
+//        // Direct assertion for signUpResult
+//        assertEquals(SignInResult.UNKNOWN_ERROR, authViewModel.signInResult.value)
+//
+//        // Clean up observer
+//        authViewModel.signInResult.removeObserver(observer)
+//    }
 
 
     /**
@@ -278,9 +321,9 @@ class AuthViewModelTest {
         // val userAccount = UserAccount(emailAddress = email, password = password)
 
         // Mock isEmailExisting(email) in AuthRepository
-        `when`(authRepository.isEmailExisting(email)).thenReturn(false)
+        `when`(authRepository.isEmailExisting(email)).thenReturn(flowOf(false))
         // Mock signUp() in AuthRepository
-        `when`(authRepository.signUp(email, password)).thenReturn(true)
+        `when`(authRepository.signUp(email, password)).thenReturn(flowOf(true))
         // Mock getUserAccountByEmailAddress(email) in AuthRepository
         // Mocking the network availability check in AuthViewModel
         `when`(authViewModel.isNetworkAvailable()).thenReturn(true)
@@ -352,7 +395,7 @@ class AuthViewModelTest {
         // Mock authRepository
         //
         // Mock isEmailExisting(email) in AuthRepository
-        `when`(authRepository.isEmailExisting(email)).thenReturn(true)
+        `when`(authRepository.isEmailExisting(email)).thenReturn(flowOf(true))
         // Mocking the network availability check in AuthViewModel
         `when`(authViewModel.isNetworkAvailable()).thenReturn(true)
 
@@ -389,7 +432,7 @@ class AuthViewModelTest {
         val password = "Pass1"
         val confirmPassword = "Pass1"
 
-        `when`(authRepository.isEmailExisting(email)).thenReturn(false)
+        //`when`(authRepository.isEmailExisting(email)).thenReturn(flowOf(false))
 
         val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
         authViewModel.signUpResult.observeForever(observer)
@@ -419,7 +462,7 @@ class AuthViewModelTest {
         val password = "password123"
         val confirmPassword = "password123"
 
-        `when`(authRepository.isEmailExisting(email)).thenReturn(false)
+        //`when`(authRepository.isEmailExisting(email)).thenReturn(flowOf(false))
 
         val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
         authViewModel.signUpResult.observeForever(observer)
@@ -446,7 +489,7 @@ class AuthViewModelTest {
         val password = "PASSWORD123"
         val confirmPassword = "PASSWORD123"
 
-        `when`(authRepository.isEmailExisting(email)).thenReturn(false)
+        //`when`(authRepository.isEmailExisting(email)).thenReturn(flowOf(false))
 
         val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
         authViewModel.signUpResult.observeForever(observer)
@@ -473,7 +516,7 @@ class AuthViewModelTest {
         val password = "Password"
         val confirmPassword = "Password"
 
-        `when`(authRepository.isEmailExisting(email)).thenReturn(false)
+        //`when`(authRepository.isEmailExisting(email)).thenReturn(flowOf(false))
 
         val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
         authViewModel.signUpResult.observeForever(observer)
@@ -497,7 +540,7 @@ class AuthViewModelTest {
         val password = "Password123"
         val confirmPassword = "Password321"
 
-        `when`(authRepository.isEmailExisting(email)).thenReturn(false)
+        //`when`(authRepository.isEmailExisting(email)).thenReturn(flowOf(false))
 
         val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
         authViewModel.signUpResult.observeForever(observer)
@@ -556,7 +599,7 @@ class AuthViewModelTest {
         val password = "Password123"
         val confirmPassword = "Password123"
 
-        `when`(authRepository.isEmailExisting(email)).thenReturn(false)
+        //`when`(authRepository.isEmailExisting(email)).thenReturn(flowOf(false))
         `when`(authViewModel.isNetworkAvailable()).thenReturn(false)
 
         val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>
@@ -581,8 +624,8 @@ class AuthViewModelTest {
         val password = "Password123"
         val confirmPassword = "Password123"
 
-        `when`(authRepository.isEmailExisting(email)).thenReturn(false)
-        `when`(authRepository.signUp(email, password)).thenReturn(false)
+        `when`(authRepository.isEmailExisting(email)).thenReturn(flowOf(false))
+        `when`(authRepository.signUp(email, password)).thenReturn(flowOf(false))
         `when`(authViewModel.isNetworkAvailable()).thenReturn(true)
 
         val observer = Mockito.mock(Observer::class.java) as Observer<SignUpResult>

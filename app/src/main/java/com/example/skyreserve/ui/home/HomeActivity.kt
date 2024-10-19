@@ -17,17 +17,17 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.skyreserve.R
 import com.example.skyreserve.ui.account.AccountActivity
 import com.example.skyreserve.ui.flightSearch.FlightSearchActivity
-import com.example.skyreserve.Util.AirportsData
-import com.example.skyreserve.Util.UserData
-import com.example.skyreserve.Util.UserInteractionLogger
+import com.example.skyreserve.util.AirportsData
+import com.example.skyreserve.util.UserData
+import com.example.skyreserve.util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivityHomeBinding
 import com.example.skyreserve.databinding.DialogAirportAutoCompleteBinding
 import com.example.skyreserve.databinding.DialogSignUpBinding
 import java.text.SimpleDateFormat
 import com.example.skyreserve.repository.UserAccountRepository
 import com.example.skyreserve.ui.authentication.AuthViewModel
-import com.example.skyreserve.ui.account.AccountViewModel
-import com.example.skyreserve.Util.LocalSessionManager
+import com.example.skyreserve.ui.account.UserAccountViewModel
+import com.example.skyreserve.util.LocalSessionManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import javax.inject.Inject
@@ -49,7 +49,7 @@ class HomeActivity : AppCompatActivity() {
     lateinit var logger: UserInteractionLogger
 
     private val authViewModel: AuthViewModel by viewModels()
-    private val accountViewModel: AccountViewModel by viewModels()
+    private val userAccountViewModel: UserAccountViewModel by viewModels()
 
     private var passengerCount = 1
     private val maxPassengerCount = 9
@@ -99,10 +99,10 @@ class HomeActivity : AppCompatActivity() {
             // Use userEmail to fetch user details if needed
 
             email = sessionManager.getUserEmail().toString()
-            accountViewModel.fetchUserDetails(email)
+            userAccountViewModel.fetchUserDetails(email)
 
-            accountViewModel.userName.observe(this) { name ->
-                binding.nameText.text = name
+            userAccountViewModel.userDetails.observe(this) { userData  ->
+                binding.nameText.text = userData?.firstName ?: ""
             }
 
         } else {
@@ -241,7 +241,7 @@ class HomeActivity : AppCompatActivity() {
                 // Get the user's email from session manager
                 //val userEmail = LocalSessionManager(this@HomeActivity).getUserEmail() ?: return@setPositiveButton
 
-                email = accountViewModel.getUserEmail().toString()
+                email = userAccountViewModel.getUserEmail().toString()
 
                 // Collect data from the UI
                 val userData = UserData(
@@ -255,9 +255,10 @@ class HomeActivity : AppCompatActivity() {
                     countryCode = binding.countryCodeEditText.text.toString(),
                     passport = binding.passportEditText.text.toString()
                 )
+
                 // Pass data to ViewModel to handle the update
-                //userAccountViewModel.updateUserDetails(userData)
-                accountViewModel.insertUserDetails(userData)
+                // Account already created in SignUpActivity so update not insert
+                userAccountViewModel.updateUserDetails(userData)
 
                 // After updating, fetch user details to update UI
                 fetchUserDetailsAfterSignIn()
@@ -269,14 +270,13 @@ class HomeActivity : AppCompatActivity() {
 
     private fun fetchUserDetailsAfterSignIn() {
         if (authViewModel.validateSession()) {
-            email = accountViewModel.getUserEmail().toString()
-            accountViewModel.fetchUserDetails(email)
+            email = userAccountViewModel.getUserEmail().toString()
+            userAccountViewModel.fetchUserDetails(email)
 
             //Log.d("fetchUserDetailsAfterSignUp", "Valid Email")
 
-            accountViewModel.userName.observe(this) { name ->
-                //Log.d("fetchUserDetailsAfterSignUp", name.toString())
-                binding.nameText.text = name
+            userAccountViewModel.userDetails.observe(this) { userData  ->
+                binding.nameText.text = userData?.firstName ?: ""
             }
         } else {
             // Handle invalid session

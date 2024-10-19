@@ -1,4 +1,4 @@
-package com.example.skyreserve.Util
+package com.example.skyreserve.util
 
 import org.junit.Test
 import android.content.Context

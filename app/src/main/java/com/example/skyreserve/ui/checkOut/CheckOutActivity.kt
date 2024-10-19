@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.example.skyreserve.R
 import com.example.skyreserve.ui.success.SuccessActivity
-import com.example.skyreserve.Util.UserInteractionLogger
+import com.example.skyreserve.util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivityCheckOutBinding
 
 class CheckOutActivity : AppCompatActivity() {

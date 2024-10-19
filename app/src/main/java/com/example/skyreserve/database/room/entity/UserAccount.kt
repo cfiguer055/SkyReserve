@@ -3,6 +3,7 @@ package com.example.skyreserve.database.room.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.skyreserve.util.UserData
 
 
 @Entity(tableName = "user_accounts")
@@ -48,8 +49,24 @@ data class UserAccount(
     // Other properties if any
 
 ) {
-    // No secondary constructor needed
+    constructor(email: String, password: String) : this(
+        emailAddress = email,
+        password = password
+    )
 
+    constructor(email: String, password: String, userDetails: UserData) : this(
+        emailAddress = email,
+        password = password,
+        firstName = userDetails.firstName,
+        lastName = userDetails.lastName,
+        gender = userDetails.gender,
+        phone = userDetails.phone,
+        dateOfBirth = userDetails.dateOfBirth,
+        address = userDetails.address,
+        stateCode = userDetails.stateCode,
+        countryCode = userDetails.countryCode,
+        passport = userDetails.passport
+    )
 }
 
 

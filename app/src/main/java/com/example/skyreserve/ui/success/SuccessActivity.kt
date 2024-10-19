@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.skyreserve.ui.home.HomeActivity
-import com.example.skyreserve.Util.UserInteractionLogger
+import com.example.skyreserve.util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivitySuccessBinding
 
 class SuccessActivity : AppCompatActivity() {
