@@ -45,7 +45,7 @@ import javax.inject.Inject
  *
  * IT:
  * Attivitá principale per la schermata iniziale dell'applicazione. Gestisce le
- * interazioni dell'utente, la rivera di voli e la configurazione del profilo. Questa activitá
+ * interazioni dell'utente, la ricerca di voli e la configurazione del profilo. Questa activitá
  * funge da punto di ingresso per l'esperienza utente.
  */
 @AndroidEntryPoint
@@ -140,6 +140,7 @@ class HomeActivity : AppCompatActivity() {
         // userAccountViewModel = ViewModelProvider(this, HomeViewModelFactory(userAccountRepository, sessionManager, this))[UserAccountViewModel::class.java]
 
 
+
         val isNewUser = intent.getBooleanExtra("FROM_SIGN_UP", false)
         if (isNewUser) {
             showSignUpDialog()
@@ -168,6 +169,10 @@ class HomeActivity : AppCompatActivity() {
             // IT: Gestire sessione non valida cancellado l'interfaccia utente
             email = ""
             binding.nameText.text = ""
+
+
+            // ....
+            // go back to login
         }
 
         setupBottomNavigation()
@@ -383,13 +388,17 @@ class HomeActivity : AppCompatActivity() {
             setTitle("Complete Your Profile")
             setView(binding.root)
             setPositiveButton("Submit") { _, _ ->
-                // Get the user's email from session manager
+                // EN: Get the user's email from session manager
+                // ES: Obtener el correo electrónico del usuario desde el gestor de sessiones.
+                // IT: Ottenere l'email dell'utente dal gestore della sessione.
 
                 //val userEmail = LocalSessionManager(this@HomeActivity).getUserEmail() ?: return@setPositiveButton
 
                 email = userAccountViewModel.getUserEmail().toString()
 
-                // Collect data from the UI
+                // EN: Collect data from the UI
+                // ES: Recopilar datos de la interfaz de usuario
+                // IT: Raccogliere i dati dall 'interfaccia utente
                 val userData = UserData(
                     firstName = binding.firstNameEditText.text.toString(),
                     lastName = binding.lastNameEditText.text.toString(),
@@ -402,8 +411,15 @@ class HomeActivity : AppCompatActivity() {
                     passport = binding.passportEditText.text.toString()
                 )
 
+                // EN:
                 // Pass data to ViewModel to handle the update
                 // Account already created in SignUpActivity so update not insert
+                // ES:
+                // Pasar los datos al ViewModel para manejar la actualización.
+                // La cuenta ya fue creada en SignUpActivity, por lo tanto, se debe actualizar en lugar de insertar
+                // IT:
+                // Passare i dati al ViewModel per gestire l'aggiornamento
+                // L'account è già stato creato in SignUpActivity, quindi aggiornare invece di inserire
                 userAccountViewModel.updateUserDetails(userData)
 
                 // After updating, fetch user details to update UI
@@ -414,6 +430,15 @@ class HomeActivity : AppCompatActivity() {
         dialog.show()
     }
 
+
+    /**
+     * EN: Fetches and displays the user's details after signing in.
+     *
+     * ES: Obtiene y muestra los detalles del usuario después de iniciar sessión.
+     *
+     * IT: Recupera e visualizza i dettagli dell'utente dopo l'accesso.
+     *
+     * */
     private fun fetchUserDetailsAfterSignIn() {
         if (authViewModel.validateSession()) {
             email = userAccountViewModel.getUserEmail().toString()
@@ -425,20 +450,40 @@ class HomeActivity : AppCompatActivity() {
                 binding.nameText.text = userData?.firstName ?: ""
             }
         } else {
-            // Handle invalid session
+            // EN: Handle invalid session
+            // ES: Manejar sesión inválida
+            // IT: Gestire la sessione non valida
             binding.nameText.text = ""
             //Log.d("fetchUserDetailsAfterSignUp", "Invalid Email")
         }
     }
 
+    /**
+     * EN:
+     * Displays an autocomplete dialog for selecting departure or arrival airports.
+     * @param departure Specifies if the dialog is for selecting a departure airport.
+     *
+     * ES:
+     * Muestra un cuadro de diálogo de autocompletar para selecciónar aeropuertos de salida o llegada.
+     * @param departure Especifica si el cuadro de diálogo es para selecciónar un aeropuerto de salida.
+     *
+     * IT:
+     * Mostra una finestra di dialogo di autocompletamento per selezionare gli aeroporti di partenza o arrivo.
+     * @param departure Specifica se la finestra di dialogo è per selezionare un aeroporto di partenza.
+     *
+     * */
     private fun showAirportAutoCompleteDialog(departure: Boolean) {
 
-        // Inflate the layout for the dialog
+        // EN: Inflate the layout for the dialog
+        // ES: Inflar el diseño para el cuadro de diálogo
+        // IT: Espandere il layout per la finestra di dialogo
         val binding = DialogAirportAutoCompleteBinding.inflate(layoutInflater)
         val searchEditText = binding.searchEditText
         val airportsListLayout = binding.airportsListLayout
 
-        // Create the AlertDialog and set its view to our inflated layout
+        // EN: Create the AlertDialog and set its view to our inflated layout
+        // ES: Crear la AlertDialog y establecer su vista con nuestro diseño inflado
+        // IT: Creare L'AlertDialog e imposare la sua vista con il nostro layout espanso
         val dialog = AlertDialog.Builder(this).apply {
             if (departure) setTitle("Departure Airport") else setTitle("Arrival Airport")
             searchEditText.hint = if (departure) "Enter departure airport" else "Enter arrival airport"
@@ -448,10 +493,14 @@ class HomeActivity : AppCompatActivity() {
             }
         }.create()
 
-        // Show the AlertDialog
+        // EN: Show the AlertDialog
+        // ES: Mostrar el AlertDialog
+        // IT: Mostrare L'AlertDialog
         dialog.show()
 
-        // Set up a text changed listener on the search EditText to filter the list as the user types
+        // EN: Set up a text changed listener on the search EditText to filter the list as the user types
+        // ES: Configurar un listener de cambios de text en el EditText de búsqueda para filtrar la lista mientras el usuario escribe
+        // IT: Configurare un listener per il cambiamento del testo nell'EditText di ricerca per filtrare l'elenco mentre l'utente digita
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 val filteredAirports = filterAirports(s.toString(), AirportsData.airports)
@@ -464,27 +513,75 @@ class HomeActivity : AppCompatActivity() {
         })
     }
 
-    // Filter airports based on the search query
+    /**
+     * EN:
+     * Filters the list of airports based on the user's input query.
+     * @param query The search query entered by the user.
+     * @param airports The list of airports to filter.
+     * @return A filtered list of airports matching the query.
+     *
+     * ES:
+     * Filtra la lista de aeropuertos según la consulta ingresada por el usuario.
+     * @param query La consulta de búsqueda ingresada por el usuario.
+     * @param airport La lista de aeropuertos a filtrar.
+     * @return Una lista filtrado de aeropuertos que coinciden con la consulta.
+     *
+     * IT:
+     * Filtra l'elenco degli aeroporti in base alla query inserita dall'utente.
+     * @param query La query di ricerca inserita dall'utente.
+     * @param airport L'elenco degli aeroporti da filtrare.
+     * @return Un elenco filtrato de aeroporti che corrispondono alla query.
+     *
+     * */
     fun filterAirports(query: String, airports: Array<String>): List<String> {
         return airports.filter {
             it.lowercase(Locale.getDefault()).contains(query.lowercase(Locale.getDefault()))
         }
     }
 
-    // Update the list of airports displayed in the ScrollView
+    /**
+     * EN:
+     * Updates the list of airports displayed in the autocomplete dialog.
+     * @param departure Specifies if this is for departure or arrival.
+     * @param dialog The AlertDialog that contains the list.
+     * @param layout The layout where the airport items are displayed.
+     * @param airports The filtered list of airports.
+     *
+     * ES:
+     * Actualiza la lista de aeropuertos mostrados en el cuadro de diálogo de autocompletar.
+     * @param departure Especifica si es para la salida o la llegada
+     * @param dialog El AlertDialog que contiene la lista.
+     * @param layout El diseño donde se muestran los elementos de los aeropuertos.
+     * @param airports La lista filtrada de aeropuertos.
+     *
+     * IT:
+     * Aggiorna l'elenco degli aeroporti visualizzati nella finestra di dialogo di autocompletamento.
+     * @param departure Specifica se è per la partenza o l'arrivo.
+     * @param dialog Il AlertDialog che contiene l'elenco.
+     * @param layout Il layout dove vengono visualizzati gli elementi degli aeroporti.
+     * @param airports L'elenco filtrato degli aeroporti.
+     *
+     * */
     @SuppressLint("SetTextI18n")
     fun updateAirportsList(departure: Boolean, dialog: AlertDialog, layout: LinearLayout, airports: List<String>) {
-        // Remove all views before adding the new filtered list
+        // EN: Remove all views before adding the new filtered list
+        // ES: Eliminar todas las vistas antes de agregar la nuevo lista filtrada
+        // IT: Rimuovere tutte le viste prima di aggiungere il nuovo elenco filtrato
         layout.removeAllViews()
 
-        // Add TextViews for each filtered airport
+        // EN: Add TextViews for each filtered airport
+        // ES: Agregar TextViews para cada aeropuerto filtrado
+        // IT: Aggiungere TextViews per ogni aeroporto filtrado
         for (airport in airports) {
             val textView = TextView(this)
             textView.text = airport
             textView.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             textView.setPadding(16, 16, 16, 16) // for example
             textView.setOnClickListener {
-                // Handle the airport selection here
+                // EN: Handle the airport selection here
+                // ES: Maejar la selección del aeropuerto aquí
+                // IT: Gestire la selezione dell'aeroporto qui
+
                 val parts = airport.split(" - ")
                 val airportCode = parts.getOrNull(1) ?: "" // This will get "LAX" or an empty string if the part is not found.
                 val city = parts.getOrNull(2)?.split(",")?.getOrNull(0) ?: "" // This will get "LOS ANGELES" or an empty string if the part is not found.
@@ -497,6 +594,15 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+
+    /**
+     * EN: Configures the bottom navigation bar for the home activity.
+     *
+     * ES: Configura la barra de navegación inferior para la actividad de inicio.
+     *
+     * IT: Configura la barra di navigazione inferiore per l'attivitá home
+     *
+     * */
     private fun setupBottomNavigation() {
         binding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -523,6 +629,14 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * EN: Mimics pressing the home button by starting the launcher activity.
+     *
+     * ES: Imita la pulsación del botón de inicio iniciando la actividad del lanzador.
+     *
+     * IT: Imita la pressione del pulsante home avviando l'attivitá di avvio
+     *
+     * */
     override fun onBackPressed() {
         // Create an intent that mimics the Home button being pressed
         val startMain = Intent(Intent.ACTION_MAIN)
