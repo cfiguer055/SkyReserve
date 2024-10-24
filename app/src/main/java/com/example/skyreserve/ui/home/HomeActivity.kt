@@ -166,7 +166,7 @@ class HomeActivity : AppCompatActivity() {
         } else {
             // EN: Handle invalid session, e.g., navigate to login
             // ES: Manejar sessión invalida limpiando la interfaz de usuario
-            // IT: Gestire sessione non valida cancellado l'interfaccia utente
+            // IT: Gestire sessione non valida cancellato l'interfaccia utente
             email = ""
             binding.nameText.text = ""
 
@@ -295,7 +295,7 @@ class HomeActivity : AppCompatActivity() {
      * Navega a [FlightSearchActivity] con los parámetros de búsqueda de vuelo actuales.
      *
      * IT:
-     * Naviga a [FlightSearchActivity] con i parametri di riecera volo correnti.
+     * Naviga a [FlightSearchActivity] con i parametri di ricerca volo correnti.
      *
      */
     private fun navigateToFlightSearch() {
@@ -358,7 +358,7 @@ class HomeActivity : AppCompatActivity() {
      * @return Una cadena que representa el nombre abreviado del mes.
      *
      * Italiano: Recupera il nome abbreviato di un mese in base all'indice fornito.
-     * L'indice deve essere un numero intero tra 0 (gennaio) e 11 (dicembre).
+     * L'indice deve essere un numero intero tra zero (gennaio) e undici (dicembre).
      * @param month L'indice del mese (0 per gennaio, 11 per dicembre).
      * @return Una stringa che rappresenta il nome abbreviato del mese.
      *
@@ -483,7 +483,7 @@ class HomeActivity : AppCompatActivity() {
 
         // EN: Create the AlertDialog and set its view to our inflated layout
         // ES: Crear la AlertDialog y establecer su vista con nuestro diseño inflado
-        // IT: Creare L'AlertDialog e imposare la sua vista con il nostro layout espanso
+        // IT: Creare L'AlertDialog e impostare la sua vista con il nostro layout espanso
         val dialog = AlertDialog.Builder(this).apply {
             if (departure) setTitle("Departure Airport") else setTitle("Arrival Airport")
             searchEditText.hint = if (departure) "Enter departure airport" else "Enter arrival airport"
