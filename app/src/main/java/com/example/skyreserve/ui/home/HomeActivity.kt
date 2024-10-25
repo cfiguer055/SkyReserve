@@ -230,7 +230,7 @@ class HomeActivity : AppCompatActivity() {
         binding.returnDateEditText.setOnClickListener {
             // EN: Show date picker dialog for selecting return date
             // ES: Mostrar cuadro de diálogo para seleccionar la fecha de regreso
-            // IT: Mostare finestra di dialogo per selezionare la data di ritorno
+            // IT: Mostare la finestra di dialogo per selezionare la data di ritorno
 
             val calendar = Calendar.getInstance()
             val datePickerDialog = DatePickerDialog(
