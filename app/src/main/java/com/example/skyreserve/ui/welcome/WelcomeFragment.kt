@@ -11,10 +11,12 @@ import com.example.skyreserve.R
  * Displays a welcoming message to the user.
  *
  * ES:
- *
+ * Fragmento que sirve como la pantalla introductoria de la secuencia de bienvenida.
+ * Muestra un mensaje de bienvenida al usuario.
  *
  * IT:
- *
+ * Frammenti che funge da schermata introduttiva della sequenza di benvenudo.
+ * Visualizza un messaggio di benvenuto all'utente.
  *
  * */
 class WelcomeFragment : Fragment() {
@@ -24,8 +26,8 @@ class WelcomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // EN: Inflate the layout for this fragment
-        // ES:
-        // IT:
+        // ES: Inflar el diseño para este fragmento
+        // IT: Espandere il layout per questo frammento
         return inflater.inflate(R.layout.fragment_welcome, container, false)
     }
 }
