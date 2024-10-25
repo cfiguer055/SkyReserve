@@ -9,13 +9,16 @@ import com.example.skyreserve.R
 
 /**
  * EN:
- * Fragment that guides the user on how to plan a trip. Part of the welcome screen sequence.
+ * Fragment that provides information about the final step of traveling. Part of the welcome
+ * screen sequence.
  *
  * ES:
- *
+ * Fragmento que proporciona información sobre el último paso del viaje. Parte de la secuencia
+ * de bienvenida.
  *
  * IT:
- *
+ * Frammenti che fornische informazioni sull'ultimo passo del viaggio. Parte della sequenza
+ * di benvenudo.
  *
  * */
 class LetsTravelFragment : Fragment() {
@@ -25,8 +28,8 @@ class LetsTravelFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // EN: Inflate the layout for this fragment
-        // ES:
-        // IT:
+        // ES: Inflar el diseño para este fragmento
+        // IT: Espandere il layout per questo frammento
         return inflater.inflate(R.layout.fragment_lets_travel, container, false)
     }
 }
