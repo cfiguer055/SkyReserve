@@ -18,11 +18,23 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
-/*
-The activity manages the SignUpFragment.
-It sets up the navigation flow for the sign-up process.
-You can include any additional logic for initializing the app here.
-*/
+/**
+ * EN:
+ * Activity for managing the user sign-up process. It handles user input validation,
+ * displays error messages, and navigates between the SignUp screen and other screens.
+ * Initializes the necessary dependencies, like the AuthRepository and session manager.
+ *
+ * ES:
+ * Actividad para gestionar el proceso de registro de usuarios. Maneja la validación de entradas
+ * del usuario, muestra mensajes de error, y navega entre la pantalla de registro y otros pantallas.
+ * Inicializa los dependencias necesarios, como el AuthRepository y gestor de sesiones.
+ *
+ * IT:
+ * Atività per gestire il processo di registrazione degli utenti. Gestisce la validazione dell'input
+ * dell'utente, visualizza messaggi di errore e naviga tra la schermata di registrazione e altre schermate.
+ * Inizializza le dipendeze necessarie, come AuthRepository e il gestore della sessione.
+ *
+ * */
 @AndroidEntryPoint
 class SignUpActivity : AppCompatActivity() {
 
@@ -41,6 +53,23 @@ class SignUpActivity : AppCompatActivity() {
     private val authViewModel: AuthViewModel by viewModels()
     // private lateinit var userViewModel: UserViewModel
 
+
+    /**
+     * EN:
+     * Called when the activity is first created. Sets up the view binding, initializes
+     * the sign-up UI elements, and sets up listeners for user input changes and button clicks.
+     *
+     * ES:
+     * Se llama cuando se crea la actividad por primera vez. Configura la vinculación de vistas,
+     * inicializa los elementos de la interfaz de usuarios de registro y configura los listeners
+     * para cambios en la entrada del usuario y clics en botones.
+     *
+     * IT:
+     * Viene chiamato quando l'atività viene creata per la prima volta. Configura il binding delle viste,
+     * inizializza gli elementi dell'interfaccia di registrazione e imposta i listener
+     * per i cambiamenti dell'input dell'utente e i click sui pulsanti.
+     *
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
@@ -54,10 +83,16 @@ class SignUpActivity : AppCompatActivity() {
 
 
 
+        // EN: Set up listeners for text changes in email, password, and confirm password fields
+        // ES: Configurar listeners para cambios de texto en los campos de correo, contraseña y confirmación de contraseña
+        // IT: Impostare i listener per cambiamenti di testo nei campi email, password e conferma password
         binding.emailEditText.addTextChangedListener { resetInputUI() }
         binding.passwordEditText.addTextChangedListener { resetInputUI() }
         binding.confirmPasswordEditText.addTextChangedListener { resetInputUI() }
 
+        // EN: Display password requirements when the password field gains focus
+        // ES: Mostrar los requisitos de contraseña cuando el campo de contraseña tiene foco
+        // IT: Visualizzare i requisiti della password quando il campi della password è attivo
         binding.passwordEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 // User has focused on the password field
@@ -68,6 +103,9 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
 
+        // EN: Set the sign-up button click listener to initiate the sign-up process
+        // ES: Configurar el listener del botón de registro para iniciar el proceso de registro
+        // IT: Impostare il listener del pulsante di registrazione per avviare il processo di registrazione
         binding.signUpButton.setOnClickListener{
             val email = binding.emailEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
@@ -85,12 +123,28 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
 
+        // EN: Set click listener for the "Sign in" link
+        // ES: Configurar el listener del enlace "Iniciar Session"
+        // IT: Impostare il listener per il link "Accedi"
         binding.signInLinkTextView.setOnClickListener {
             navigateToSignIn()
         }
     }
 
-
+    /**
+     * EN:
+     * Resets the UI for the input fields, hiding any error messages and restoring the default
+     * appearance of the input fields.
+     *
+     * ES:
+     * Restablece la interfaz de usuario para los campos de entrada, ocultando los mensajes de error
+     * y restaurando la aparencia predeterminada de los campos de entrada.
+     *
+     * IT:
+     * Reimposta l'interfaccia utente per i campi di input, nascondendo eventuali messaggi di errore
+     * e ripristiando l'aspetto predefinito dei campi di input.
+     *
+     * */
     private fun resetInputUI() {
         binding.errorTextView.visibility = View.GONE
         binding.errorTextView.text = ""
@@ -101,6 +155,19 @@ class SignUpActivity : AppCompatActivity() {
         binding.confirmPasswordEditText.setBackgroundResource(R.drawable.edit_text_background)
     }
 
+    /**
+     * EN:
+     * Enables all sign-up UI elements, allowing the user to input their information.
+     *
+     * ES:
+     * Habilita todos los elementos de la interfaz de usuario de registro, permetiendo al usuario
+     * ingresar su información.
+     *
+     * IT:
+     * Abilita tutti gli elementi dell'interfaccia di registrazione, consentendo all'utente
+     * di inserire le proprie informazioni.
+     *
+     * */
     private fun enableSignUpUI() {
         binding.emailEditText.isEnabled = true
         binding.passwordEditText.isEnabled = true
@@ -108,6 +175,18 @@ class SignUpActivity : AppCompatActivity() {
         binding.signUpButton.isEnabled = true
     }
 
+    /**
+     * EN:
+     * Disables all sign-up UI elements to prevent further input during the sign-up process.
+     *
+     * ES:
+     * Deshabilita todos los elementos de la interfaz de registro para evitar más entradas durante
+     * el proceso de registro.
+     *
+     * IT:
+     *
+     *
+     * */
     private fun disableSignUpUI() {
         binding.emailEditText.isEnabled = false
         binding.passwordEditText.isEnabled = false
@@ -115,14 +194,51 @@ class SignUpActivity : AppCompatActivity() {
         binding.signUpButton.isEnabled = false
     }
 
+    /**
+     * EN:
+     * Displays the password requirements on the UI when the user focuses on the password field.
+     *
+     * ES:
+     * Muestra los requisitos de la contraseña en la interfaz cuando el usuario enfoca el campo
+     * de la contraseña.
+     *
+     * IT:
+     *
+     *
+     * */
     fun displayPasswordRequirements() {
         binding.passwordRequirementsTextView.visibility = View.VISIBLE
     }
 
+    /**
+     * EN:
+     * Hides the password requirements from the UI when the password field is no longer focused.
+     *
+     * ES:
+     * Oculta los requisitos de la contraseña en la interfaz cuando el campo de contraseña ya no
+     * tiene foco.
+     *
+     * IT:
+     *
+     *
+     * */
     fun hidePasswordRequirements() {
         binding.passwordRequirementsTextView.visibility = View.GONE
     }
 
+    /**
+     * EN:
+     * Navigates to the HomeActivity after a successful sign-up. Flags are used to clear the
+     * task stack and make HomeActivity the root of the new task.
+     *
+     * ES:
+     * Navega a HomeActivity después de un registro exitoso. Se usan flags para limpiar la pila de
+     * tareas y hacer de HomeActivity la raíz de la nueva tarea.
+     *
+     * IT:
+     *
+     *
+     * */
     private fun navigateToHome() {
         val intent = Intent(this, HomeActivity::class.java)
 
@@ -132,6 +248,19 @@ class SignUpActivity : AppCompatActivity() {
         // finish() temp
     }
 
+    /**
+     * EN:
+     * Navigates to the SignInActivity when the user clicks the "Sign In" link.
+     * The activity is reordered to the front of the task stack.
+     *
+     * ES:
+     * Navega a SignInActivity cuando el usuario hace clic en el enlace "Iniciar Sesión".
+     * El actividad se reordena al frente de la pila de tareas.
+     *
+     * IT:
+     *
+     *
+     * */
     private fun navigateToSignIn() {
         val intent = Intent(this, SignInActivity::class.java)
 
@@ -140,6 +269,19 @@ class SignUpActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    /**
+     * EN:
+     * Observes the sign-up result from the ViewModel and handles different outcomes, such as success,
+     * missing information, or invalid input. Displays appropriate error messages or navigates to HomeActivity.
+     *
+     * ES:
+     * Observa los resultados del registro en el ViewModel y maneja diferentes escenarios, como éxito,
+     * información faltante o entrada inválida. Muestra mensajes de error apropiados o navega a HomeActivity.
+     *
+     * IT:
+     *
+     *
+     * */
     private fun observeSignUpResult() {
         authViewModel.signUpResult.observe(this) { result ->
             when (result) {
@@ -159,13 +301,28 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * EN:
+     * Displays a specific error message in the UI and highlights the problematic fields based on
+     * the provided error code.
+     *
+     * ES:
+     * Muestra un mensaje de error específico en la interfaz de usuario y resalta los campos
+     * problemáticos según el código de error proporcionado.
+     *
+     * IT:
+     *
+     *
+     * */
     private fun showSignUpError(message: String, errorCode: String) {
         binding.errorTextView.visibility = View.VISIBLE
         binding.errorTextView.text = message
 
         when (errorCode) {
             "MISSING_INFORMATION" -> {
-                // Check each EditText and if empty, change the background
+                // EN: Check each EditText and if empty, change the background
+                // ES: Comprueba cada EditText y si es vacío, cambia el fondo
+                // IT:
                 if (binding.emailEditText.text.isNullOrEmpty()) {
                     binding.emailEditText.setBackgroundResource(R.drawable.edit_text_error_background)
                 }
