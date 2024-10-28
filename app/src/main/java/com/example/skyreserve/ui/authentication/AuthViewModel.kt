@@ -23,12 +23,21 @@ import androidx.core.util.PatternsCompat
 import kotlinx.coroutines.flow.first
 
 
-/*
-* The parameters of an annotated constructor of a class are the dependencies of that class.
-* In the example, UserViewModel has AuthRepository, LocalSessionManager, and Context as a
-* dependency. Therefore, Hilt must also know how to provide instances of AuthRepository,
-* LocalSessionManager, and Context.
-* */
+/**
+ * EN:
+ * ViewModel responsible for managing authentication-related actions, including signing in,
+ * signing up, session validation, and logout. Uses StateFlow and LiveData to track and communicate
+ * the current authentication status and user details.
+ *
+ * ES:
+ * ViewModel responsable de gestionar las acciónes relacionados con la autenticación, incluyendo
+ * iniciar sesión, registrarse, validación de sesión, y cierre de sesión. Utiliza StateFlow y LiveData
+ * para rastrear y comunicar el estado actual de autenticación y los detalles del usuario.
+ *
+ * IT:
+ *
+ *
+ * */
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository, // Handles authentication logic
@@ -51,6 +60,19 @@ class AuthViewModel @Inject constructor(
     val currentUser: StateFlow<UserAccount?> = _currentUser
 
 
+    /**
+     * EN:
+     * Initiates the sign-in process. Validates network availability and checks credentials
+     * before logging in and creating a session.
+     *
+     * ES:
+     * Inicia el proceso de inicio de sesión. Valida la disponibilidad de red y verifica las
+     * credenciales antes de iniciar sesión y crear una sesión.
+     *
+     * IT:
+     *
+     *
+     * */
     fun signIn(emailAddress: String, password: String) {
         viewModelScope.launch {
             try {
@@ -87,6 +109,20 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+
+    /**
+     * EN:
+     * Initiates the sign-up process. Validates email format, password strength,
+     * network availability, and whether the email is already registered.
+     *
+     * ES:
+     * Inicializa el proceso de registro. Valida el formato de correo electrónico, la fortaleza
+     * de la contraseña, la disponibilidad de red y si el correo electrónico ya está registrado.
+     *
+     * IT:
+     *
+     *
+     * */
     fun signUp(emailAddress: String, password: String, confirmPassword: String) {
         viewModelScope.launch {
             when {
@@ -140,24 +176,53 @@ class AuthViewModel @Inject constructor(
     }
 
 
-
+    /**
+     * EN: Validates if the current session token is still valid.
+     *
+     * ES: Valida si el token de sesión actual sigue siendo válido.
+     *
+     * IT:
+     *
+     * */
     fun validateSession() : Boolean {
         return sessionManager.isTokenValid()
     }
 
+    /**
+     * EN: Refreshes the session token to keep the session active.
+     *
+     * ES: Actualiza el token de sesión para mantener la sesión activa.
+     *
+     * IT:
+     *
+     * */
     fun refreshSessionToken() {
         sessionManager.renewToken()
     }
 
 
-    // Function to log out the user
+    /**
+     * EN: Logs out the user by clearing the session and resetting the user state.
+     *
+     * ES: Cierra la sesión del usuario limpiando la sesión y restableciendo el estado del usuario.
+     *
+     * IT:
+     *
+     * */
     fun logout() {
         sessionManager.logoutUser()
         _isLoggedIn.value = false
         _currentUser.value = null
     }
 
-    // Network availability check function
+    /**
+     * EN: Checks if there is an active network connection available.
+     *
+     * ES: Verifica si hay una conexión de red activa disponible.
+     *
+     * IT:
+     *
+     * */
     fun isNetworkAvailable(): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false
@@ -165,13 +230,27 @@ class AuthViewModel @Inject constructor(
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
-    // Email existence check function
+    /**
+     * EN: Checks if the given email is already registered in the system.
+     *
+     * ES: Verifica si el correo electrónico dado ya está registrado en el sistema.
+     *
+     * IT:
+     *
+     * */
     private suspend fun isEmailExisting(email: String): Boolean {
         return authRepository.isEmailExisting(email).first()
     }
     // Additional ViewModel logic...
 
-    // Function to validate email
+    /**
+     * EN: Validates if the provided email format is correct.
+     *
+     * ES: Valida si el formatto del correo electrónico proporcionado es correcto.
+     *
+     * IT:
+     *
+     * */
     private fun isValidEmail(email: String): Boolean {
 
         return PatternsCompat.EMAIL_ADDRESS.matcher(email).matches()
