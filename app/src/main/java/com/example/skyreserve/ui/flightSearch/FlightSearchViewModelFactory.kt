@@ -2,11 +2,12 @@ package com.example.skyreserve.ui.flightSearch
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.skyreserve.repository.FlightSearchRepository
 
-class FlightSearchViewModelFactory() : ViewModelProvider.Factory {
-    override fun <T: ViewModel> create(modelClass: Class<T>): T {
-        if(modelClass.isAssignableFrom(FlightSearchViewModel::class.java)) {
-            return FlightSearchViewModel() as T
+class FlightSearchViewModelFactory(private val flightSearchRepository: FlightSearchRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(FlightSearchViewModel::class.java)) {
+            return FlightSearchViewModel(flightSearchRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

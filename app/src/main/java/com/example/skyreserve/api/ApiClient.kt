@@ -1,80 +1,125 @@
 package com.example.skyreserve.api
 
-// Import necessary packages from the OkHttp library and Java I/O.
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
+import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.*
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
+class ApiClient(private val baseUrl: String = DEFAULT_BASE_URL) {
 
-
-// Create a class named ApiClient which takes a baseUrl as a parameter.
-class ApiClient(private val baseUrl: String) {
-    // Initialize an instance of the OkHttpClient.
-    private val client: OkHttpClient = OkHttpClient()
+    private val client: OkHttpClient
 
     companion object {
-        const val DEFAULT_BASE_URL = "https://aeroapi.flightaware.com/aeroapi/"
+        const val DEFAULT_BASE_URL = "https://aeroapi.flightaware.com/aeroapi"
+        const val TAG = "ApiClient"
     }
 
-    // Overloaded constructor to use the default baseUrl if none is provided
-    constructor() : this(DEFAULT_BASE_URL)
+    init {
+        // Initialize OkHttpClient with Logging Interceptor and Timeouts
+        val logging = HttpLoggingInterceptor { message -> Log.d(TAG, message) }
+        logging.level = HttpLoggingInterceptor.Level.BODY
 
+        client = OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .connectTimeout(30, TimeUnit.SECONDS) // Set appropriate timeouts
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .build()
+    }
 
-    // Define a method to perform an HTTP GET request.
-    fun get(endpoint: String, queryParams: Map<String, String> = emptyMap(), headers: Map<String, String> = emptyMap()): ApiResponse {
-        // Build the full URL including endpoint and query parameters.
+    /**
+     * Performs an HTTP GET request asynchronously using coroutines.
+     *
+     * @param endpoint The API endpoint.
+     * @param queryParams A map of query parameters.
+     * @param headers A map of HTTP headers.
+     * @return An ApiResponse containing the response details.
+     */
+    suspend fun getAsync(
+        endpoint: String,
+        queryParams: Map<String, String> = emptyMap(),
+        headers: Map<String, String> = emptyMap()
+    ): ApiResponse = withContext(Dispatchers.IO) {
         val url = buildUrl(endpoint, queryParams)
+        Log.d(TAG, "GET request URL: $url")
 
-        // Create a new request builder with the specified URL.
         val requestBuilder = Request.Builder().url(url)
 
         // Add custom headers to the request builder.
-        for((key, value) in headers) {
+        for ((key, value) in headers) {
+            if (key.equals("x-apikey", ignoreCase = true)) {
+                Log.d(TAG, "Adding header: $key: [HIDDEN]") // Hide sensitive info
+            } else {
+                Log.d(TAG, "Adding header: $key: $value")
+            }
             requestBuilder.header(key, value)
         }
 
-        // Create a new HTTP request using the OkHttp library.
         val request = requestBuilder.build()
+        Log.d(TAG, "Request built successfully")
 
-        // Execute the request and return the response.
-        return executeRequest(request)
+        executeRequest(request)
     }
 
-
-    // Add more methods for different HTTP methods like POST, PUT, DELETE, etc. (if necessary)
-
-
-
-    // Method to build the complete URL with query parameters.
+    /**
+     * Builds the complete URL with query parameters using HttpUrl.Builder.
+     *
+     * @param endpoint The API endpoint.
+     * @param queryParams A map of query parameters.
+     * @return The complete URL as a string.
+     */
     private fun buildUrl(endpoint: String, queryParams: Map<String, String>): String {
-        // Construct the query string from the provided query parameters.
-        val query = queryParams.entries.joinToString("&") {(key, value) -> "$key=$value"}
+        val httpUrlBuilder = baseUrl.toHttpUrlOrNull()?.newBuilder()
+            ?.addPathSegments(endpoint)
+            ?: throw IllegalArgumentException("Invalid base URL or endpoint")
 
-        // Combine the baseUrl, endpoint, and query parameters to form the complete URL.
-        return if (query.isNotEmpty()) {
-            "$baseUrl/$endpoint?$query"
-        } else {
-            "$baseUrl/$endpoint"
+        // Add query parameters with proper encoding
+        for ((key, value) in queryParams) {
+            httpUrlBuilder.addQueryParameter(key, value)
         }
+
+        val url = httpUrlBuilder.build().toString()
+        Log.d(TAG, "Built URL: $url")
+        return url
     }
 
+    /**
+     * Executes an HTTP request and processes the response.
+     *
+     * @param request The HTTP request to execute.
+     * @return An ApiResponse containing the response details.
+     */
+    private suspend fun executeRequest(request: Request): ApiResponse {
+        Log.d(TAG, "Executing request: ${request.url}")
 
-    // Method to execute an HTTP request and process the response.
-    private fun executeRequest(request: Request): ApiResponse {
-        try {
-            // Execute the request using the OkHttpClient and obtain the response.
-            val response: Response = client.newCall(request).execute()
+        return try {
+            Log.d(TAG, "About to execute the network call")
+            client.newCall(request).execute().use { response ->
+                Log.d(TAG, "Network call completed")
+                val responseBody = response.body?.string()
 
-            // Create an ApiResponse object using information from the response.
-            return ApiResponse(response.isSuccessful, response.code, response.body?.string())
+                if (!response.isSuccessful) {
+                    Log.e(TAG, "Unsuccessful response: ${response.code}, body: $responseBody")
+                    return@use ApiResponse(false, response.code, responseBody)
+                }
+
+                Log.d(TAG, "Response received: isSuccess=${response.isSuccessful}, statusCode=${response.code}")
+                Log.d(TAG, "Response body: ${responseBody?.take(100)}...") // Log first 100 chars
+
+                ApiResponse(true, response.code, responseBody)
+            }
         } catch (e: IOException) {
-            // In case of an exception (e.g., network error), return an error ApiResponse.
-            return ApiResponse(false, -1, e.message)
+            Log.e(TAG, "Request execution failed", e)
+            ApiResponse(false, -1, e.message)
         }
     }
 
-
-    // Define a data class to hold information about the API response.
+    /**
+     * Data class representing the API response.
+     */
     data class ApiResponse(val isSuccess: Boolean, val statusCode: Int, val responseBody: String?)
 }

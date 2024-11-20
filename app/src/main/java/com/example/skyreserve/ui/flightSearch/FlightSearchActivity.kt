@@ -14,20 +14,25 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.skyreserve.model.FlightAdapter
 import com.example.skyreserve.model.FlightInfo
 import com.example.skyreserve.R
+import com.example.skyreserve.api.ApiClient
 import com.example.skyreserve.ui.reservation_confirmation.ReservationConfirmationActivity
 import com.example.skyreserve.util.AirportsData
 import com.example.skyreserve.util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivityFlightSearchBinding
 import com.example.skyreserve.databinding.DialogAirportAutoCompleteBinding
+import com.example.skyreserve.repository.FlightSearchRepository
 import java.text.SimpleDateFormat
 import java.util.*
 
 class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickListener {
+    private lateinit var flightSearchViewModel: FlightSearchViewModel
+
     private lateinit var binding: ActivityFlightSearchBinding
     private lateinit var logger: UserInteractionLogger
 
@@ -46,6 +51,22 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         super.onCreate(savedInstanceState)
         binding = ActivityFlightSearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+
+
+        // TEMP UNTIL DEPENDENCY INJECTION
+        // Initialize ApiClient
+        val apiClient = ApiClient()
+        // Initialize FlightSearchRepository
+        val flightSearchRepository = FlightSearchRepository(apiClient)
+        // Initialize FlightSearchViewModel using ViewModelProvider and Factory
+        val factory = FlightSearchViewModelFactory(flightSearchRepository)
+        flightSearchViewModel = ViewModelProvider(this, factory).get(FlightSearchViewModel::class.java)
+
+
+
+
 
         //logger = (application as MyApp).logger
         //logger.logInteraction("FlightSearchActivity:")
@@ -218,6 +239,46 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         binding.headerTitle.text = "$departAirportCode to $arriveAirportCode"
         //logger.logInteraction("Flight Results Displayed for $departAirportCode to $arriveAirportCode")
 
+
+
+
+        // Set up RecyclerView's layout manager
+//        binding.flightResultsRecyclerView.layoutManager = LinearLayoutManager(this)
+//
+//        // Observe the flight results from the ViewModel
+//        flightSearchViewModel.flightResults.observe(this) { flights ->
+//            if (binding.flightResultsRecyclerView.adapter == null) {
+//                // Attach the adapter only once
+//                val adapter = FlightAdapter(flights, this)
+//                binding.flightResultsRecyclerView.adapter = adapter
+//            } else {
+//                // Update the adapter's dataset
+//                (binding.flightResultsRecyclerView.adapter as FlightAdapter).apply {
+//                    //notifyDataSetChanged()
+//                }
+//            }
+//        }
+//
+//        flightSearchViewModel.isLoading.observe(this) { isLoading ->
+//            // Update loading spinner visibility
+//            //binding.loadingSpinner.visibility = if (isLoading) View.VISIBLE else View.GONE
+//        }
+//
+//        flightSearchViewModel.errorMessage.observe(this) { errorMessage ->
+//            // Handle error messages
+//            if (!errorMessage.isNullOrEmpty()) {
+//                binding.errorTextView.text = errorMessage
+//                binding.errorTextView.visibility = View.VISIBLE
+//            } else {
+//                binding.errorTextView.visibility = View.GONE
+//            }
+//        }
+
+
+
+
+
+        flightSearchViewModel.getAirportDepartures("LAX", "")
         val flightList = listOf(
             FlightInfo("08:00", "10:00", departCity , arriveCity, departAirportCode, arriveAirportCode,"7h", "Spirit Airlines", "$500", roundTrip),
             FlightInfo("08:15", "14:45", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 30m", "Spirit Airlines", "$500", roundTrip),
