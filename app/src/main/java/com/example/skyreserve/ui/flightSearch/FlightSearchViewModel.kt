@@ -34,13 +34,13 @@ class FlightSearchViewModel constructor(private val flightSearchRepository: Flig
      *
      * @param departAirportCode The IATA code of the departure airport (e.g., "LAX").
      */
-    fun getAirportDepartures(departAirportCode: String) {
+    fun getAirportDepartures(departAirportCode: String, departureDate: String) {
         _isLoading.value = true
         _errorMessage.value = null
 
         viewModelScope.launch {
             try {
-                val response = flightSearchRepository.getAirportDepartures(departAirportCode)
+                val response = flightSearchRepository.getAirportDepartures(departAirportCode, departureDate)
                 if (response.isSuccess && response.data != null) {
                     // Map API flights to domain model
                     val flightInfoList = response.data.scheduledDepartures?.let {

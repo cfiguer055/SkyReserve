@@ -6,6 +6,7 @@ import com.example.skyreserve.api.ApiClient
 import com.example.skyreserve.model.Flight
 import com.example.skyreserve.model.FlightInfo
 import com.example.skyreserve.model.FlightResponse
+import java.time.LocalDate
 
 
 import java.time.ZoneId
@@ -25,17 +26,18 @@ class FlightSearchRepository(private val apiClient: ApiClient) {
 
 
 
-    suspend fun getAirportDepartures(departAirportCode: String): ApiClient.ApiResponse<FlightResponse> {
+    suspend fun getAirportDepartures(departAirportCode: String, departureDate: String)
+    : ApiClient.ApiResponse<FlightResponse> {
         Log.d(ContentValues.TAG, "getAirportDepartures: $departAirportCode")
-        Log.d(ContentValues.TAG, "Start DateTime: ${getCurrentDateTimeISO()}")
-        Log.d(ContentValues.TAG, "End DateTime: ${getEndDateTimeISO()}")
+        Log.d(ContentValues.TAG, "Start DateTime: ${getStartDateTimeISO(departureDate)}")
+        Log.d(ContentValues.TAG, "End DateTime: ${getEndDateTimeISO(departureDate)}")
 //        Log.d(ContentValues.TAG, "API Key: ${BuildConfig.API_KEY}")
 
         val endpoint = "airports/$departAirportCode/flights/scheduled_departures"
         val queryParams = mapOf(
             // temp values
-            "start" to getCurrentDateTimeISO(),
-            "end" to getEndDateTimeISO(),
+            "start" to getStartDateTimeISO(departureDate),
+            "end" to getEndDateTimeISO(departureDate),
             "max_pages" to "5"
         )
 //        val queryParams = mapOf(
@@ -101,23 +103,55 @@ class FlightSearchRepository(private val apiClient: ApiClient) {
 
 
     /**
-     * Returns the current date-time in ISO 8601 format without fractional seconds and with encoded colons.
+     * Returns the start date-time (00:00 UTC) for the given departure date in ISO 8601 format.
      */
-    private fun getCurrentDateTimeISO(): String {
-        val now = ZonedDateTime.now(ZoneId.of("UTC")).truncatedTo(ChronoUnit.SECONDS)
-        val isoString = now.format(DateTimeFormatter.ISO_INSTANT)
-        return isoString
-        //return encodeTimeInDateTime(isoString)
+    private fun getStartDateTimeISO(departureDate: String): String {
+        // val formatter = DateTimeFormatter.ofPattern("dd MMM").withZone(ZoneId.of("UTC"))
+        val currentYear = ZonedDateTime.now(ZoneId.of("UTC")).year
+
+        // Parse the date for the current year
+        var parsedDate = LocalDate.parse("$departureDate $currentYear", DateTimeFormatter.ofPattern("dd MMM yyyy"))
+
+        // If the parsed date is before today, use the next year
+        if (parsedDate.isBefore(LocalDate.now(ZoneId.of("UTC")))) {
+            parsedDate = parsedDate.plusYears(1)
+        }
+
+        // Create the ZonedDateTime for 00:00
+        val startDateTime = parsedDate.atStartOfDay(ZoneId.of("UTC")).truncatedTo(ChronoUnit.SECONDS)
+        return startDateTime.format(DateTimeFormatter.ISO_INSTANT)
     }
+//    private fun getCurrentDateTimeISO(departureDate: String): String {
+//        val now = ZonedDateTime.now(ZoneId.of("UTC")).truncatedTo(ChronoUnit.SECONDS)
+//        val isoString = now.format(DateTimeFormatter.ISO_INSTANT)
+//        return isoString
+//        //return encodeTimeInDateTime(isoString)
+//    }
     /**
-     * Returns the end date-time (1 day from now) in ISO 8601 format without fractional seconds and with encoded colons.
+     * Returns the end date-time (23:59:59 UTC) for the given departure date in ISO 8601 format.
      */
-    private fun getEndDateTimeISO(): String {
-        val endDate = ZonedDateTime.now(ZoneId.of("UTC")).plusDays(1).truncatedTo(ChronoUnit.SECONDS)
-        val isoString = endDate.format(DateTimeFormatter.ISO_INSTANT)
-        return isoString
-        //return encodeTimeInDateTime(isoString)
+    private fun getEndDateTimeISO(departureDate: String): String {
+        //val formatter = DateTimeFormatter.ofPattern("dd MMM").withZone(ZoneId.of("UTC"))
+        val currentYear = ZonedDateTime.now(ZoneId.of("UTC")).year
+
+        // Parse the date for the current year
+        var parsedDate = LocalDate.parse("$departureDate $currentYear", DateTimeFormatter.ofPattern("dd MMM yyyy"))
+
+        // If the parsed date is before today, use the next year
+        if (parsedDate.isBefore(LocalDate.now(ZoneId.of("UTC")))) {
+            parsedDate = parsedDate.plusYears(1)
+        }
+
+        // Create the ZonedDateTime for 23:59:59
+        val endDateTime = parsedDate.plusDays(1).atStartOfDay(ZoneId.of("UTC")).minusSeconds(1)
+        return endDateTime.format(DateTimeFormatter.ISO_INSTANT)
     }
+//    private fun getEndDateTimeISO(departureDate: String): String {
+//        val endDate = ZonedDateTime.now(ZoneId.of("UTC")).plusDays(1).truncatedTo(ChronoUnit.SECONDS)
+//        val isoString = endDate.format(DateTimeFormatter.ISO_INSTANT)
+//        return isoString
+//        //return encodeTimeInDateTime(isoString)
+//    }
 
     /**
      * Encodes the time portion of an ISO 8601 date-time string by replacing ':' with '%3A'.

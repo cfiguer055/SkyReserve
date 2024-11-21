@@ -13,6 +13,7 @@ class ReservationConfirmationActivity: AppCompatActivity() {
     private lateinit var binding: ActivityReservationConfirmationBinding
     private lateinit var logger: UserInteractionLogger
 
+
     private var baggageCount = 1
     private var maxBaggageCount = 5
 
@@ -24,6 +25,8 @@ class ReservationConfirmationActivity: AppCompatActivity() {
     private lateinit var arrivalAirport: String
     private lateinit var flightDuration: String
     private lateinit var airline: String
+
+    private lateinit var flightInfo: FlightInfo
 
     private var numPassengers : Int = 1
     private var basePrice: Double = 0.00
@@ -86,7 +89,7 @@ class ReservationConfirmationActivity: AppCompatActivity() {
 
     private fun loadIntentData() {
         // Retrieve the data from the intent
-        val flightInfo = intent.getSerializableExtra("EXTRA_FLIGHT_INFO") as? FlightInfo
+        flightInfo = (intent.getSerializableExtra("EXTRA_FLIGHT_INFO") as? FlightInfo)!!
         flightInfo?.let {
             // Assign the flightInfo data to variables
             departureCity = it.departureCity.toString()
@@ -136,6 +139,7 @@ class ReservationConfirmationActivity: AppCompatActivity() {
         //logger.logInteraction("Navigating To CheckOutActivity - TASK 2 Complete")
 
         val intent = Intent(this, CheckOutActivity::class.java)
+        intent.putExtra("EXTRA_FLIGHT_INFO", flightInfo)
         intent.putExtra("EXTRA_NUM_PASSENGERS", numPassengers)
         intent.putExtra("EXTRA_BASE_PRICE", basePrice)
         intent.putExtra("EXTRA_SEAT_CHANGE_FEE", seatChangeFee)
