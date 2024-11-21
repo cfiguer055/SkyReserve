@@ -7,6 +7,7 @@ plugins {
     id "org.jetbrains.dokka"
 }
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.dagger.hilt.android'
 
@@ -230,6 +231,14 @@ dependencies {
     // MockK, a Kotlin mocking library, which can mock static methods and constructors
     testImplementation "io.mockk:mockk:1.10.0"
 
+
+
+    // Moshi for JSON parsing
+    implementation 'com.squareup.moshi:moshi:1.14.0'
+    implementation 'com.squareup.moshi:moshi-kotlin:1.14.0'
+
+    // Optional: Moshi Codegen for Kotlin Code Generation (Recommended)
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.14.0'
 }
 kapt {
     correctErrorTypes true

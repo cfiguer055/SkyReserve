@@ -11,9 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +32,8 @@ import com.example.skyreserve.databinding.DialogAirportAutoCompleteBinding
 import com.example.skyreserve.repository.FlightSearchRepository
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.lifecycle.Observer
+
 
 class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickListener {
     private lateinit var flightSearchViewModel: FlightSearchViewModel
@@ -63,6 +68,7 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         // Initialize FlightSearchViewModel using ViewModelProvider and Factory
         val factory = FlightSearchViewModelFactory(flightSearchRepository)
         flightSearchViewModel = ViewModelProvider(this, factory).get(FlightSearchViewModel::class.java)
+
 
 
 
@@ -220,6 +226,38 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         //logger.logInteraction("Error State Reset")
     }
 
+    /**
+     * Fetch flights from the departure airport.
+     */
+    private fun fetchFlights(departAirportCode: String, departureDate: String) {
+        flightSearchViewModel.getAirportDepartures(departAirportCode, departureDate)
+        flightSearchViewModel.flightResults.observe(this) { flightInfoList ->
+            if (flightInfoList.isNullOrEmpty()) {
+                binding.flightResultsRecyclerView.visibility = View.GONE
+                binding.errorTextView.text = getString(R.string.no_flights_found)
+                binding.errorTextView.visibility = View.VISIBLE
+            } else {
+                binding.errorTextView.visibility = View.GONE
+
+            }
+        }
+    }
+
+
+    /**
+     * Filter flights based on destination airport code.
+     */
+    private fun filterFlights(destinationAirportCode: String) {
+        flightSearchViewModel.filterFlightsByDestination(destinationAirportCode)
+    }
+
+    /**
+     * Reset flight filter to show all flights.
+     */
+    private fun resetFilter() {
+        flightSearchViewModel.resetFlightFilter()
+    }
+
 
     private fun showFlightResults() {
         // consider leaving header visible the entire time, just change the navigation for back button
@@ -236,75 +274,56 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         val arriveAirportCode = arriveParts.getOrNull(0) ?: "" // This will get "LAX" or an empty string if the part is not found.
         val arriveCity = arriveParts.getOrNull(1)?.split(",")?.getOrNull(0) ?: ""
 
+        val departureDate = binding.departureDateEditText.text.toString()
+
+
+
         binding.headerTitle.text = "$departAirportCode to $arriveAirportCode"
         //logger.logInteraction("Flight Results Displayed for $departAirportCode to $arriveAirportCode")
 
+        fetchFlights(departAirportCode, departureDate)
 
+        flightSearchViewModel.flightResults.observeOnce(this) { flightInfoList ->
+            if (flightInfoList != null) {
+                // Filter the flights based on the arrival airport code
+                val filteredFlights = flightInfoList.filter { flight ->
+                    flight.arrivalAirportCode.equals(arriveAirportCode, ignoreCase = true)
+                }
 
-
-        // Set up RecyclerView's layout manager
-//        binding.flightResultsRecyclerView.layoutManager = LinearLayoutManager(this)
-//
-//        // Observe the flight results from the ViewModel
-//        flightSearchViewModel.flightResults.observe(this) { flights ->
-//            if (binding.flightResultsRecyclerView.adapter == null) {
-//                // Attach the adapter only once
-//                val adapter = FlightAdapter(flights, this)
-//                binding.flightResultsRecyclerView.adapter = adapter
-//            } else {
-//                // Update the adapter's dataset
-//                (binding.flightResultsRecyclerView.adapter as FlightAdapter).apply {
-//                    //notifyDataSetChanged()
-//                }
-//            }
-//        }
-//
-//        flightSearchViewModel.isLoading.observe(this) { isLoading ->
-//            // Update loading spinner visibility
-//            //binding.loadingSpinner.visibility = if (isLoading) View.VISIBLE else View.GONE
-//        }
-//
-//        flightSearchViewModel.errorMessage.observe(this) { errorMessage ->
-//            // Handle error messages
-//            if (!errorMessage.isNullOrEmpty()) {
-//                binding.errorTextView.text = errorMessage
-//                binding.errorTextView.visibility = View.VISIBLE
-//            } else {
-//                binding.errorTextView.visibility = View.GONE
-//            }
-//        }
-
-
-
-
-
-        flightSearchViewModel.getAirportDepartures("LAX", "")
-        val flightList = listOf(
-            FlightInfo("08:00", "10:00", departCity , arriveCity, departAirportCode, arriveAirportCode,"7h", "Spirit Airlines", "$500", roundTrip),
-            FlightInfo("08:15", "14:45", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 30m", "Spirit Airlines", "$500", roundTrip),
-            FlightInfo("09:30", "15:00", departCity, arriveCity, departAirportCode, arriveAirportCode, "5h 30m", "Delta", "$450", roundTrip),
-            FlightInfo("10:45", "17:15", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 30m", "United", "$470", roundTrip),
-            FlightInfo("11:20", "17:05", departCity, arriveCity, departAirportCode, arriveAirportCode, "5h 45m", "Southwest", "$530", roundTrip),
-            FlightInfo("12:50", "19:35", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 45m", "American Airlines", "$550", roundTrip),
-            FlightInfo("13:10", "18:55", departCity, arriveCity, departAirportCode, arriveAirportCode, "5h 45m", "JetBlue", "$520", roundTrip),
-            FlightInfo("14:00", "20:15", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 15m", "Alaska Airlines", "$510", roundTrip),
-            FlightInfo("15:35", "22:20", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 45m", "Frontier", "$435", roundTrip),
-            FlightInfo("16:05", "22:50", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 45m", "Spirit", "$499", roundTrip),
-            FlightInfo("17:40", "23:25", departCity, arriveCity, departAirportCode, arriveAirportCode, "5h 45m", "Delta", "$460", roundTrip),
-            FlightInfo("18:25", "00:10", departCity, arriveCity, departAirportCode, arriveAirportCode, "5h 45m", "United", "$480", roundTrip),
-            FlightInfo("19:15", "01:00", departCity, arriveCity, departAirportCode, arriveAirportCode, "5h 45m", "Southwest", "$540", roundTrip),
-            FlightInfo("20:30", "03:15", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 45m", "American Airlines", "$560", roundTrip),
-            FlightInfo("21:45", "04:30", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 45m", "JetBlue", "$525", roundTrip),
-            FlightInfo("22:50", "05:35", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 45m", "Alaska Airlines", "$515", roundTrip)
-        )
-
-        // Initialize the RecyclerView and Adapter
-        val recyclerView = findViewById<RecyclerView>(R.id.flightResultsRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        val adapter = FlightAdapter(flightList, this) // Pass your flight data here
-        recyclerView.adapter = adapter
+                // Pass the filtered flights to the RecyclerView setup
+                if (filteredFlights.isNotEmpty()) {
+                    setupRecyclerView(filteredFlights)
+                } else {
+                    showToast("No flights found for arrival airport $arriveAirportCode")
+                    onBackPressed()
+                }
+            } else {
+                showToast("No flights found")
+                onBackPressed()
+            }
+        }
     }
+
+    fun <T> LiveData<T>.observeOnce(owner: LifecycleOwner, onChange: (T?) -> Unit) {
+        this.observe(owner, object : Observer<T> {
+            override fun onChanged(t: T?) {
+                onChange(t)
+                this@observeOnce.removeObserver(this)
+            }
+        })
+    }
+
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun setupRecyclerView(flightList: List<FlightInfo>) {
+        val adapter = FlightAdapter(flightList, this) // `this` is your OnFlightClickListener
+        binding.flightResultsRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.flightResultsRecyclerView.adapter = adapter
+    }
+
 
     private fun showFlightSearch() {
         binding.searchFlight.visibility = View.VISIBLE
@@ -347,22 +366,6 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
             showFlightSearch()
         }
 
-
-//        val data = Intent()
-//        // Put extras in the Intent
-//        data.putExtra("ROUND_TRIP", binding.radioGroup.checkedRadioButtonId)
-//        data.putExtra("DEPART_AIRPORT", binding.departButton.text.toString())
-//        data.putExtra("ARRIVE_AIRPORT", binding.arriveButton.text.toString())
-//        data.putExtra("DEPART_DATE", binding.departureDateEditText.text.toString())
-////        data.putExtra("RETURN_DATE", binding.returnDateEditText.text.toString())
-//        data.putExtra("NUM_PASSENGERS", binding.passengerCountTextView.text.toString())
-//        // Other extras...
-//
-//        // Set the result with a result code and the Intent
-//        setResult(Activity.RESULT_OK, data)
-//
-//        // Finish the current activity to go back to HomeActivity
-//        // finish() temp
     }
 
     override fun onFlightClick(selectedFlightInfo: FlightInfo) {

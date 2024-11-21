@@ -16,10 +16,13 @@ import com.example.skyreserve.R
 import com.example.skyreserve.ui.success.SuccessActivity
 import com.example.skyreserve.util.UserInteractionLogger
 import com.example.skyreserve.databinding.ActivityCheckOutBinding
+import com.example.skyreserve.model.FlightInfo
 
 class CheckOutActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCheckOutBinding
     private lateinit var logger: UserInteractionLogger
+
+    private lateinit var flightInfo: FlightInfo
 
     private var numPassengers: Int = 1
     private var basePrice: Double = 0.00
@@ -214,6 +217,7 @@ class CheckOutActivity : AppCompatActivity() {
 
     private fun loadIntentData() {
         // Retrieve the data from the intent
+        flightInfo = (intent.getSerializableExtra("EXTRA_FLIGHT_INFO") as? FlightInfo)!!
         numPassengers = intent.getIntExtra("EXTRA_NUM_PASSENGERS", 1)
         basePrice = intent.getDoubleExtra("EXTRA_BASE_PRICE", 0.00)
         seatChangeFee = intent.getDoubleExtra("EXTRA_SEAT_CHANGE_FEE", 0.00)

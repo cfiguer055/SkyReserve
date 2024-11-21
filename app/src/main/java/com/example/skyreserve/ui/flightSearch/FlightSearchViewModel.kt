@@ -9,14 +9,18 @@ import androidx.lifecycle.viewModelScope
 import com.example.skyreserve.model.FlightInfo
 import com.example.skyreserve.repository.FlightSearchRepository
 import kotlinx.coroutines.launch
+import androidx.lifecycle.*
 
 
 class FlightSearchViewModel constructor(private val flightSearchRepository: FlightSearchRepository) : ViewModel() {
     private val _isFormFilled = MutableLiveData<Boolean>()
     val isFormFilled: LiveData<Boolean> get() = _isFormFilled
 
-    private val _flightResults = MutableLiveData<List<FlightInfo>>()
-    val flightResults: LiveData<List<FlightInfo>> = _flightResults
+    private val _flightResults = MutableLiveData<List<FlightInfo>?>()
+    val flightResults: MutableLiveData<List<FlightInfo>?> get() = _flightResults
+
+    private val _filteredFlightResults = MutableLiveData<List<FlightInfo>?>()
+    val filteredFlightResults: MutableLiveData<List<FlightInfo>?> get() = _filteredFlightResults
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -24,22 +28,109 @@ class FlightSearchViewModel constructor(private val flightSearchRepository: Flig
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> get() = _errorMessage
 
-    fun getAirportDepartures(departAirportCode: String, arriveAirportCode: String) {
+
+    /**
+     * Fetches airport departures and updates the flight results.
+     *
+     * @param departAirportCode The IATA code of the departure airport (e.g., "LAX").
+     */
+    fun getAirportDepartures(departAirportCode: String, departureDate: String) {
         _isLoading.value = true
         _errorMessage.value = null
 
         viewModelScope.launch {
             try {
-                val flights = flightSearchRepository.getAirportDepartures(departAirportCode)
-                Log.d(TAG, "Flight Results: $flights")
-                // _flightResults.value = flights
+                val response = flightSearchRepository.getAirportDepartures(departAirportCode, departureDate)
+                if (response.isSuccess && response.data != null) {
+                    // Map API flights to domain model
+                    val flightInfoList = response.data.scheduledDepartures?.let {
+                        flightSearchRepository.mapFlightsToFlightInfo(
+                            it
+                        )
+                    }
+                    _flightResults.value = flightInfoList
+                    _filteredFlightResults.value = flightInfoList // Initialize with all flights
+
+                    // Log details for each scheduled departure flight
+                    if (flightInfoList != null) {
+                        logEachScheduledDepartureFlight(flightInfoList)
+                    }
+                } else {
+                    _errorMessage.value = response.errorMessage ?: "Unknown error occurred."
+                    Log.e(TAG, "Error fetching departures: ${response.errorMessage}")
+                }
             } catch (e: Exception) {
                 _errorMessage.value = e.message
+                Log.e(TAG, "Exception in getAirportDepartures", e)
             } finally {
                 _isLoading.value = false
             }
         }
     }
+    private fun logEachScheduledDepartureFlight(flightInfoList: List<FlightInfo>) {
+        Log.d(TAG, "Logging ${flightInfoList.size} scheduled departure flights:")
+        flightInfoList.forEachIndexed { index, flightInfo ->
+            Log.d(
+                TAG,
+                """
+                Flight ${index + 1}:
+                    Departure Time: ${flightInfo.departureTime}
+                    Arrival Time: ${flightInfo.arrivalTime}
+                    Departure City: ${flightInfo.departureCity} (${flightInfo.departureAirportCode})
+                    Arrival City: ${flightInfo.arrivalCity} (${flightInfo.arrivalAirportCode})
+                    Duration: ${flightInfo.duration}
+                    Airline: ${flightInfo.airline}
+                    Price: ${flightInfo.price}
+                    Trip Type: ${flightInfo.tripType}
+                """.trimIndent()
+            )
+        }
+    }
+//    fun getAirportDepartures(departAirportCode: String) {
+//        _isLoading.value = true
+//        _errorMessage.value = null
+//
+//        viewModelScope.launch {
+//            try {
+//                val flights = flightSearchRepository.getAirportDepartures(departAirportCode)
+//                Log.d(TAG, "Flight Results: $flights")
+//                // _flightResults.value = flights
+//            } catch (e: Exception) {
+//                _errorMessage.value = e.message
+//            } finally {
+//                _isLoading.value = false
+//            }
+//        }
+//    }
+
+    /**
+     * Filters the flight results based on the destination airport code.
+     *
+     * @param destinationAirportCode The IATA code of the destination airport (e.g., "DEN").
+     */
+    fun filterFlightsByDestination(destinationAirportCode: String) {
+        val currentFlights = _flightResults.value
+        if (currentFlights != null) {
+            val filteredList = currentFlights.filter { it.arrivalAirportCode.equals(destinationAirportCode, ignoreCase = true) }
+            _filteredFlightResults.value = filteredList
+            Log.d(TAG, "Filtered flights count: ${filteredList.size}")
+        }
+    }
+
+    /**
+     * Resets the flight filter to show all flights.
+     */
+    fun resetFlightFilter() {
+        _filteredFlightResults.value = _flightResults.value
+        Log.d(TAG, "Flight filter reset. Total flights: ${_flightResults.value?.size ?: 0}")
+    }
+
+
+
+
+
+
+
 
     fun checkFormFilled(
         departAirport: String,

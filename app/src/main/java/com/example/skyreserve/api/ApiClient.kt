@@ -1,6 +1,10 @@
 package com.example.skyreserve.api
 
 import android.util.Log
+import com.example.skyreserve.model.FlightResponse
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.*
@@ -12,13 +16,20 @@ import java.util.concurrent.TimeUnit
 class ApiClient(private val baseUrl: String = DEFAULT_BASE_URL) {
 
     private val client: OkHttpClient
+    private val moshi: Moshi = Moshi.Builder()
+        .add(KotlinJsonAdapterFactory())
+        .build()
+    private val flightResponseAdapter: JsonAdapter<FlightResponse> = moshi.adapter(FlightResponse::class.java)
+
 
     companion object {
         const val DEFAULT_BASE_URL = "https://aeroapi.flightaware.com/aeroapi"
         const val TAG = "ApiClient"
     }
 
+
     init {
+
         // Initialize OkHttpClient with Logging Interceptor and Timeouts
         val logging = HttpLoggingInterceptor { message -> Log.d(TAG, message) }
         logging.level = HttpLoggingInterceptor.Level.BODY
@@ -43,7 +54,7 @@ class ApiClient(private val baseUrl: String = DEFAULT_BASE_URL) {
         endpoint: String,
         queryParams: Map<String, String> = emptyMap(),
         headers: Map<String, String> = emptyMap()
-    ): ApiResponse = withContext(Dispatchers.IO) {
+    ): ApiResponse<FlightResponse> = withContext(Dispatchers.IO) {
         val url = buildUrl(endpoint, queryParams)
         Log.d(TAG, "GET request URL: $url")
 
@@ -91,9 +102,9 @@ class ApiClient(private val baseUrl: String = DEFAULT_BASE_URL) {
      * Executes an HTTP request and processes the response.
      *
      * @param request The HTTP request to execute.
-     * @return An ApiResponse containing the response details.
+     * @return An ApiResponse containing the parsed FlightResponse or error details.
      */
-    private suspend fun executeRequest(request: Request): ApiResponse {
+    private fun executeRequest(request: Request): ApiResponse<FlightResponse> {
         Log.d(TAG, "Executing request: ${request.url}")
 
         return try {
@@ -104,22 +115,47 @@ class ApiClient(private val baseUrl: String = DEFAULT_BASE_URL) {
 
                 if (!response.isSuccessful) {
                     Log.e(TAG, "Unsuccessful response: ${response.code}, body: $responseBody")
-                    return@use ApiResponse(false, response.code, responseBody)
+                    // Extract meaningful error message if available
+                    val errorMsg = extractErrorMessage(responseBody)
+                    return@use ApiResponse(false, response.code, null, "Unsuccessful response", errorMsg)
                 }
 
-                Log.d(TAG, "Response received: isSuccess=${response.isSuccessful}, statusCode=${response.code}")
-                Log.d(TAG, "Response body: ${responseBody?.take(100)}...") // Log first 100 chars
-
-                ApiResponse(true, response.code, responseBody)
+                val flightResponse = flightResponseAdapter.fromJson(responseBody!!)
+                if (flightResponse != null) {
+                    Log.d(TAG, "Response parsed successfully")
+                    ApiResponse(true, response.code, flightResponse, null, null)
+                } else {
+                    Log.e(TAG, "Failed to parse response")
+                    ApiResponse(false, response.code, null, "Failed to parse response", "Failed to parse response")
+                }
             }
         } catch (e: IOException) {
             Log.e(TAG, "Request execution failed", e)
-            ApiResponse(false, -1, e.message)
+            ApiResponse(false, -1, null, e.message, e.message)
         }
     }
 
     /**
+     * Extracts a meaningful error message from the response body.
+     *
+     * @param responseBody The raw response body as a string.
+     * @return A user-friendly error message.
+     */
+    private fun extractErrorMessage(responseBody: String?): String {
+        // Implement parsing of the error message from the responseBody if the API provides structured error responses.
+        // For now, return a generic message or the raw response.
+        return responseBody ?: "Unknown error occurred."
+    }
+
+
+    /**
      * Data class representing the API response.
      */
-    data class ApiResponse(val isSuccess: Boolean, val statusCode: Int, val responseBody: String?)
+    data class ApiResponse<T>(
+        val isSuccess: Boolean,
+        val statusCode: Int,
+        val data: T?,
+        val responseBody: String?,
+        val errorMessage: String? ) {
+    }
 }
