@@ -68,6 +68,7 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
 
 
 
+
         //logger = (application as MyApp).logger
         //logger.logInteraction("FlightSearchActivity:")
 
@@ -220,6 +221,27 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
         //logger.logInteraction("Error State Reset")
     }
 
+    /**
+     * Fetch flights from the departure airport.
+     */
+    private fun fetchFlights(departAirportCode: String) {
+        flightSearchViewModel.getAirportDepartures(departAirportCode)
+    }
+
+    /**
+     * Filter flights based on destination airport code.
+     */
+    private fun filterFlights(destinationAirportCode: String) {
+        flightSearchViewModel.filterFlightsByDestination(destinationAirportCode)
+    }
+
+    /**
+     * Reset flight filter to show all flights.
+     */
+    private fun resetFilter() {
+        flightSearchViewModel.resetFlightFilter()
+    }
+
 
     private fun showFlightResults() {
         // consider leaving header visible the entire time, just change the navigation for back button
@@ -278,7 +300,8 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
 
 
 
-        flightSearchViewModel.getAirportDepartures("LAX", "")
+        //flightSearchViewModel.getAirportDepartures("LAX")
+        fetchFlights("LAX")
         val flightList = listOf(
             FlightInfo("08:00", "10:00", departCity , arriveCity, departAirportCode, arriveAirportCode,"7h", "Spirit Airlines", "$500", roundTrip),
             FlightInfo("08:15", "14:45", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 30m", "Spirit Airlines", "$500", roundTrip),

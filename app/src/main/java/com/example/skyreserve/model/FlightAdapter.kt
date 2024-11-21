@@ -35,14 +35,14 @@ class FlightAdapter(private val flightList: List<FlightInfo>, private val listen
         holder.departureArrivalTimeTextView.text = "${flight.departureTime} - ${flight.arrivalTime}"
 
         holder.departureArrivalCityTextView.text = "${flight.departureTime} - ${flight.arrivalTime}"
-        holder.tripCostTextView.text = "${flight.cost}"
+        holder.tripCostTextView.text = "${flight.price}"
 
         holder.departureArrivalCityTextView.text = "${flight.departureCity} - ${flight.arrivalCity}"
-        holder.tripTypeTextView.text = "${flight.flightType}"
+        holder.tripTypeTextView.text = "${flight.tripType}"
 
-        holder.departureArrivalAirportTextView.text = "${flight.departureAirport} - ${flight.arrivalAirport}"
+        holder.departureArrivalAirportTextView.text = "${flight.departureAirportCode} - ${flight.arrivalAirportCode}"
 
-        holder.flightDurationTextView.text = "${flight.flightDuration}"
+        holder.flightDurationTextView.text = "${flight.duration}"
 
         holder.airlineTextView.text = "${flight.airline}"
 

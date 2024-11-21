@@ -89,15 +89,15 @@ class ReservationConfirmationActivity: AppCompatActivity() {
         val flightInfo = intent.getSerializableExtra("EXTRA_FLIGHT_INFO") as? FlightInfo
         flightInfo?.let {
             // Assign the flightInfo data to variables
-            departureCity = it.departureCity
-            arrivalCity = it.arrivalCity
-            departureTime = it.departureTime
-            arrivalTime = it.arrivalTime
-            departureAirport = it.departureAirport
-            arrivalAirport = it.arrivalAirport
-            flightDuration = it.flightDuration
-            airline = it.airline
-            basePrice = parsePrice(it.cost)
+            departureCity = it.departureCity.toString()
+            arrivalCity = it.arrivalCity.toString()
+            departureTime = it.departureTime.toString()
+            arrivalTime = it.arrivalTime.toString()
+            departureAirport = it.departureAirportCode.toString()
+            arrivalAirport = it.arrivalAirportCode.toString()
+            flightDuration = it.duration.toString()
+            airline = it.airline.toString()
+            basePrice = it.price?.let { it1 -> parsePrice(it1) }!!
         }
         numPassengers = intent.getIntExtra("NUM_PASSENGERS", 1)
         email = intent.getStringExtra("EXTRA_EMAIL") ?: ""

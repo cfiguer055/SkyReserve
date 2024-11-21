@@ -1,8 +1,11 @@
 package com.example.skyreserve.repository
 import android.content.ContentValues
 import android.util.Log
-import com.example.skyreserve.BuildConfig
+import com.example.skyreserve.BuildConfig.API_KEY
 import com.example.skyreserve.api.ApiClient
+import com.example.skyreserve.model.Flight
+import com.example.skyreserve.model.FlightInfo
+import com.example.skyreserve.model.FlightResponse
 
 
 import java.time.ZoneId
@@ -22,7 +25,7 @@ class FlightSearchRepository(private val apiClient: ApiClient) {
 
 
 
-    suspend fun getAirportDepartures(departAirportCode: String): ApiClient.ApiResponse {
+    suspend fun getAirportDepartures(departAirportCode: String): ApiClient.ApiResponse<FlightResponse> {
         Log.d(ContentValues.TAG, "getAirportDepartures: $departAirportCode")
         Log.d(ContentValues.TAG, "Start DateTime: ${getCurrentDateTimeISO()}")
         Log.d(ContentValues.TAG, "End DateTime: ${getEndDateTimeISO()}")
@@ -42,7 +45,7 @@ class FlightSearchRepository(private val apiClient: ApiClient) {
 
         val headers = mapOf(
             "Accept" to "application/json; charset=UTF-8",
-            "x-apikey" to BuildConfig.API_KEY // Replace with your actual API key
+            "x-apikey" to API_KEY // Replace with your actual API key
         )
 
         val response = apiClient.getAsync(endpoint, queryParams, headers)
@@ -53,14 +56,50 @@ class FlightSearchRepository(private val apiClient: ApiClient) {
     }
 
     /**
-     * Encodes the time portion of an ISO 8601 date-time string by replacing ':' with '%3A'.
+     * Maps a list of Flight objects to a list of FlightInfo domain models.
      *
-     * @param dateTime The ISO 8601 date-time string (e.g., "2024-11-20T19:59:59Z").
-     * @return The encoded date-time string (e.g., "2024-11-20T19%3A59%3A59Z").
+     * @param flights The list of Flight objects from the API.
+     * @return A list of FlightInfo domain models.
      */
-//    private fun encodeTimeInDateTime(dateTime: String): String {
-//        return dateTime.replace(":", "%3A")
-//    }
+    fun mapFlightsToFlightInfo(flights: List<Flight>): List<FlightInfo> {
+        return flights.map { flight ->
+            FlightInfo(
+                departureTime = flight.scheduled_out?.substring(11, 16) ?: "Unknown", // Extract "HH:mm"
+                arrivalTime = flight.scheduled_in?.substring(11, 16) ?: "Unknown", // Extract "HH:mm"
+                departureCity = flight.origin?.city ?: "Unknown",
+                arrivalCity = flight.destination?.city ?: "Unknown",
+                departureAirportCode = flight.origin?.code_iata ?: "Unknown",
+                arrivalAirportCode = flight.destination?.code_iata ?: "Unknown",
+                duration = if (flight.scheduled_out != null && flight.scheduled_in != null) {
+                    calculateDuration(flight.scheduled_out, flight.scheduled_in)
+                } else {
+                    "N/A" // Handle missing duration calculation
+                },
+                airline = flight.operator ?: "Unknown",
+                price = "$500", // Placeholder: Replace with actual pricing logic if available
+                tripType = "Round Trip" // Placeholder: Adjust based on actual trip type
+            )
+        }
+    }
+
+    /**
+     * Calculates the flight duration based on scheduled departure and arrival times.
+     *
+     * @param scheduledOut The scheduled departure time in ISO 8601 format.
+     * @param scheduledIn The scheduled arrival time in ISO 8601 format.
+     * @return The flight duration as a string (e.g., "5h 30m").
+     */
+    private fun calculateDuration(scheduledOut: String, scheduledIn: String): String {
+        val formatter = DateTimeFormatter.ISO_DATE_TIME
+        val departure = ZonedDateTime.parse(scheduledOut, formatter)
+        val arrival = ZonedDateTime.parse(scheduledIn, formatter)
+        val duration = java.time.Duration.between(departure, arrival)
+        val hours = duration.toHours()
+        val minutes = duration.toMinutes() % 60
+        return "${hours}h ${minutes}m"
+    }
+
+
     /**
      * Returns the current date-time in ISO 8601 format without fractional seconds and with encoded colons.
      */
@@ -79,6 +118,17 @@ class FlightSearchRepository(private val apiClient: ApiClient) {
         return isoString
         //return encodeTimeInDateTime(isoString)
     }
+
+    /**
+     * Encodes the time portion of an ISO 8601 date-time string by replacing ':' with '%3A'.
+     *
+     * @param dateTime The ISO 8601 date-time string (e.g., "2024-11-20T19:59:59Z").
+     * @return The encoded date-time string (e.g., "2024-11-20T19%3A59%3A59Z").
+     */
+//    private fun encodeTimeInDateTime(dateTime: String): String {
+//        return dateTime.replace(":", "%3A")
+//    }
+
 
     // Add more methods for other API endpoints
 
