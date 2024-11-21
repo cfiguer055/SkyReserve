@@ -8,4 +8,6 @@
 
     <!-- Accessibility -->
     <string name="signin_google">Sign in using your Google account</string>
+
+    <string name="no_flights_found">No Flights Found</string>
 </resources>

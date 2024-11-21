@@ -17,10 +17,10 @@ class FlightSearchViewModel constructor(private val flightSearchRepository: Flig
     val isFormFilled: LiveData<Boolean> get() = _isFormFilled
 
     private val _flightResults = MutableLiveData<List<FlightInfo>?>()
-    val flightResults: MutableLiveData<List<FlightInfo>?> = _flightResults
+    val flightResults: MutableLiveData<List<FlightInfo>?> get() = _flightResults
 
     private val _filteredFlightResults = MutableLiveData<List<FlightInfo>?>()
-    val filteredFlightResults: MutableLiveData<List<FlightInfo>?> = _filteredFlightResults
+    val filteredFlightResults: MutableLiveData<List<FlightInfo>?> get() = _filteredFlightResults
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading

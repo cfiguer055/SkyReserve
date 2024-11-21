@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -226,7 +227,18 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
      */
     private fun fetchFlights(departAirportCode: String) {
         flightSearchViewModel.getAirportDepartures(departAirportCode)
+        flightSearchViewModel.flightResults.observe(this) { flightInfoList ->
+            if (flightInfoList.isNullOrEmpty()) {
+                binding.flightResultsRecyclerView.visibility = View.GONE
+                binding.errorTextView.text = getString(R.string.no_flights_found)
+                binding.errorTextView.visibility = View.VISIBLE
+            } else {
+                binding.errorTextView.visibility = View.GONE
+                setupRecyclerView(flightInfoList)
+            }
+        }
     }
+
 
     /**
      * Filter flights based on destination airport code.
@@ -301,33 +313,53 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
 
 
         //flightSearchViewModel.getAirportDepartures("LAX")
-        fetchFlights("LAX")
-        val flightList = listOf(
-            FlightInfo("08:00", "10:00", departCity , arriveCity, departAirportCode, arriveAirportCode,"7h", "Spirit Airlines", "$500", roundTrip),
-            FlightInfo("08:15", "14:45", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 30m", "Spirit Airlines", "$500", roundTrip),
-            FlightInfo("09:30", "15:00", departCity, arriveCity, departAirportCode, arriveAirportCode, "5h 30m", "Delta", "$450", roundTrip),
-            FlightInfo("10:45", "17:15", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 30m", "United", "$470", roundTrip),
-            FlightInfo("11:20", "17:05", departCity, arriveCity, departAirportCode, arriveAirportCode, "5h 45m", "Southwest", "$530", roundTrip),
-            FlightInfo("12:50", "19:35", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 45m", "American Airlines", "$550", roundTrip),
-            FlightInfo("13:10", "18:55", departCity, arriveCity, departAirportCode, arriveAirportCode, "5h 45m", "JetBlue", "$520", roundTrip),
-            FlightInfo("14:00", "20:15", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 15m", "Alaska Airlines", "$510", roundTrip),
-            FlightInfo("15:35", "22:20", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 45m", "Frontier", "$435", roundTrip),
-            FlightInfo("16:05", "22:50", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 45m", "Spirit", "$499", roundTrip),
-            FlightInfo("17:40", "23:25", departCity, arriveCity, departAirportCode, arriveAirportCode, "5h 45m", "Delta", "$460", roundTrip),
-            FlightInfo("18:25", "00:10", departCity, arriveCity, departAirportCode, arriveAirportCode, "5h 45m", "United", "$480", roundTrip),
-            FlightInfo("19:15", "01:00", departCity, arriveCity, departAirportCode, arriveAirportCode, "5h 45m", "Southwest", "$540", roundTrip),
-            FlightInfo("20:30", "03:15", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 45m", "American Airlines", "$560", roundTrip),
-            FlightInfo("21:45", "04:30", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 45m", "JetBlue", "$525", roundTrip),
-            FlightInfo("22:50", "05:35", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 45m", "Alaska Airlines", "$515", roundTrip)
-        )
+        fetchFlights(departAirportCode)
+
+        flightSearchViewModel.flightResults.observe(this) { flightInfoList ->
+            if (flightInfoList != null) {
+                setupRecyclerView(flightInfoList)
+            } else {
+                showToast("No flights found")
+            }
+        }
+
+//        val flightList = listOf(
+//            FlightInfo("08:00", "10:00", departCity , arriveCity, departAirportCode, arriveAirportCode,"7h", "Spirit Airlines", "$500", roundTrip),
+//            FlightInfo("08:15", "14:45", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 30m", "Spirit Airlines", "$500", roundTrip),
+//            FlightInfo("09:30", "15:00", departCity, arriveCity, departAirportCode, arriveAirportCode, "5h 30m", "Delta", "$450", roundTrip),
+//            FlightInfo("10:45", "17:15", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 30m", "United", "$470", roundTrip),
+//            FlightInfo("11:20", "17:05", departCity, arriveCity, departAirportCode, arriveAirportCode, "5h 45m", "Southwest", "$530", roundTrip),
+//            FlightInfo("12:50", "19:35", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 45m", "American Airlines", "$550", roundTrip),
+//            FlightInfo("13:10", "18:55", departCity, arriveCity, departAirportCode, arriveAirportCode, "5h 45m", "JetBlue", "$520", roundTrip),
+//            FlightInfo("14:00", "20:15", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 15m", "Alaska Airlines", "$510", roundTrip),
+//            FlightInfo("15:35", "22:20", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 45m", "Frontier", "$435", roundTrip),
+//            FlightInfo("16:05", "22:50", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 45m", "Spirit", "$499", roundTrip),
+//            FlightInfo("17:40", "23:25", departCity, arriveCity, departAirportCode, arriveAirportCode, "5h 45m", "Delta", "$460", roundTrip),
+//            FlightInfo("18:25", "00:10", departCity, arriveCity, departAirportCode, arriveAirportCode, "5h 45m", "United", "$480", roundTrip),
+//            FlightInfo("19:15", "01:00", departCity, arriveCity, departAirportCode, arriveAirportCode, "5h 45m", "Southwest", "$540", roundTrip),
+//            FlightInfo("20:30", "03:15", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 45m", "American Airlines", "$560", roundTrip),
+//            FlightInfo("21:45", "04:30", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 45m", "JetBlue", "$525", roundTrip),
+//            FlightInfo("22:50", "05:35", departCity, arriveCity, departAirportCode, arriveAirportCode, "6h 45m", "Alaska Airlines", "$515", roundTrip)
+//        )
 
         // Initialize the RecyclerView and Adapter
-        val recyclerView = findViewById<RecyclerView>(R.id.flightResultsRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        val adapter = FlightAdapter(flightList, this) // Pass your flight data here
-        recyclerView.adapter = adapter
+//        val recyclerView = findViewById<RecyclerView>(R.id.flightResultsRecyclerView)
+//        recyclerView.layoutManager = LinearLayoutManager(this)
+//
+//        val adapter = FlightAdapter(flightList, this) // Pass your flight data here
+//        recyclerView.adapter = adapter
     }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun setupRecyclerView(flightList: List<FlightInfo>) {
+        val adapter = FlightAdapter(flightList, this) // `this` is your OnFlightClickListener
+        binding.flightResultsRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.flightResultsRecyclerView.adapter = adapter
+    }
+
 
     private fun showFlightSearch() {
         binding.searchFlight.visibility = View.VISIBLE
