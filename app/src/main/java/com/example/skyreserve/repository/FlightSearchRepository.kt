@@ -36,7 +36,7 @@ class FlightSearchRepository(private val apiClient: ApiClient) {
             // temp values
             "start" to getCurrentDateTimeISO(),
             "end" to getEndDateTimeISO(),
-            "max_pages" to "1"
+            "max_pages" to "5"
         )
 //        val queryParams = mapOf(
 //            "departure_airport" to departAirportCode,

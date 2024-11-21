@@ -234,7 +234,7 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
                 binding.errorTextView.visibility = View.VISIBLE
             } else {
                 binding.errorTextView.visibility = View.GONE
-                setupRecyclerView(flightInfoList)
+
             }
         }
     }
@@ -317,7 +317,17 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
 
         flightSearchViewModel.flightResults.observe(this) { flightInfoList ->
             if (flightInfoList != null) {
-                setupRecyclerView(flightInfoList)
+                // Filter the flights based on the arrival airport code
+                val filteredFlights = flightInfoList.filter { flight ->
+                    flight.arrivalAirportCode.equals(arriveAirportCode, ignoreCase = true)
+                }
+
+                // Pass the filtered flights to the RecyclerView setup
+                if (filteredFlights.isNotEmpty()) {
+                    setupRecyclerView(filteredFlights)
+                } else {
+                    showToast("No flights found for arrival airport $arriveAirportCode")
+                }
             } else {
                 showToast("No flights found")
             }
