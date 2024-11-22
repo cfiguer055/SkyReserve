@@ -289,7 +289,7 @@ class FlightSearchActivity : AppCompatActivity(), FlightAdapter.OnFlightClickLis
                 val filteredFlights = flightInfoList.filter { flight ->
                     flight.arrivalAirportCode.equals(arriveAirportCode, ignoreCase = true)
                 }
-
+                // 
                 // Pass the filtered flights to the RecyclerView setup
                 if (filteredFlights.isNotEmpty()) {
                     setupRecyclerView(filteredFlights)
